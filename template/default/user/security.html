@@ -1,0 +1,107 @@
+{template header}
+    <script type="text/javascript" src="{THEME_PATH}js/jquery_Validform.js"></script>
+    <script type="text/javascript">
+        function chkpwd(obj) {
+            var t = obj.value;
+            var id = getResult(t);
+            //定义对应的消息提示
+            var msg = new Array(3);
+            msg[0] = "弱";
+            msg[1] = "中";
+            msg[2] = "高";
+            var sty = new Array(3);
+            sty[0] = 10;
+            sty[1] = 50;
+            sty[2] = 100;
+            var col = new Array(3);
+            col[0] = "gray";
+            col[1] = "#50AEDD";
+            col[2] = "green";
+            //设置显示效果
+            $(".chkResult").html(msg[id]);
+            $(".reat i").attr("style", "width:"+sty[id]+"px");
+        }
+        //定义检测函数,返回0/1/2/3分别代表无效/差/一般/强
+        function getResult(s) {
+            if (s.length < 4) {
+                return 0;
+            }
+            var ls = 0;
+            if (s.match(/[a-z]/ig)) {
+                ls++;
+            }
+            if (s.match(/[0-9]/ig)) {
+                ls++;
+            }
+            if (s.match(/(.[^a-z0-9])/ig)) {
+                ls++;
+            }
+            if (s.length < 6 && ls > 0) {
+                ls--;
+            }
+            return ls
+        }
+    </script>
+    <style type="text/css">
+    	.anqun li p span{width: 500px;}
+    </style>
+    <div class="main w1100">
+       {template setting_left}
+            <div class="content fr">
+                <div class="dizhi">
+                    <h3>账号安全</h3>
+                    <dl>
+                        <dt style="height:0px;padding:0;border-bottom: none;" ><em style="bottom: 12px;"><a href="javascript:location.reload();" class="shua"></a></em></dt>
+                        <dd>
+                            <form name="form1" action="{U('user/security')}" method="post" class="secuform">
+                                <div class="tixing">
+                                    	安全提醒: 请妥善保管密码！我们的工作人员不会以任何理由向您索取密码。
+                                </div>
+                                <ul class="anqun">
+                                    <li>
+                                        <span>当前密码：</span><p><input type="password" name="pwd" value="" class="input_4" datatype="*2-12" nullmsg="请输入旧密码！" errormsg="请输入2-12个字符，支持中文，英文！"/><span class="Validform_checktip"></span></p>
+                                    </li>
+                                    <li>
+                                        <span>设置新密码：</span><p><input type="password" name="newpwd" value="" class="input_4" onkeyup="chkpwd(this)"  /></p>
+                                        <div class="passwordst">
+                                            <span style="margin-left: 20px;">安全等级：</span>
+                                            <span class="reat">
+                                                <i class=""></i>
+                                            </span>
+                                            <span class="chkResult"></span>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <span>确认新密码：</span><p><input type="password" name="newpwd2" value="" class="input_4" datatype="*" recheck="newpwd" nullmsg="请再输入一次密码！" errormsg="您两次输入的账号密码不一致！" /><span class="Validform_checktip"></span></p>
+                                    </li>
+                                    <li>
+                                        <span>&nbsp;</span><p><input type="submit" value="确认" class="btn4" /></p>
+                                    </li>
+                                </ul>
+                            </form>
+                        </dd>
+                    </dl>
+                </div>
+            </div>
+            <div class="clear"></div>
+        </div>
+    </div>
+    <!--{subtemplate common/footer}-->
+    <script type="text/javascript">
+        $(function() {
+            $(".secuform").Validform({
+                tiptype: 4,
+                ajaxPost: true,
+                callback: function(data) {
+                    if (data.status == 1) {
+                        alert(data.info);
+                        location.href = "{U('user/security')}";
+                    }else{
+                        alert(data.info);
+                    }
+                }
+            });
+        })
+    </script>
+</body>
+</html>

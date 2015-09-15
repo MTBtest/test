@@ -1,0 +1,46 @@
+<!--{subtemplate common/header}-->
+<style type="text/css">
+	.kindly-a h3.error{
+		margin-left: 0px;
+		padding-left:35px;
+		background: url("{THEME_PATH}images/homeimages/attention_03.png") no-repeat left center;
+		}
+	.kindly-a h3.right{
+		margin-left: 0px;
+		padding-left:35px;
+		background: url("{THEME_PATH}images/homeimages/right_02.png") no-repeat left center;
+	}
+</style>
+<div class="shopCarbox w1100">
+       <div class="shopCar_nav">
+            <div class="shopCar_Title-3">温馨提示</div>
+       </div>
+    <div class="kindly-box w1100">
+        <div class="kindly-a">
+			<h3 {if $status == 1}class="right"{else}class="error"{/if}>{$msg}</h3>
+            <span class="hint"></span>
+            <p>您可以尝试以下操作:</p>
+            {if $status == 1}
+            <p><a href="{U('Goods/Index/index')}"> 商城首页 </a>| <a href="{U('User/Order/manage')}">我的订单</a> | <a href="{U('Goods/Cart/index')}">我的购物车</a></p>
+            {else}
+             <p>1.检查刚才输入的网址是否正确</p>
+             <p>2.到其他地方去逛逛：<a href="javascript:history.back();">返回上一级操作</a> |<a href="{U('Goods/Index/index')}"> 商城首页 </a>| <a href="{U('User/Order/manage')}">我的订单</a> | <a href="{U('Goods/Cart/index')}">我的购物车</a></p>
+            {/if}
+        </div>
+    </div>
+    <div class="clear"></div>
+</div>
+<script type="text/javascript">
+{if $url_forward=='goback' || $url_forward==''}
+{php $url_forward = 'javascript:history.back();';}
+{elseif $url_forward=="close"}
+{php $url_forward = 'javascript:window.close()';}
+{else}
+{php $url_forward = strip_tags($url_forward);}
+{/if}
+var i=setTimeout("redirect('<?php echo strip_tags($url_forward) ?>');", {$ms});
+$('.kindly-a a').click(function(){
+    clearTimeout(i);
+})
+</script>
+<!--{subtemplate common/footer}-->

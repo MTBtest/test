@@ -1,0 +1,59 @@
+{template header}
+	    <div class="main w1100">
+	        {template ucenter_left}
+	            <div class="content fr">
+	                <div class="cash">
+	                    <h3>我的优惠券</h3>
+	                    <h4>可用优惠券：<font class="org">{$list['c']}</font> 张</h4>
+	                    <dl>
+	                        <dt style="border-bottom: none;">
+	                        <div style="width: 810px;border-bottom:1px solid #eee;height: 42px;">
+	                            <form name="form1" action="{U('coupons/addCoupons')}" method="post">
+	                                <div class="fr xuhao">
+	                                   	 输入优惠序列号：<input type="text" placeholder="输入正确序列号即可添加新的优惠券" name="key" class="input_hao" /><input type="submit" value="添加" class="btn5" />
+	                                </div>
+	                            </form>
+	                            <span>状态：
+	                                <a href="{U('coupons/couponsList',array('type'=>'all'))}" {if $type == 'all'} class="hover" {/if}>全部</a>
+	                                <a href="{U('coupons/couponsList',array('type'=>1))}" 
+	                                	{if $type == 1} class="hover" {/if}>未使用</a>
+	                                <a href="{U('coupons/couponsList',array('type'=>2))}"
+	                                {if $type == 2} class="hover" {/if} >已使用/过期</a></span><em><a href="javascript:location.reload();" class="shua"></a></em>
+	                        </dt>
+	                        <dd>
+	                            <table class="casble">
+	                                <tr>
+	                                    <th>序列号</th>
+	                                    <th>优惠券名称</th>
+	                                    <th>面值</th>
+	                                    <th>最小订单金额</th>
+	                                    <th>有效期</th>
+	                                    <th>状态</th>
+	                                </tr>
+	                                {loop $list['list'] $v}
+	                                <tr>
+	                                	<td>{$v[sn]}</td>
+	                                	<td>{$v[name]}</td>
+	                                	<td>{$v[value]}</td>
+	                                	<td>{$v[couponsInfo][limit]}</td>
+	                                	<td><?php echo date('Y-m-d H:i:s',$v['end_time']); ?></td>
+	                                	<td>{if $v[status] == 1}未使用{elseif $v[status] == 2}已使用{/if}</td>
+	                                </tr>
+	                                {/loop}
+	                            </table>
+	                            <div class="page">
+									<div class="fr mr20">
+	                            	{$list['page']}
+									</div>
+									<div class="clear"></div>
+	                            </div>
+	                        </dd>
+	                    </dl>
+	                </div>
+	            </div>
+	            <div class="clear"></div>
+	        </div>
+	    </div>
+	    <!--{subtemplate common/footer}-->
+    </body>
+</html>

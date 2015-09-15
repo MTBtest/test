@@ -1,0 +1,58 @@
+{template header}
+<script type="text/javascript">
+var referer = "{U('User/User/userinfo')}";
+</script>
+    <div class="main">
+		<div class="address" >
+            <div class="swiper-slide" id='waterfall-content'>
+            	<ul id="container">
+                    {loop $addressList $v}
+                    <li>
+                        <strong>{$v['address_name']}</strong>
+                        {if ($v['id']==$this->userinfo['address_id'])}
+                            <font>默认</font>
+                        {else}
+                            <a onclick="mr({$v['id']});">
+                                <font style="width:75px;background-color:#1a8fda;">设置为默认</font>
+                            </a>
+                        {/if}
+                        <a href="{U('User/Address/edit',array('id'=>$v['id']))}">
+                            <span>{$v['mobile']}</span>
+                            <p>{$v['addressInfo']}</p>
+                            <em><img src="/template/wap/statics/img/ico_15.png"></em>
+                        </a>
+                    </li>
+                    {/if}
+                </ul>
+                <div class="mar15">
+                	<a href="{U('User/address/add')}"><input type="button" value="添加新收货地址" class="btnBlue mt10" /></a>
+                </div>
+            </div>
+        </div>
+    </div>
+{template footer}
+
+
+<script type="text/javascript">
+/* 设置为默认 */
+function mr(id) {
+    if (id == "") {
+        hd_alert('请选择你要操作的信息');
+        return false;
+    }
+    hd_alert("确定设置为默认地址吗？" , 2000 , 'confirm' , function(){
+        $.post("{U('address/addressDefaut')}", {
+            id: id
+        }, function(data) {
+            hd_alert(data.info);
+            if (data.status == 1) {
+                location.reload();
+                return false;
+            }
+        },'json')
+    })
+}
+setTitle('我的收货地址');
+</script>
+</body>
+</html>

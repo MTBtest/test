@@ -1,0 +1,50 @@
+{template user/header}
+    <div class="main">
+		<div class="zhipei">
+        	<ul>
+            	<li>
+                	<strong>发票抬头</strong>
+					<input type="text" name="invoice_title" value="{$norder_keys[invoice_title]}" placeholder="单位或个人"/>
+                </li>
+                <li>
+                	<h3>发票内容</h3>
+					<span id="invoice_type">
+                    {loop $site_invoicecontent $r}
+						<a href="javascript:;" invoice_type="{$r}" {if $norder_keys[invoice_type] == $r}class='hover'{/if}>{$r}</a>
+                    {/loop}
+					</span>
+                </li>
+            </ul>
+            <div class="mar15">
+            	<input type="button" value="确定发票信息" class="btnBlue" name="dosubmit" />
+            </div>
+        </div>
+    </div>
+<script type="text/javascript">
+setTitle('发票信息');
+$(function() {
+    $("input[name=dosubmit]").click(function() {
+        if($("input[name=invoice_title]").val().length < 1) {
+            hd_alert('请输入准确的发票抬头信息');
+            return false;
+        }
+        if($('span#invoice_type a[class=hover]').length == 0) {
+            hd_alert('请选择发票内容');
+            return false;
+        }
+        var args = {
+            invoice_title : $("input[name=invoice_title]").val(),
+            invoice_type : $("span#invoice_type a.hover").attr('invoice_type')
+        }
+        $.post('?m=goods&c=order&a=invoicerate', args, function(ret) {
+            if(ret.status == 1) {
+                window.location.href = '?m=goods&c=order&a=index';
+            } else {
+                hd_alert(ret.info);
+            }
+        }, 'JSON');
+    });
+})
+</script>
+</body>
+</html>

@@ -1,0 +1,81 @@
+{template header}
+<script type="text/javascript">
+var referer = "{U('User/User/userinfo')}";
+</script>
+<?php $_GET['type'] = I('type','1'); ?>
+    <div class="main">
+		<dl class="dldt1">
+        	<dt>                
+                <strong><a href="{U('user/coupons/couponsList',array('type'=>1))}" {if $_GET['type']==1}class="hover"{/if}>未使用</a></strong>
+                <strong><a href="{U('user/coupons/couponsList',array('type'=>'2'))}" {if $_GET['type']==2}class="hover"{/if}>已使用</a></strong>
+                <strong><a href="{U('user/coupons/couponsList',array('type'=>3))}" {if $_GET['type'] >2||!$_GET['type']}class="hover"{/if}>已过期</a></strong>
+            </dt>
+            <dd>
+            	<div class="swiper-container">
+                    <div class="swiper-wrapper">
+                        <div class="swiper-slide" id='waterfall-content'>
+                        	<ul class="youhui" id="container"></ul>
+                        </div>
+
+                        <div class="swiper-slide" id='waterfall-empty'>
+                            <div class="none">
+                                <img src="{THEME_PATH}img/bg_2.png" />
+                                <p>您还没有相关的优惠券</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>            	
+            </dd>
+        </dl>
+        <div id="meiyou">没有更多信息</div>
+    </div>
+{template footer}
+
+<script src="{THEME_PATH}js/waterfall.min.js"></script>
+<script src="{THEME_PATH}js/handlebars.js"></script>
+<script type="text/javascript">
+$('#container').waterfall({
+    debug:true,//开启debug
+    dataType: 'json',//默认返回JSON格式
+    path: "{U('User/Api/coupons_list')}",//接口地址
+    params:{method:"lists",user_id:<?php echo $this->userid;?>,type:"{$_GET['type']}"},//接口或方法
+    callbacks: {//回调函数
+        loadingFinished: function($loading, isBeyondMaxPage ,data) {
+            if ( !isBeyondMaxPage ) {
+                $loading.fadeOut();
+            } else {
+                $loading.hide();
+                $('#meiyou').show();
+            }
+            var _html = '';
+            if(!data.lists && $('#container').html().length == 0) {
+                $("#waterfall-content").hide();
+                $("#waterfall-empty").show();
+                return false;
+            }
+            $.each(data.lists, function(items, item) {
+                if ( item.status == 2 || ( (item.end_time1*1000) < Date.parse(new Date()))) {
+                    _html += '<li class="huis"><p>';
+                }else{
+                    _html += '<li><p>';
+                }
+                _html += '    <span>使用规则：满'+ item.limit +'元可用</span>';
+                _html += '    使用期限：<br />'+ item.start_time +'~' + item.end_time;
+                _html += '    </p><strong>￥'+ item.value +'</strong>';
+                if (item.status == 2) {
+                    _html += '    <em><img src="{THEME_PATH}img/z_2.png" /></em>';
+                }
+                if ((item.end_time1*1000) < Date.parse(new Date()) && item.status != 2) {
+                    _html += '    <em><img src="{THEME_PATH}img/z_1.png" /></em>';
+                }
+                _html += '</li>';
+            })
+            $('#container').append(_html);
+        }
+    },    
+});
+setTitle('我的优惠券');
+</script> 
+
+</body>
+</html>

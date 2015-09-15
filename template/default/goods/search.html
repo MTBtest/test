@@ -1,0 +1,232 @@
+<!--{subtemplate common/header}-->
+		<script src="{THEME_PATH}js/artTemplate/artTemplate.js" type="text/javascript"></script>
+		<script src="{THEME_PATH}js/artTemplate/artTemplate-plugin.js" type="text/javascript"></script>
+		<script type="text/javascript" src="{THEME_PATH}js/goods_list.js"></script>
+		<div class="Nowposition w1100">
+			<div>
+				<img src="{THEME_PATH}images/homeimages/homepic_22.png">您当前位置：
+				<a href="{__APP__}">首页</a> &nbsp;>&nbsp;
+				<a href="">搜索&nbsp;{$keyword}&nbsp;的商品结果</a>
+			</div>
+		</div>
+		<div class="shopCon w1100">
+				<div class="sidebarBox fl">
+					<div class="sidebarBox_top" style="margin-top: 0px;">
+						<div class="sidebarBox_top_title" style="background-color: #417eb7;color: #ffffff;">
+							热门销量排行榜
+						</div>
+						<div class="sidebarBox_top_li">
+							<ul id="top10">
+								{hd:goods action="lists" catid="0" num="8" order="`sales_number` DESC"}
+								{php $i = 0;}
+								{loop $data $r}
+								{php $i++;}
+								<li>
+									<div class="first">
+										<span style="margin-right:10px;">
+											<img src="{THEME_PATH}images/homeimages/top_{$i}.png">
+										</span>
+										{$r[name]}
+									</div>
+									<div class="last clearfix">
+										<div class="imgbox">
+											<table width="100%" border="0" cellspacing="0" cellpadding="0">
+												<tr>
+													<td class="top_td_number">
+														<img src="{THEME_PATH}images/homeimages/top_{$i}.png" class="top_td_img">
+													</td>
+													<td style="width:68px;">
+														<a href="{U('Goods/Index/detail', array('id'=> $r[id]))}" target="_blank">
+															{if empty($r[thumb]) && empty($r[list_img])}
+															<img src="{THEME_PATH}images/homeimages/nopic.jpg" alt="" height="75" width="50" style="border:1px solid #ccc;" />
+															{elseif empty($r[thumb])}
+															<?php $list_img = str2arr($r[list_img]);?>
+															<img src="{$list_img[0]}" alt="" height="75" width="50" style="border:1px solid #ccc;" />
+															{else}
+															<?php $thumb = str2arr($r[thumb])?>
+															<img src="{$thumb[0]}" alt="" height="75" width="50" style="border:1px solid #ccc;" />
+															{/if}
+														</a>
+													</td>
+													<td>
+														<p><a href="{U('Goods/Index/detail', array('id'=> $r[id]))}" target="_blank">{$r[name]}</a>
+															<br />
+														</p>
+														<p class='imagebox-p2'><font class="market_s">{MONUNIT}{$r[shop_price]}</font>
+															<br />
+														</p>
+													</td>
+												</tr>
+											</table>
+										</div>
+									</div>
+								</li>
+								{/loop}
+								{/hd}
+							</ul>
+						</div>
+					</div>
+				</div>
+					<!--右边-->
+					<div class="ShopboxR fl">
+						<!--今日推荐end-->
+						<!--配方奶粉box-->
+						<div class="MilknavBox" style="margin-top: 0px;">
+							<div class="MilknavBox_T">
+								<span class="MilknavBox_T_L">搜索结果</span>
+								<span class="MilknavBox_T_R">搜索到<span class="search_pro" id="goods_count">0</span>件相关商品</span>
+							</div>
+						</div>
+						<!--排序销量-->
+						<div class="Floatmenu">
+							<dl>
+								<dt class="Floatmenu_01">
+		                           	 排序:
+		                        </dt>
+								<dd class="Floatmenu_02">
+									<a href="{create_url('sort', 'sale,'.$_by)}"{if $_sort == 'sale'} class="hover"{/if}>销量<i class="Floatmenu_{if $_by == 'DESC'}up{else}down{/if}"></i></a>
+								</dd>
+								<dd class="Floatmenu_02">
+									<a href="{create_url('sort', 'price,'.$_by)}"{if $_sort == 'price'} class="hover"{/if}>价格<i class="Floatmenu_{if $_by == 'DESC'}up{else}down{/if}"></i></a>
+								</dd>
+								<dd class="Floatmenu_02">
+									<a href="{create_url('sort', 'hits,'.$_by)}"{if $_sort == 'hits'} class="hover"{/if}>人气<i class="Floatmenu_{if $_by == 'DESC'}up{else}down{/if}"></i></a>
+								</dd>
+								<dd>
+								</dd>
+								<?php $num = getconfig('site_listnum') ?>
+								<div class="Floatmenu_div_R">
+									<div class="pagefooter pageactivity">
+										<div class="pagefooter-01">
+											{hd:goods action="page" catid="$id" brand_id="$brand_id" price="$price" goods_ids="$_goods_ids" num="$num" where="$_where" page="$page"}{$data[page]}{/hd}
+										</div>
+										<div class="clear"></div>
+									</div>
+								</div>
+						</div>
+						<!--产品展示-->
+						<div class="protect_con">
+							{hd:goods action="lists" catid="$id" brand_id="$brand_id" price="$price" goods_ids="$_goods_ids" num="$num" where="$_where" page="$page" order="$_order"}
+							<script type="text/javascript">$("#goods_count").text('{$count}');</script>
+							{loop $data $r}
+							<div class="shop_01 fl">
+								<div class="shop_01-imgbox">
+									<a href="{U('Goods/Index/detail', array('id'=> $r[id]))}" target="_blank">
+										{if empty($r[small_pics]) && empty($r[list_img])}
+										<img src="{THEME_PATH}images/homeimages/nopic.jpg" width='190' height="190">
+										{elseif empty($r[small_pics])}
+										<?php $list_img = str2arr($r[list_img]);?>
+										<img src="{$list_img[0]}" width='190' height="190">
+										{else}
+										<?php $small_pics = str2arr($r[small_pics])?>
+										<img src="{$small_pics[0]}" width='190' height="190">
+										{/if}
+									</a>
+								</div>
+								<p class="p1">
+									<a href="{U('Goods/Index/detail', array('id'=> $r[id]))}" target="_blank">{$r[name]}</a>
+								</p>
+								<div class="p2">
+									<p>销售价<span>{MONUNIT}{$r[shop_price]}</span>
+									</p>
+									<div class="btnshop">
+										<!--<div class="joincar fl">加入购物车</div>-->
+										<div class="rate fl">关注({$r[hits]})</div>
+										<a href="{U('User/Collect/add', array('goods_id' => $r[id]))}"><div class="collect fr">收藏</div></a>
+									</div>
+								</div>
+							</div>
+							{/loop}
+							{/hd}
+						</div>
+				<div class="clear"></div>
+					<!--第一行商品结束-->
+					<div class="pagefooter pageactivity">
+						<div class="pagefooter-01">{$pages}</div>
+					</div>
+					<div class="clear"></div>
+				</div>
+					<div class="clear"></div>
+					<!--右边结束-->
+					<!--footer-->
+				</div>
+		<!--{subtemplate common/footer}-->
+	</body>
+	<script type="text/javascript">
+				$(function() {
+					resetcart();
+				})
+				/**
+				 * 重置购物车
+				 */
+				function resetcart() {
+					var url = "/index.php?g=Home&m=Cart&a=return_cart_info";
+					$.getJSON(url, function(data) {
+						if (data !== null) {
+							//显示总数
+							$("#cart .shop_number>em").text(data.total_num);
+							$(".topcartinfo font").eq(0).text(data.cart_num_count);
+							$(".topcartinfo font").eq(1).text(data.total_num);
+							$(".topcartinfo font").eq(2).text(data.total_price);
+							//加入模板
+							var jsondata = data.goodlist;
+							var consultRowHtml = template('topcartRowTemplate', data);
+							$('.topcart').html(consultRowHtml);
+						}
+					})
+				}
+				/**
+				 * 删除购物车
+				 */
+				function removeCart(goods_id) {
+					var url = "/index.php?m=Goods&a=lists";
+					$.getJSON(url, {
+						"goods_id": goods_id,
+						"random": Math.random()
+					}, function(content) {
+						if (content.state_code == 11) {
+							msg_time(content.state_message);
+							resetcart();
+						} else {
+							msg_time(content.state_message);
+						}
+					})
+				}
+				/**
+				 * 清空购物车
+				 */
+				function emptyCart() {
+					var url = "/index.php?g=Home&m=Cart&a=empty_cart";
+					$.getJSON(url, "", function() {
+						resetcart();
+					})
+				}
+			</script>
+	<script type="text/javascript">
+		$(function() {
+			//提交自定义价格
+			$(".sure_Btn").click(function() {
+				var p0 = $(".price0").val();
+				var p1 = $(".price1").val();
+				var regex = "^[0-9]*[1-9][0-9]*$";
+				var re = new RegExp(regex);
+				if (!re.test(p0) || !re.test(p1)) {
+					msg_time('请输入正确内容');
+					return;
+				}
+				var url = "/index.php?m=Goods&a=lists&id=42&brand=&sort=&order=&price=" + p0 + '-' + p1;
+				window.location.href = url;
+			})
+		})
+		 $(function() {
+			$("#top10 li:last").css("border", "none");
+			$(".Floatmenu_02 a").each(function() {
+				if ($(this).hasClass("hover")) {
+					$(this).find('img').show();
+				} else {
+					$(this).find('img').hide();
+				}
+			})
+		})
+	</script>
+</html>

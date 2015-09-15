@@ -1,0 +1,152 @@
+<!--{subtemplate common/header}-->
+	<!--购物车（有商品）-->
+	<div class="shopCarbox w1100">
+		<div class="shopCar_nav">
+            <div class="shopCar_Title">购物车</div>
+            <div class="shopCar_msg">
+                <span class="shopCar_msg_01">
+                    <img src="{THEME_PATH}images/homeimages/1_03.png">放入购物车<img src="{THEME_PATH}images/homeimages/9qw_10.png"></span>
+                <span class="shopCar_msg_02">
+                    <img src="{THEME_PATH}images/homeimages/9_05.png">填写核对订单<img src="{THEME_PATH}images/homeimages/9qw_10.png"></span>
+                <span class="shopCar_msg_02">
+                    <img src="{THEME_PATH}images/homeimages/92_07.png">成功提交订单</span>
+            </div>
+		</div>
+		{if $lists}
+		<!--商品-->
+	    <div class="shppingBox">
+	        <div class="shoppingBox_Title">
+	        	<input type="checkbox" id="checkall" checked class="checkboxshop checkall"/>
+	        	<ul>
+		            <li class="shopping_01">商品</li>
+		            <li class="shopping_02">单价</li>
+		            <li class="shopping_03">花费积分</li>
+		            <li class="shopping_04">数量</li>
+		            <li class="shopping_05">小计</li>
+		            <li class="shopping_06">操作</li>
+	            </ul>
+	        </div>
+	        <!--有特价-->
+	        {loop $lists $k $r}
+	        <input type="checkbox" name="keys[]" class="checkboxshop" value="{$k}" checked/>
+	        <div class="cart_01" data-id="{$k}">
+	            <!--商品-->
+	            <li class="cart_01a" style="width: 542px;">
+					<div class="cart_01a_img"><img src="{$r['goods_img']}" width="55" height="55" alt="{$r[name]}"></div>
+					<div class="cart_01a_p">
+						<a class="cart_01a_p1" href="{U('Goods/Index/detail', array('id' => $r['id']))}" target="_blank" title="{$r[name]}">{msubstr($r[name], 20)}
+						{if $r[spec_text]}<br><span class="cart_01a_p2">[{$r[spec_text]}]</span>{/if}</a>
+					</div>
+					{if $r['prom_id'] > 0 && $r['prom_type'] && $r['is_promotion'] == TRUE}
+						{php $pro_type = array('order'=>'订单','goods'=>'商品','timed'=>'限时')}
+						<div class="cart_01b_div fr">{$pro_type[$r['prom_type']]}促销</div>
+					{/if}
+	            </li>
+	            <!--特价-->
+	            <!--单价-->
+	            <li class="cart_01c">
+	                {MONUNIT}<span class="price">{$r[shop_price]}</span>
+	            </li>
+	            <!--积分-->
+	            <li class="cart_01d">
+	                <span class="score">0</span>
+	            </li>
+	            <!--数量-->
+	            <li class="cart_01e">
+	                <span class="reduce">-</span>
+	                <input class="count-input" type="text" value="{$r[goods_num]}" data-num="{$r[goods_num]}">
+	                <span class="add">+</span>
+	            </li>
+	            <!--小计-->
+	            <li class="cart_01f">
+	                {MONUNIT}<span class="price-total">{$r[total_price]}</span>
+	            </li>
+	            <!--删除-->
+				
+	            <li class="cart_01ag deleteAll">删除</li>
+	        </div>
+	        <div class="clear clearfix"></div>
+	        {/loop}
+	        <!--结算-->
+	        <div class="total ">
+	            <span class="total-span1">花费积分：0</span>
+	            <span class="total-span2">应付商品金额：</span>
+	            <span class="total-span3" id="priceTotal">{MONUNIT}<span>{$count_price}</span></span>
+				<!-- <span class="total-span3" id="priceTotal">{MONUNIT}<span>0</span></span> -->
+	        </div>
+	    </div>
+	    <div class="shopCar_content" style="display:none">
+	    	<div class="shopCar_content_01">你的购物车还是空的,赶紧行动吧！</div>
+	    	{if !is_login()}
+	    	<div class="shopCar_content_02">如果您上次退出时，购物车中有商品，那么商品已自动保存，请登录后查看</div>
+	    	<div class="shopCar_content_03"><img src="{THEME_PATH}/images/attention_03.png"></div>
+	    	{/if}
+	    </div>
+	    {else}
+	    <div class="shopCar_content">
+	    	<div class="shopCar_content_01">你的购物车还是空的,赶紧行动吧！</div>
+	    	{if !is_login()}
+	    	<div class="shopCar_content_02">如果您上次退出时，购物车中有商品，那么商品已自动保存，请登录后查看</div>
+	    	<div class="shopCar_content_03"><img src="{THEME_PATH}/images/attention_03.png"></div>
+	    	{/if}
+	    </div>
+	    {/if}
+		<div class="clear"></div>
+	    <!--商品end-->
+	        <div>
+	            <div class="shopCar_btn fl">继续购物</div>
+	            {if $lists}
+	            <div class="shopCar_btn_02 fl">清空购物车</div>
+	            <div><a class="shopCar_btn_03 fl" href="javascript:;" id='balance'>结算</a></div>
+	            {/if}
+	         </div>
+	    <div class="clear"></div>
+	</div>
+<script type="text/javascript">
+var keys = <?php echo json_encode(array_keys($lists)) ?>;
+$("#checkall").bind('click',function(){
+   $("input[name='keys[]']").prop("checked",this.checked);   
+})
+
+/* 选择复选框结算 */
+$("#checkall, input[name='keys[]']").bind('click',function() {
+	var count_price = 0;
+	keys = new Array();
+	$.each($("input[name='keys[]']:checked"), function() {
+		var $obj = $("div[data-id="+ $(this).attr('value') +"]");
+		var price = $obj.find('span.price').text();
+		var num = parseInt($obj.find('.count-input').val());
+		keys.push($(this).attr('value'));
+		count_price += (price * num)
+	})
+	$("#priceTotal > span").text(count_price.toFixed(2));
+})
+
+
+/* 结算 */
+$('#balance').bind('click',function() {
+	var url = "{U('Goods/Order/index')}";
+	if (keys == '' || keys == undefined) {
+		alert('请选择您要结算的商品！');
+		return false;
+	}
+	window.location.href = url + '&keys=' + keys;
+})
+
+
+$(function() {
+	$(".shopCar_btn").click(function() {
+		location.href = "{U('Goods/Index/index')}";
+	});
+	$(".shopCar_btn_02").click(function() {
+		if (confirm('确定要清空购物车吗？')) {
+			location.href = "{U('Goods/Cart/clear')}";
+		}
+	})
+})
+</script>
+	<!--商品结束-->
+	<!--footer-->
+	<!--{subtemplate common/footer}-->
+</body>
+</html>

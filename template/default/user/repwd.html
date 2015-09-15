@@ -1,0 +1,189 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta http-equiv="x-ua-compatible" content="text/html" />
+	<title>{if isset($SEO['title']) && !empty($SEO['title'])}{$SEO['title']}{/if}{$SEO['site_title']}</title>
+	<link rel="stylesheet" type="text/css" href="{THEME_PATH}css/home-common.css" />
+	<link rel="stylesheet" type="text/css" href="{THEME_PATH}css/home-style.css" />
+	 <link rel="stylesheet" type="text/css" href="{THEME_PATH}css/new_common.css"/>
+    <link rel="stylesheet" type="text/css" href="{THEME_PATH}css/new_index.css"/>
+    <link rel="stylesheet" type="text/css" href="{THEME_PATH}css/new_footer.css"/>
+	<!--[if IE 6]>
+	<script type="text/javascript" src="../style/js/DD_belatedPNG.js" ></script>
+	<script type="text/javascript">
+	DD_belatedPNG.fix('*');
+	</script>
+	<![endif]-->
+	<script type="text/javascript" src="{THEME_PATH}js/jquery-1.7.2.min.js"></script>
+	<script type="text/javascript" src="{JS_PATH}Validform_v5.3.2_min.js"></script>
+	<script type="text/javascript" src="{THEME_PATH}js/artDialog4.1.7/artDialog.js?skin=default"></script>
+	<script type="text/javascript" src="{THEME_PATH}js/artDialog4.1.7/plugins/iframeTools.js" ></script>
+	<style type="text/css">
+		.sign{ position:relative;width:900px;margin:0 auto;padding:15px 0 60px;border:1px solid #dadada; background:#f9f9f9;min-height: 471px;}
+		.not-reg{color: #999999;font-size: 26px;text-align: center;line-height: 400px;}
+		.sign h3{color:#417eb7;font-size:22px;padding-left:30px;line-height:40px;border-bottom: 1px dashed #417DB7;}
+		.sign h4{color:#999999;padding-left:30px;line-height:26px;border-bottom:1px dashed #e3e3e3;padding-bottom:12px;}
+		.sign em{ position:absolute;right:-1px;bottom:-1px;}
+		.sign li{width:100%; clear:both; overflow:hidden;padding-top:20px;}
+		.sign li span{ display:block;float:left;line-height:38px;padding-right:6px;text-align:right;width:180px;}
+		.sign li p{float:left;color:#999999;}
+		.sign li font{ display:block;line-height:20px;padding-top:20px;line-height:20px;}
+		.sign li div p input.input_1,.sign li div p input.input_1:hover{
+			width: 260px;
+			height: 16px;
+			line-height: 14px;
+			padding-top:12px;
+			padding-bottom: 12px;
+			color: #363636;
+			font-size: 14px;
+			padding-left: 10px;
+			border: none;
+			outline：none;
+			margin-right: 15px;
+		}
+	</style>
+</head>
+<body >
+	<div class="header">
+			 <!--登录条 -->
+			<div class="loginbar">
+				<div class="w1100">
+					<div class="site-nav-left fl" style="margin-left: -30px;">
+		                <a href="javascript:void(0)" onclick="SetHome(this,window.location)">设为首页</a>
+						<a href="javascript:void(0)" onclick="AddFavorite(document.title,window.location)">收藏本站</a>
+		            </div>
+		            <div class="site-nav-right fr">
+		            	{if is_login() > 0}
+						<?php $arr = getUserInfo(is_login());?>
+						<a href="">您好 {$arr[username]}</a><a href="{U('User/Public/logout')}">[退出]</a>
+						{else}
+		            	<a href="{U('User/Public/login')}" target="_self">登录</a>|
+						<a href="{U('User/Public/reg')}" target="_self">注册</a>|
+						{/if}
+						<a href="{U('User/Index/index')}" >会员中心</a>|
+						<a href="{U('User/order/manage')}" >我的订单</a>
+					</div>
+				</div>
+				<div class="clear"></div>
+			</div>
+			<!--登录条结束-->
+			<!--{subtemplate common/topbar}-->
+			<div class="clear"></div>
+			<div style="background: #417eb7;">
+				<div class="w1100 menu clearfix">
+					<strong class="menudown1">
+						<div class="headermenu">
+						<!--一级菜单-->全部商品分类<img class="menudown" src="{THEME_PATH}images/homeimages/down_11.png">
+						<!--一级菜单end-->
+						<!--下来二级菜单-->
+						<div class="headermenu_li">
+							{hd:category action="lists" num="7" order="id ASC"}
+							<ul>
+								{loop $data $cat}
+								{php $catid = $cat['id'];}
+								<li class="listli_01">
+									<p class="listli_01-p"><a href="{U('Goods/Index/lists', array('id'=> $cat['id']))}">{$cat[name]}</a></p>
+									<!--下拉三级菜单-->
+									<div class="listli_01box list-con">
+									<!--第0个-->
+										<div class="listli_01box_div">
+											<div class="listli_01box_L fl">
+												{hd:category action="lists" catid="$cat[id]" order="id ASC"}
+												{loop $data $cat}
+												<div>
+													<div class="listli_01box_title fl"><a href="{U('Goods/Index/lists', array('id'=> $cat['id']))}">{$cat[name]}</a></div>
+													{hd:category action="lists" catid="$cat[id]" order="id ASC"}
+													<ul class="listli_01box_ul fl">
+														{loop $data $cat}
+														<li class="listli_01box_li"><a href="{U('Goods/Index/lists', array('id'=> $cat['id']))}">{$cat[name]}</a></li>
+														{/loop}
+													</ul>
+													{/hd}
+												</div>
+												{/loop}
+												{/hd}
+											</div>
+											<div class="listli_01box_R fl">
+		                                    <!--<p>热门产品</p>-->
+		                                    <div class="hotpro">
+		                                    	<table border=none"" cellspacing="" cellpadding="">
+		                                    		<h3>推荐品牌</h3>
+		                                    		<tr>
+		                                    			<!--品牌最大只能让他显示12个-->
+		                                    			{hd:brand action="lists" catid="$catid" num="12" return="brand"}
+														{loop $brand $r}
+		                                    			<td>{$r[name]}</td>
+														{/loop}
+														{/hd}
+		                                    		</tr>
+		                                    	</table>
+		                                    </div>
+		                                </div>
+										</div>
+									</div>
+									<div class="clear"></div>
+								</li>
+								{/loop}
+							{/hd}
+							</ul>
+							<!--<img src="{THEME_PATH}images/homeimages/2e_03.png">-->
+						</div>
+						<div class="clear"></div>
+						<!--下拉二级菜单end-->
+						</div>
+					</strong>
+					<ul>
+					{hd:navigation action="lists" num="10" order="id ASC"}
+					{loop $data $r}
+						<li class="header-nav"><a href="{$r[url]}">{$r[name]}</a></li>
+					{/loop}
+					{/hd}
+					</ul>
+				</div>
+			</div>
+		</div>
+	<div class="clear"></div>
+	<div class=" w1100" style="margin-top: 20px;">
+		<form action="{U('User/Public/repwd')}" method="post" class="repwdform" >
+		<div class="sign">
+	    	<h3>取回密码</h3>
+	    	<ul style="margin-left:315px;">
+	            <li style="margin-top: 100px;">
+	                <div style="display: inline-block;margin-bottom: 10px;">注册邮箱</div>
+	                <div ><p ><input type="text" placeholder="注册邮箱" class="input_1 fl" name="email"  datatype="e" errormsg="邮箱格式错误！" ajaxurl="{U('User/Public/findEmail')}" nullmsg='请填写邮箱' /><span class="Validform_checktip Validform_wrong"></span></p></div>
+	            </li>
+	            	<span>&nbsp;</span><p><input type="button" id="btn_sub" value="下一步" class="btn8" /></p>
+	            </li>
+	        </ul>
+	        <em><img src="{THEME_PATH}images/bg4.png" /></em>
+	        <div class="clear"></div>
+	    </div>
+	   </form>
+	</div>
+	<div class="clear"></div>
+	<div class="mt10"></div>
+	<!--{subtemplate common/footer}-->
+	<script type="text/javascript">
+		var url = "<?php echo U('User/Public/login')?>";
+		$(function(){
+			$(".repwdform").Validform({
+				btnSubmit:"#btn_sub",
+				tiptype:function(msg,o,cssctl){
+					if(!o.obj.is("form")){//验证表单元素时o.obj为该表单元素，全部验证通过提交表单时o.obj为该表单对象;
+						var objtip=o.obj.siblings(".Validform_checktip");
+						cssctl(objtip,o.type);
+						objtip.text(msg);
+					}
+				},
+				ajaxPost:true,
+				callback:function(data){
+					art.dialog(data.info, function(){
+						window.location.href=url;
+					});
+				}
+			});
+		});
+	</script>
+</body>
+</html>

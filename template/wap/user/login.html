@@ -1,0 +1,77 @@
+{template header}
+    <div class="main">
+		<div class="login">
+            <input type="hidden" name="url_forward" value="{$_GET[url_forward]}"/>
+			<input type="hidden" name="wechat_openid" value="{$_GET[wechat_openid]}"/>
+        	<ul>
+            	<li>
+                	<input type="text" name="account" placeholder="用户名/手机号/邮箱" class="input_3" />
+                </li>
+                <li>
+                	<input type="password" name="password" placeholder="密码" class="input_3" />
+                </li>
+            </ul>
+            <div class="mar15">
+            	<input type="button" onclick="dosubmit();" value="登录" class="btnBlue" />
+                {if getconfig('reg_isreg') == 1}
+                    <a href='{U('user/public/reg')}'><input type="button" value="还没有账号？注册" class="btnPink mt10" /></a>
+                {else}
+                    <a href='javascript:;'><input type="button" value="注册已关闭" class="btnPink mt10" /></a>
+                {/if}
+            	<div class="jiz clearfix">
+					<p><label><input type="checkbox" name="cookie" value="1" /> 记住登录</label></p>
+					<span><a href="{U('user/public/repwd')}">忘记密码？</a></span>
+				</div>
+			</div>
+			<div class="other-login">
+            {loop $logins $login}
+            {if $login['login_code'] != 'wechat'}
+				<span><a href="javascript:void(0)" class="{$login['login_code']}_login third_login" login-code="{$login['login_code']}"></a><em>|</em></span>
+            {/if}
+            {/loop}
+			</div>
+			<style>
+				.other-login { margin-top: 28px; text-align: center; }
+				.other-login span { display: inline-block; padding-right: 17px; }
+				.other-login a { float: left; display: block; width: 44px; height: 44px; background: url({THEME_PATH}img/other-login.png) no-repeat; }
+				.other-login em { float: right; margin-left: 20px; line-height: 44px; color: #ccc; font-style: normal; }
+				.other-login .sina_login { background-position: 0 -44px; }
+				.other-login .qq_login { background-position: -60px -44px; }
+				.other-login .alipay_login { background-position: -180px -44px; }
+				.other-login span:last-child em { display: none; }
+			</style>
+        </div>
+    </div>
+{template footer}
+<script type="text/javascript">
+function dosubmit() {
+    $.post("{U('user/api/login_wap')}",{
+        url_forward:$('input[name="url_forward"]').val(),
+		wechat_openid:$('input[name="wechat_openid"]').val(),
+        account:$('input[name="account"]').val(),
+        password:$('input[name="password"]').val(),
+        cookie:$('input[name="cookie"]').val()
+    },function(data) {
+        if (data.status==1) {
+            hd_alert(data.info);
+            window.location.href = data.url;
+        } else {
+            hd_alert(data.info);
+        }
+    },'JSON');
+}
+setTitle('登录');
+/* 第三方登录 */
+$('.third_login').bind('click',function(){
+    var login_code = $(this).attr('login-code');
+    $.post("{U('User/Api/third_login')}",{login_code : login_code},function(ret){
+        if (ret.status != 1) {
+            alert(ret.info);
+        } else {
+            location.href = ret.url;
+        }
+    },'json');
+})
+</script>
+</body>
+</html>

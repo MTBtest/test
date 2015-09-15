@@ -1,0 +1,78 @@
+{template user/header}
+    <div class="main">
+        <div class="addr1">
+            <h3><img src="{THEME_PATH}img/ico_22.png" />请选择并确认您的收货地址</h3>
+            <ul data-address_id="{$norder_keys[address_id]}">
+                <a href="{U('Goods/Order/address')}">
+                {if $user_address[$norder_keys[address_id]]}
+                <li>
+                    <strong>收货人：{$user_address[$norder_keys[address_id]][address_name]}</strong><span>{$user_address[$norder_keys[address_id]][mobile]}</span>
+                    <p>{getAreaNameById($user_address[$norder_keys[address_id]][province])} {getAreaNameById($user_address[$norder_keys[address_id]][city])} {getAreaNameById($user_address[$norder_keys[address_id]][district])} {$user_address[$norder_keys[address_id]][address]} [{$user_address[$norder_keys[address_id]][zipcode]}]</p>
+                </li>
+                {else}
+                <li>
+                    <strong>暂无收货地址</strong><span>请选择</span>
+                    <!-- <p>[默认]云南省 昆明市 盘龙区 北京路635号小城故事A座309室</p> -->
+                </li>
+                {/if}</a>
+            </ul> 
+        </div>
+        {if $norder_keys[delivery_id]}
+        <a href="{U('Goods/Order/delivery')}" class="block"><div class="zhip clearfix"><strong>支付配送</strong><p><em class='normal'>{$payment[name]}</em><em class='normal'>{$deliverys[$norder_keys[delivery_id]][name]}</em></p></div></a>
+        {else}
+        <ul class="zhip1 clearfix"><a href="{U('Goods/Order/delivery')}" class="block"><li><strong>支付配送</strong><span>请选择</span></li></a></ul>
+        {/if}
+        <ul class="zhip1">
+            <?php $coupons_count = count($coupons_list); ?>
+            <a href="{U('Goods/Order/coupons')}">
+            <li>
+                <strong>优惠券({if $coupons_count}{$coupons_count}张{else}无{/if}可用)</strong>
+                {if $coupons_list[$norder_keys[coupons_id]][name]}
+                <span data-coupons_id="{$norder_keys[coupons_id]}">{$coupons_list[$norder_keys[coupons_id]][name]}</span>
+                {else}
+                <span>请选择</span>
+                {/if}
+            </li>
+            </a>
+            {if getconfig('site_invoice') && getconfig('site_invoicecontent')}
+            <a href="{U('Goods/Order/invoicerate')}"><li><strong>发票信息</strong><span>{if $norder_keys[invoice_type]}{$norder_keys[invoice_type]}{else}请填写{/if}</span></li></a>
+            {/if}
+        </ul>
+        <ul class="zhip1">
+            <a href="{U('Goods/Order/promotion')}"><li><strong>订单促销</strong><span>{if $norder_keys[promotion_id]}{$order_promotions[$norder_keys[promotion_id]][name]}{else}请选择{/if}</span></li></a>
+        </ul>
+        <div class="dan1">
+            <h3><input type="text" name="postscript" placeholder="订单备注" class="input_b" /></h3>
+            <ul>
+                {loop $cart_goods_list $r}
+                <li>
+                    <em><a href="javascript:;"><img src="{if $r[goods_img]}{$r[goods_img]}{else}{$r[thumb]}{/if}" /></a></em>
+                    <p><a href="javascript:;">{if (in_array($r['goods_id'], $rs[goods_promotion_gids]))}<font color='red'>[促销]</font>{/if}{$r[name]}</a><span>规格：{if $r[spec_text]}{$r[spec_text]}{else}无{/if}</span>
+                    <strong><b class="org">{MONUNIT}{$r[shop_price]}</b>x{$r[goods_num]}</strong>
+                    </p>
+                </li>
+                {/loop}
+            </ul>
+        </div>
+    </div>
+    <div class="btnF">
+        <a href="javascript:;" id="btn_order" class="btnBlue1 hover">结算</a>
+        <p><strong class="org">合计：{MONUNIT}<em class="normal" id="real_amount">0.00</em></strong>结算商品数量：{$rs[goods_count_num]} 件</p>
+    </div>
+<script type="text/javascript" src="{THEME_PATH}js/goods_order.js"></script>
+<script type="text/javascript">
+setTitle('确认订单');
+var norder_keys = <?php echo json_encode($norder_keys);?>;
+norder_keys.sn = '{$coupons_list[$norder_keys[coupons_id]][sn]}';
+{if $norder_keys[invoice_type]}
+norder_keys.invoicerate = 1;
+{/if}
+goods_order.initialize();
+$(function(){
+    $("#btn_order").click(function() {
+        goods_order.submit();
+    });
+})
+</script>
+</body>
+</html>

@@ -1,0 +1,59 @@
+{template user/header}
+    <div class="main">
+		<dl class="dldt1">
+            <dd>
+            	<div class="swiper-container">
+                    <div class="swiper-wrapper">
+                        <div class="swiper-slide">
+                        {if $order_promotions}
+                        	<ul class="juan">
+                            {loop $order_promotions $r}
+								<li data-value='{$r[id]}' {if $norder_keys[promotion_id] == $r[id]}class="hover"{/if}>
+									<strong>促销信息：{if $r[award_type] == 1}满额打折{elseif $r[award_type] == 2}满额减价{elseif $r[award_type] == 3}送倍数积分{elseif $r[award_type] == 4}满额送券{else}满额免邮{/if}</strong>
+									<p>
+										使用规则：{$r[name]}<br />
+										活动时间：{mdate($r[start_time], 'Y-m-d')}~{mdate($r[end_time], 'Y-m-d')}
+									</p>
+								</li>
+                            {/loop}
+							</ul>
+							<div class="mar15">
+								<input type="button" value="参与此订单促销" name="dosubmit" class="btnBlue">
+							</div>
+                        {else}
+                            <div class="none"><img src="{THEME_PATH}img/bg_2.png" /><p>暂无任何可参与的促销信息</p></div>
+                        {/if}
+                        </div>
+                    </div>
+                </div>
+            </dd>
+        </dl>
+    </div>
+    <script src="{THEME_PATH}js/swiper.min.js"></script>
+    <script type="text/javascript">
+    setTitle('订单促销');
+    $(function(){
+        $(".juan li").click(function(){
+            $(".juan li").removeClass("hover");
+            $(this).addClass("hover");
+        });
+        $("input[name=dosubmit]").click(function() {
+            if($('.juan li[class=hover]').length == 0) {
+                hd_alert('请选择要使用的优惠券');
+                return;
+            }
+            var args = {
+                promotion_id : $('.juan li[class=hover]').attr('data-value'),
+            };
+            $.post('?m=goods&c=order&a=promotion', args, function(ret) {
+                if(ret.status == 1) {
+                    window.location.href = '?m=goods&c=order&a=index';
+                } else {
+                    hd_alert(ret.info);
+                }
+            }, 'JSON');
+        });
+    })
+    </script>
+</body>
+</html>

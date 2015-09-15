@@ -1,0 +1,42 @@
+{template header}
+<?php
+$user_id = $this->userid;
+?>
+    <div class="main">
+        <div class="vip clearfix">
+        	<em><a href="{U('User/User/userinfo')}"><img src="<?php if ($this->userinfo['ico']): ?><?php echo $this->userinfo['ico'] ?><?php else: ?>{THEME_PATH}img/head.png<?php endif ?>" /></a></em>
+            <p><?php echo $this->userinfo['username'];?><br />会员等级：<?php echo group_name($this->userinfo['group_id']);?><br />积分：<font><?php echo  $this->userinfo['pay_points']?></font>
+            </p>
+        </div>        
+        <div class="shu">
+        	<ul class="clearfix">
+            	<li><a href="{U('Collect/lists')}" style="border-bottom:4px solid #fc6e51;"><b><?php echo model('user_collect')->total(array('user_id' => $user_id));?></b>收藏的商品</a></li>
+                <li><a href="{U('Coupons/couponslist')}" style="border-bottom:4px solid #48cfad;"><b><?php echo model('coupons_list')->total(array('user_id' => $user_id, 'type' => 1));?></b>我的优惠券</a></li>
+                <li><a style="border-bottom:4px solid #ac92ec;"><b>{MONUNIT}<?php echo $this->userinfo['user_money'];?></b>我的余额</a></li>
+            </ul>
+        </div>
+        <div class="ding">
+        	<ul>
+            	<a href="{U('User/Order/manage')}"><li><em><img src="{THEME_PATH}img/ico_3.png" /></em><strong>我的订单</strong><span>查看全部订单</span></li></a>
+            </ul>
+        </div>
+        <div class="dai clearfix">
+            <a href="{U('User/Order/manage', array('type' => 'pay'))}"><img src="{THEME_PATH}img/ico_7.png" />待付款<?php if ($this->o_count['pay'] > 0): ?><font><?php echo $this->o_count['pay'] ?></font><?php endif ?></a>
+            <a href="{U('User/Order/manage', array('type' => 'delivery'))}"><img src="{THEME_PATH}img/ico_8.png" />待发货<?php if ($this->o_count['delivery'] > 0): ?><font><?php echo $this->o_count['delivery'] ?></font><?php endif ?></a>
+            <a href="{U('User/Order/manage', array('type' => 'finish'))}"><img src="{THEME_PATH}img/ico_9.png" />待收货<?php if ($this->o_count['finish'] > 0): ?><font><?php echo $this->o_count['finish'] ?></font><?php endif ?></a>
+            <a href="{U('User/Order/manage', array('type' => 'comment'))}"><img src="{THEME_PATH}img/ico_10.png" />待评价<?php if ($this->o_count['comment'] > 0): ?><font><?php echo $this->o_count['comment'] ?></font><?php endif ?></a>
+        </div>
+        <div class="ding line">
+        	<ul>
+                <a href="{U('User/User/userinfo')}"><li><em><img src="{THEME_PATH}img/ico_4.png" /></em><strong>个人资料</strong><span>修改信息</span></li></a>
+                <a href="{U('User/User/security')}"><li><em><img src="{THEME_PATH}img/ico_5.png" /></em><strong>账号安全</strong><span>修改密码</span></li></a>
+            </ul>
+        </div>
+        <div class="btn_1"><a href="{U('User/Public/logout')}">退出当前账号</a></div>
+    </div>
+    <br/><br/><br/>    
+<script type="text/javascript">
+setTitle('个人中心');
+</script>
+</body>
+</html>

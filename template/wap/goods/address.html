@@ -1,0 +1,44 @@
+{template user/header}
+    <div class="main">
+		<div class="address">
+        	<ul>
+            {if $address_lists}
+                {loop $address_lists $address}
+            	<li>
+                	<a href="javascript:;" data-address="{$address[id]}"><strong>{$address[address_name]}</strong>{if $address_id == $address[id]}<font>默认</font>{/if}<span>{$address[mobile]}</span>
+                    <p>{getAreaNameById($address[province])} {getAreaNameById($address[city])} {getAreaNameById($address[district])} {$address[address]}</p>
+                    </a>
+                    <b><a href="{U('User/Address/edit', array('id' => $address[id], 'referer' => urlencode(__SELF__)))}"><img src="{THEME_PATH}img/ico_21.png" /></a></b>
+                </li>
+                {/loop}
+            {/if}
+            </ul>
+            <div class="mar15">
+            	<input type="button" name="address_add" value="添加新收货地址" class="btnBlue mt10" />
+            </div>
+        </div>
+    </div>
+<script type="text/javascript">
+var referer = "{U('Goods/Order/index')}";
+setTitle('选择收货地址');
+$(function(){
+    $("input[name=address_add]").click(function() {
+        location.href = "{U('User/Address/add', array('referer' => urlencode(__SELF__)))}";
+    });
+    $("a[data-address]").click(function() {
+        var args = {
+            address_id : $(this).attr('data-address'),
+            random : Math.random
+        }
+        $.post('?m=goods&c=order&a=address', args, function(ret) {
+            if(ret.status == 1) {
+                window.location.href = '?m=goods&c=order&a=index';
+            } else {
+                hd_alert(ret.info);
+            }
+        }, 'JSON');
+    });
+})
+</script>
+</body>
+</html>

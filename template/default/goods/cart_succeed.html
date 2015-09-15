@@ -1,0 +1,127 @@
+<!--{subtemplate common/header}-->
+    <script type="text/javascript" src="{THEME_PATH}js/artDialog.js?skin=default"></script>
+	<!--购物车（有商品）-->
+	<div class="shop_last w1100">
+	    <!--左边-->
+	    <div class="other_shopl fl">
+	        <!--成功加入购物车-->
+	        <div class="shopCar_T">
+	            <span class="shopCar_T_span1">商品已成功加入购物车</span>
+	            <span class="shopCar_T_span2" onclick="location.href='javascript:history.back();'">继续购物</span>
+	            <span class="shopCar_T_span3" onclick="location.href='{U('Goods/Cart/index')}'"></span>
+	        </div>
+	        <div class="clear"></div>
+	        <!--其他用户购买-->
+	        <div class="other_user_shop">
+	            <div class="other_user_shop_T">
+	                购买该商品的用户还购买了
+	            </div>
+	            <div class="other_user_shop_shop">
+					{hd:goods action="lists" catid="0" order="rand()" num="8"}
+					{loop $data $r}
+	                <div class="shop_01 fl Mleft_1">
+	                    <div class="shop_01-imgbox">
+							<a href="{U('Goods/Index/detail', array('id'=> $r[id]))}" target="_blank">
+								{if empty($r[small_pics]) && empty($r[list_img])}
+								<img src="{THEME_PATH}images/homeimages/nopic.jpg">
+								{elseif empty($r[small_pics])}
+								<?php $list_img = str2arr($r[list_img]);?>
+								<img src="{$list_img[0]}">
+								{else}
+								<?php $small_pics = str2arr($r[small_pics])?>
+								<img src="{$small_pics[0]}">
+								{/if}
+							</a>
+	                    </div>
+	                    <p class="p1"><a href="{U('Goods/Index/detail', array('id'=> $r[id]))}" target="_blank">{$r[name]}</a></p>
+						<div class="p2">
+	                        <p>销售价<span>{MONUNIT}{$r[shop_price]}</span></p>
+	                        <div class="btnshop">
+	                            <!--<div class="joincar fl">加入购物车</div>-->
+	                            <div class="rate fl">关注({$r[hits]})</div>
+	                            <a href="{U('User/Collect/add', array('goods_id' => $r[id]))}"><div class="collect fr">收藏</div></a>
+	                        </div>
+	                    </div>
+	                </div>
+					{/loop}
+					{/hd}
+				</div>
+	            <div class="clear"></div>
+	        </div>
+	        <!--您可能还需要以下商品-->
+	        <div class="other_user_shop">
+	        <div class="other_user_shop_T">
+	            您可能还需要以下商品
+	        </div>
+	        <div class="other_user_shop_shop">
+				{hd:goods action="lists" catid="0" order="rand()" num="8"}
+				{loop $data $r}
+	            <div class="shop_01 fl Mleft_1">
+	                <div class="shop_01-imgbox">
+						<a href="{U('Goods/Index/detail', array('id'=> $r[id]))}" target="_blank">
+							{if empty($r[small_pics]) && empty($r[list_img])}
+							<img src="{THEME_PATH}images/homeimages/nopic.jpg">
+							{elseif empty($r[small_pics])}
+							<?php $list_img = str2arr($r[list_img]);?>
+							<img src="{$list_img[0]}">
+							{else}
+							<?php $small_pics = str2arr($r[small_pics])?>
+							<img src="{$small_pics[0]}">
+							{/if}
+						</a>
+	                </div>
+	                <p class="p1"><a href="{U('Goods/Index/detail', array('id'=> $r[id]))}" target="_blank">{$r[name]}</a></p>
+					<div class="p2">
+						<p>销售价<span>{MONUNIT}{$r[shop_price]}</span></p>
+						<div class="btnshop">
+							<!--<div class="joincar fl">加入购物车</div>-->
+							<div class="rate fl">关注({$r[hits]})</div>
+							<a href="{U('User/Collect/add', array('goods_id' => $r[id]))}"><div class="collect fr">收藏</div></a>
+						</div>
+					</div>
+	            </div>
+				{/loop}
+				{/hd}
+	        </div>
+	        <div class="clear"></div>
+	        </div>
+	        <div class="clear"></div>
+	    </div>
+	    <!--右边-->
+	    <div class="other_shopr fr">
+	    	<div class="other_shopr_T">我的购物车</div>
+	        <div class="other_shopr_ul">
+	        	<ul>
+	        	{loop $all_item $r}
+	        		<li>
+	                    <div>
+							<span class="other_shopr_ul_span1" onclick="location.href='{U('Goods/Index/detail', array('id'=> $r[id]))}'">
+								<img src="{$r[goods_img]}" width="50" height="50">
+							</span>
+							<span class="other_shopr_ul_span2">
+								<p class="other_shopr_p1" onclick="location.href='{U('Goods/Index/detail', array('id'=> $r[id]))}'">{$r[name]}</p>
+								<p class="other_shopr_p2">{MONUNIT}{$r[total_price]}</p>
+							</span>
+						</div>
+	        		</li>
+	        	{/loop}
+	        	</ul>
+	        </div>
+	        <div class="other_shop_jion">
+	            <p class="other_shop_num">共<span> {$goods_num} </span>件商品</p>
+	            <p class="other_shop_num">金额合计：<span>{MONUNIT}{$count_price}</span></p>
+	            <div class="other_join" onclick="location.href='{U('Goods/Cart/index')}'"></div>
+	        </div>
+	    </div>
+	    <div class="clear"></div>
+	</div>
+	<!--商品结束-->
+	<!--footer-->
+	<!--{subtemplate common/footer}-->
+</body>
+	<script type="text/javascript">
+    $(function(){
+        $(".other_shopr_ul li div:last").css("border","none");
+    })
+</script>
+</html>

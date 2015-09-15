@@ -1,0 +1,145 @@
+{template header}
+<script type="text/javascript" src="{THEME_PATH}js/common.js"></script>
+<script src="{THEME_PATH}js/artTemplate/artTemplate.js" type="text/javascript"></script>
+<script src="{THEME_PATH}js/artTemplate/artTemplate-plugin.js" type="text/javascript"></script>
+    <div class="main w1100">
+         {template ucenter_left}
+            <div class="content fr">
+                <div class="weimai">
+                    <h3>我的订单 -{$meta_title}</h3>
+                    <dl class="clearfix xzcs">
+                        <dt>时间：</dt>
+                        <dd>
+                            <a href="<?php echo U('Order/manage',array('type'=> $type)); ?>" {if !$time}class="hover"{/if}>全部</a>
+                            <a href="<?php echo U('Order/manage',array('type'=> $type, 'time'=> 'week')); ?>" {if $time == 'week'}class="hover"{/if}>最近7天</a>
+                            <a href="<?php echo U('Order/manage',array('type'=> $type, 'time'=> 'month')); ?>" {if $time == 'month'}class="hover"{/if}>最近一个月</a>
+                            <a href="<?php echo U('Order/manage',array('type'=> $type, 'time'=> 'month3')); ?>" {if $time == 'month3'}class="hover"{/if}>最近三个月</a>
+                            <a href="<?php echo U('Order/manage',array('type'=> $type, 'time'=> 'month6')); ?>" {if $time == 'month6'}class="hover"{/if}>最近半年</a>
+                            <a href="<?php echo U('Order/manage',array('type'=> $type, 'time' => 'year')); ?>" {if $time == 'year'}class="hover"{/if}>最近一年</a>
+                        </dd>
+                    </dl>
+                </div>
+                {if $lists}
+                <div class="list_s mt10">
+                    <div class="list_st" style="background: none;">
+                        <div style="width: 810px;border-bottom:1px solid #f0f0f0;height: 30px;">
+                            <em><a href="javascript:location.reload();"></a></em>
+                        </div>
+                    </div>
+                    <!--已购买商品信息-->
+                    <div class="bought-box">
+                    	<!--box头部-->
+                    	<div class="col-name">
+                    		<li class="order-msg">订单信息</li>
+                    		<li class="order-cnee">收货人</li>
+                    		<li class="order-price">订单金额</li>
+                    		<li class="order-status">订单状态</li>
+                    		<li class="order-operate">操作</li>
+                    	</div>
+                    	<!--待付款-->
+                    	{loop $lists $v}
+                    	<div class="bought-bd">
+                    		<!--bd头部-->
+                			<div class="order-bd bd-head">
+	                    		<p class="order-time"><?php echo date('Y-m-d H:i:s',$v['create_time']) ?></p>
+	                    		<p class="order-num">订单号：{$v[order_sn]}</p>
+	                    		{if $v[order_status] == 2 || $v[order_status]==4}
+                                <span><a href="{U('User/Order/repeat_buy', array('order_sn' => $v['order_sn']))}"><img src="{THEME_PATH}images/keep-buy.png"></a></span>
+                                {/if}
+                			</div>
+	                    	<!--表单body-->
+	                    	<div class="bd-body">
+                            <?php
+                            $goods_info = getGoodsInfoByOrderId($v['id']);
+                            ?>
+                                <li class="order-msg">
+                                {loop $goods_info['info'] $r}
+                                	{php $r['thumb'] = ($r['thumb']) ? $r['thumb'] : THEME_PATH.'images/nopic.jpg';}
+	                    			<span><a href="{U('Goods/Index/detail', array('id' => $r['goods_id']))}" title="{$r[name]}" target="_blank"><img src="{$r['thumb']}" alt="{$r[name]}"/></a></span>
+                                {/if}
+                                <!--超过三个商品 显示-->
+                                <?php if ($goods_info['nums'] >3) : ?>
+                                	<span class="more-ico" style="display: inline-block"><img src="{THEME_PATH}images/more-ico.png"/></span>
+                                <?php endif ?>
+	                    		</li>
+	                    		<li class="order-cnee"><p>{$v[accept_name]}</p></li>
+	                    		<li class="order-price"><p>{MONUNIT}{$v[real_amount]}</p></li>
+	                    		<li class="order-status"><p>{if $v[order_status]==4}已取消{else}{$v[_config][$v[current_step]]}{/if}</p></li>
+	                    		<li class="order-operate">
+	                    			{if $v[pay_type] == 0 && $v[pay_status] == 0 && $v[delivery_status] == 0 && $v[order_status] == 0}
+	                    			<a href="{U('Goods/Order/detail', array('order_sn' => $v['order_sn']))}" target="_blank" class="pay-now">付款</a>
+	                    			{/if}
+	                    			{if ((($v[order_status] == 0 && $v[pay_type] == 1) || ($v[pay_type] == 0 && $v[pay_status] != 1)) && $v[delivery_status] == 0 && $v[order_status] < 2)}
+	                    			<a href="javascript:;" onclick="_cancel('{$v['order_sn']}');" class="pay-now">取消</a>
+	                    			{/if}
+	                    			{if ((($v[pay_type] == 0 && $v[pay_status] == 1)) && $v[order_status] == 1 && $v[delivery_status] == 1 )}
+	                    			<a href="javascript:;" onclick="_confirm('{$v['order_sn']}')" class="pay-now">确认收货</a>
+	                    			{/if}
+	                    			<a href="{U('Order/detail', array('order_sn' => $v['order_sn']))}" class="pay-now" >查看</a>
+                                    <!-- 退换货 s -->
+                                    <?php $site_return_days = (int) C('site_return_days');// 退货时间限制 ?>
+                                    {if $v[_config][$v[current_step]] == '已完成' && empty($v[_order_return_ing]) && empty($v[_order_return_pass]) && C('site_return_enabled') == 1 && (($v['completion_time'] + $site_return_days * 86400) > NOW_TIME)}
+                                        <a href="{U('OrderReturn/order_return', array('order_sn' => $v['order_sn']))}" class="pay-now" >申请退货</a>
+                                    {/if}
+                                    {if $v[_config][$v[current_step]] == '已完成' && !empty($v[_order_return_ing])}
+                                        <a href="{U('OrderReturn/order_return_cancel', array('order_sn' => $v['order_sn']))}" class="pay-now" onclick="if(confirm('确认取消退货申请？')==false)return false;">取消退货</a>
+                                    {/if}
+                                    {if $v[_config][$v[current_step]] == '已完成' && empty($v[_order_return_ing]) && !empty($v[_order_return_pass])}
+                                        <span href="javascript:;">(已退货)</span>
+                                    {/if}
+                                    <!-- 退换货 e -->
+	                    		</li>
+                    		</div>
+                    	</div>
+                    	{/loop}
+                    	</div>
+                    </div>
+                    {else}
+                    <!--没有商品时候显示这句话-->
+                    <div class="pro-remin">您暂时没有购买任何商品</div>
+                    {/if}
+                    <div class="page">
+                        <div class="fr mr20">{$pages}</div>
+                        <div class="clear"></div>
+                    </div>
+            </div>
+            <div class="clear"></div>
+        </div>
+    </div>
+    <!--{subtemplate common/footer}-->
+<script type="text/javascript">
+/* 确认收货 */
+function _confirm(order_sn) {
+	if (confirm("确定该操作吗？")) {
+        $.post("{U('Order/confirm')}", {
+        	order_sn:order_sn
+        }, function(ret) {
+        	if(ret.status == 1) {
+        		location.reload();
+        		return true;
+        	} else {
+        		alert(ret.info);
+        		return false;
+        	}
+        }, 'JSON')
+    }
+}
+/* 取消订单 */
+function _cancel(order_sn) {
+	if (confirm("确定取消该订单吗？")) {
+        $.post("{U('Order/cancel')}", {
+        	order_sn:order_sn
+        }, function(ret) {
+        	if(ret.status == 1) {
+        		location.reload();
+        		return true;
+        	} else {
+        		alert(ret.info);
+        		return false;
+        	}
+        }, 'JSON')
+    }
+}
+</script>
+    </body>
+</html>

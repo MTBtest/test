@@ -1,0 +1,45 @@
+<div class="bor">
+	<div class="side fl">
+		<div class="head clearfix">
+			<a href="{U('user/avatar')}">
+				<img src="{if $this->userinfo[ico]}<?php echo $this->userinfo[ico];?>{else}{THEME_PATH}images/default.jpg{/if}" width="50" height="50" alt="<?php echo $this->userinfo['username'];?>" />
+			</a>
+			<p>
+				<strong><?php echo $this->userinfo['username'];?></strong>
+				<span>会员等级：<?php echo group_name($this->userinfo['group_id']);?></span>
+			</p>
+		</div>
+		<div class="jifen clearfix">
+			<span><em></em><p><a href="{U('coupons/score')}">详细</a></p></span>积分：<font><?php echo  $this->userinfo['pay_points']?></font>
+			</div>
+			<div class="yue clearfix">
+				{if C('enable') == 1}
+	    			<span><a href="{U('Pay/init')}">充值</a></span>
+	    			余额：<font>{MONUNIT}<?php echo $this->userinfo['user_money'];?></font> 元
+				{/if}
+			</div>
+			{if C('enable') == 1}
+			<div class="yue clearfix" style="border-top:none;margin-top:-10px;">
+	    		冻结：{MONUNIT}<?php echo $this->userinfo['freeze_money'];?> 元
+			</div>
+			{/if}
+			<div class="jiaoyi">
+				<h3><a href="javascript:void(0);">交易信息</a></h3>
+				<ul>
+					<li><b class="bggray<?php if ($this->o_count['pay'] > 0): ?> num<?php endif ?>"><?php echo $this->o_count['pay'];?></b><a href="{U('Order/manage', array('type'=> 'pay'))}">待付款订单</a></li>
+		            <li><b class="bggray<?php if ($this->o_count['delivery'] > 0): ?> num<?php endif ?>"><?php echo $this->o_count['delivery'];?></b><a href="{U('Order/manage', array('type'=> 'delivery'))}">待发货订单</a></li>
+		            <li><b class="bggray<?php if ($this->o_count['finish'] > 0): ?> num<?php endif ?>"><?php echo $this->o_count['finish'];?></b><a href="{U('Order/manage', array('type'=> 'finish'))}">待确认收货</a></li>
+		            <!--<li><b class="bggray<?php if ($this->o_count['comment'] > 0): ?> num<?php endif ?>"><?php echo $this->o_count['comment'];?></b><a href="{U('Order/manage', array('type'=> 'comment'))}">待评价交易</a></li>-->
+	    		</ul>
+			</div>
+		    <div class="chaozuo">
+		        <h3>交易操作</h3>
+		        <ul>
+		        	<li><a href="{U('Order/manage')}" {if strtolower(MODULE_NAME) == 'order'} class="hover"{/if}><b class="ico_nav1"></b>我的订单</a></li>
+		            <li><a href="{U('Collect/lists')}" {if strtolower(MODULE_NAME) == 'collect'} class="hover"{/if}><b class="ico_nav2"></b>我的收藏</a></li>
+		            <li><a href="{U('Coupons/score')}" {if strtolower(MODULE_NAME) == 'coupons' && ACTION_NAME == 'score'} class="hover"{/if}><b class="ico_nav3"></b>我的积分</a></li>
+		            <li><a href="{U('Coupons/couponslist')}" {if strtolower(MODULE_NAME) == 'coupons' && ACTION_NAME == 'couponslist'} class="hover"{/if}><b class="ico_nav4"></b>我的优惠券</a></li>
+		            <li><a href="{U('Consult/manage')}" {if strtolower(MODULE_NAME) == 'consult'} class="hover"{/if} ><b class="ico_nav5"></b>咨询回复</a></li>
+		        </ul>
+		    </div>
+	</div>

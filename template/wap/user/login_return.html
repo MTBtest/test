@@ -1,0 +1,98 @@
+{template header}
+    <div class="main">
+        <div class="login">
+            <ul class="fuku third_bind_check" style="padding-bottom:0px;">
+                <li data-id="bind">
+                    <em>&nbsp;</em>
+                    <div><p><strong>已有账号</strong></p></div>
+                </li>
+                <li data-id="reg_bind">
+                    <em>&nbsp;</em>
+                    <div><p><strong>没有账号</strong></p></div>
+                </li>
+            </ul>
+            <ul class="hide" id="third_login_bind">
+                <li>
+                    <input type="text" placeholder="请输入要绑定账号的用户名" name="username" class="input_3" />
+                </li>
+                <li>
+                    <input type="password" placeholder="请输入要绑定账号的密码" name="password" class="input_3" />
+                </li>
+                <div class="mar15" style="margin-top:15px;">
+                    <input type="button" onclick="dosubmit();" value="立即绑定" class="btnBlue" />
+                </div>
+            </ul>
+            <ul class="hide" id="third_login_reg_bind">
+                <li>
+                    <input type="text" placeholder="注册新的用户名" name="username" class="input_3" />
+                </li>
+                <li>
+                    <input type="password" placeholder="注册新用户的密码" name="password" class="input_3" />
+                </li>
+                <li>
+                    <input type="password" placeholder="确认新注册用户密码" name="confirm_pwd" class="input_3" />
+                </li>
+                <div class="mar15" style="margin-top:10px;margin-bottom: 10px;">
+                    <input type="button" value="注册并绑定" class="btnBlue" />
+                </div>
+            </ul>
+        </div>
+    </div>
+
+{template footer}
+
+<script type="text/javascript">
+setTitle('绑定帐号');
+$('.third_bind_check li').bind('click',function(){
+    if ($(this).attr('data-id') == 'reg_bind') {
+        $("#third_login_bind").hide();
+        $("#third_login_reg_bind").show();
+    } else {
+        $("#third_login_bind").show();
+        $("#third_login_reg_bind").hide();
+    }
+})
+/* 绑定 */
+function dosubmit() {
+    $.post("{U('User/ThirdLogin/login_return')}",{
+        type     : "{$_GET['login_code']}",
+        openid   : "{$_GET['openid']}",
+        username : $('input[name=username]').val(),
+        password : $('input[name=password]').val()
+    },function(ret){
+        hd_alert(ret.info);
+        if (ret.status == 1) {
+            location.href = ret.url;
+        }
+    },'json');
+}
+/* 注册并绑定 */
+$('#third_login_reg_bind .btnBlue').bind('click',function(){
+    if ($('#third_login_reg_bind input[name=username]').val() == '') {
+        hd_alert('请输入新注册的用户名');
+        return false;
+    }
+    if ($('#third_login_reg_bind input[name=password]').val() == '') {
+        hd_alert('请输入新注册的密码');
+        return false;
+    }
+    if ($('#third_login_reg_bind input[name=password]').val() != $('#third_login_reg_bind input[name=confirm_pwd]').val()) {
+        hd_alert('两次密码不一致');
+        return false;
+    }
+    $.post("{U('User/ThirdLogin/reg_band')}",{
+            type     : "{$_GET['login_code']}",
+            openid   : "{$_GET['openid']}",
+            username : $('#third_login_reg_bind input[name=username]').val(),
+            password : $('#third_login_reg_bind input[name=password]').val(),
+            confirm_pwd : $('#third_login_reg_bind input[name=confirm_pwd]').val()
+        },function(ret){
+            hd_alert(ret.info);
+            if (ret.status == 1) {
+                location.href = ret.url;
+            }
+        },'json');
+})
+</script>
+</body>
+</html>

@@ -1,0 +1,124 @@
+{template header}
+    <div class="main w1100">
+    {template ucenter_left}
+        <div class="content fr">
+            <div class="cash">
+                <h3>咨询管理</h3>
+                <h4>待回复咨询：<font class="org">{$notC}</font></h4>
+                <dl>
+                    <dt>
+                        <div style="width: 810px;border-bottom:1px solid #eee;height: 42px;">
+                        <span>状态：
+                                <a href="{U('manage')}" {if $isreply == '-1'}class="hover"{/if}>全部</a>
+                                <a href="{U('manage',array('isreply'=>0))}" {if $isreply == 0}class="hover"{/if}>未回复咨询</a>
+                                <a href="{U('manage',array('isreply'=>1))}" {if $isreply == 1}class="hover"{/if}>已回复咨询</a></span>
+                                <em><a href="javascript:location.reload();" class="shua"></a></em>
+                            <div>
+                    </dt>
+                    <dd class="pinglun">
+                        <ol class="clearfix">
+                            <li style="width:450px;">商品名称</li>
+                            <li>咨询时间</li>
+                            <li>状态</li>
+                        </ol>
+                        <ul>
+                        {loop $lists $r}
+                            <li><a href="{U('Goods/Index/detail',array('id' =>$r[goods_id]))}" target="_blank"><img src="{$r[_goods_info][thumb]}" width="48" height="48" alt="{$r[_goods_info][name]}" /></a><p>{$r[_goods_info][name]}</p><span>{mdate($r['time'])}</span><span> {if $r[reply_time] }已回复{else}未回复{/if}</span><div class="clear"></div>
+                            <div class="conmon-num">
+                                <h5>我的咨询</h5><p>{$r[question]}</p>
+                                <h5 class="reply">管理员回复：</h5><p>{$r[reply]}</p>
+                            </div>
+                            </li>
+                        {/loop}
+                        </ul>
+                        <div class="page">
+                            <div class="fr mr20">{$pages}</div>
+                            <div class="clear"></div>
+                        </div>
+                    </dd>
+                </dl>
+                </div>
+            </div>
+            <div class="clear"></div>
+        </div>
+        <!--评价弹窗-->
+		<div class="fabiao" id="comment" style="display: none;">
+			<dl>
+				<dd>
+					<div>
+					<span id="comment_title">商品名称：</span>
+					<span id="comment_price">购买价格：</span>
+					<span class="org">注意：此处价格为购买时价格，有可能与该商品当前价格有误差</span>
+					</div>
+					<textarea id="text" name="comment[contents]" placeholder="输入商品评论"></textarea>
+					<p>您还可以输入<font class="org" id="count">30</font>个字</p>
+				</dd>
+			</dl>
+		</div>
+    </div>
+    <!--{subtemplate common/footer}-->
+    </body>
+        <script type="text/javascript">
+        function fabu(goods_id,order_id) {
+            $text = $("#text").val();
+            if ($text == "") {
+                alert("请输入评论内容");
+                return false;
+            }
+            $.post("{U('order/addComment')}", {
+                goods_id: goods_id,
+                order_id: order_id,
+                text: $text
+            }, function(d) {
+                if (d.status == 1) {
+                     alert(d.info);
+                     location.reload();
+                };
+                return false;
+            })
+        }
+    </script>
+    <script type="text/javascript">
+    	//评论按钮
+function addComment(o){
+	var s = $(o).parents('tr');
+	var a = s.attr('data-id');
+	var t = s.find('td').eq(0).text();
+	var p = s.find('td').eq(2).text();
+	$("span#comment_title").text('商品名称：' + t);
+	$("span#comment_price").text('购买价格：' + p);
+	art.dialog({
+		padding: '0px',
+		id: 'comment',
+		background: '#ddd',
+		opacity: 0.3,
+		title: '发表商品评论',
+		content: document.getElementById('comment'),
+		okVal:'提交评论',
+		cancelVal:'取消',
+		ok:function() {
+			var msg = $("textarea[name='comment[contents]']");
+			if(msg.val().length < 10) {
+				alert('评价内容不能低于10个字');
+				return false;
+			}
+			$.post("{U('Order/comment')}", {
+				order_sn:'{$rs[order_sn]}',
+				id:a,
+				contents:msg.val(),
+				ajax:1
+			}, function(ret) {
+				console.debug(ret);
+			}, 'JSON');
+		},
+		cancel:true
+	});
+}
+(function(config) {
+	config['lock'] = true;
+	config['fixed'] = true;
+	config['okVal'] = 'Ok';
+	config['cancelVal'] = 'Cancel';
+})(art.dialog.defaults);
+    </script>
+</html>

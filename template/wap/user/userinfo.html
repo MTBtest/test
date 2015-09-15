@@ -1,0 +1,101 @@
+{template header}
+<script type="text/javascript">
+var referer = "{U('User/Index/index')}";
+</script>
+<div class="main">
+	<div class="datum">
+		<ul id="goods_albums">
+            <a id="img1">
+                <li>
+                    <strong class="mt10">头像</strong>
+                    <span><img src="{if $this->userinfo[ico]}<?php echo $this->userinfo[ico];?>{else}{THEME_PATH}img/head.png{/if}" width="50" height="50" alt="<?php echo $this->userinfo[username];?>" /></span>
+                    <input type="hidden" />
+                    <input type="file" id="file_up" name="上传" style="display:none;"/>
+                </li>
+            </a>
+            <a href="{U('User/user/update_phone')}"><li><strong>电话号码</strong><span>{$userInfoList[mobile_phone]}</span></li></a>
+            <a href="{U('User/address/address')}"><li><strong>收货地址</strong><span>立即修改</span></li></a>
+        </ul>
+        <ul>
+            <a href="{U('Coupons/couponslist')}"><li><strong>我的优惠券</strong><span><font class="org"><?php echo model('coupons_list')->total(array('user_id' => $this->userid, 'type' => 1)); ?></font> 张</span></li></a>
+            <a><li><strong>我的积分</strong><span style="background:none;"><font class="org"><?php echo $this->userinfo['pay_points'];?></font> 分</span></li></a>
+        </ul>
+    </div>
+</div>
+{template footer}
+<link href="{JS_PATH}webuploader/webuploader.css" rel="stylesheet" />
+<script src="{JS_PATH}webuploader/webuploader.js" type="text/javascript"></script>
+<script type="text/javascript">
+setTitle('个人资料');
+var goods_album = $("#goods_albums").find('a');
+for(var i=0; i < goods_album.length; i++) {
+    var uploader = WebUploader.create({
+        auto:true,
+        fileVal:'upfile',
+        // swf文件路径
+        swf: '{JS_PATH}webuploader/webuploader.swf',
+        // 文件接收服务端。
+        server: "{U('Attachment/Upload/swfupload')}",
+        // 选择文件的按钮。可选
+        formData:{
+            "module":"",
+            "catid":"",
+            "userid":"1",
+            "dosubmit":"1",
+            "thumb_width":"0",
+            "thumb_height":"0",
+            "watermark_enable":"1",
+            "filetype_post":"jpg|jpeg|gif|bmp|png",
+            "swf_auth_key":"57a39f6f7415ec2cdd2b8afd77b57c3f",
+            "isadmin":"1"
+        },
+        // 内部根据当前运行是创建，可能是input元素，也可能是flash.
+        pick: {
+            id: '#img' + (i+1),
+            multiple:false
+        },
+        accept:{
+            title: '图片文件',
+            extensions: 'gif,jpg,jpeg,bmp,png',
+            mimeTypes: 'image/*'
+        },
+        thumb:{
+            width: '110',
+            height: '110'
+        },
+        chunked: false,
+        chunkSize:1000000,
+        // 不压缩image, 默认如果是jpeg，文件上传前会压缩一把再上传！
+        resize: false
+    });
+    uploader.onUploadSuccess = function( file, response ) {
+        var pickid = this.options.pick.id;
+        var data = response._raw;
+        var arr = data.split(',');
+        if(response.url.length > 0) {
+            $(pickid).find('img').attr('src', response.url);
+            $(pickid).find('input[type=hidden]').eq(0).attr('value', response.url);
+        }
+        $.post("{U('User/Upload/upload_user_avatar_wap')}",{
+            img_url : response.url
+        },function(data){
+            if (data.status == 1) {
+                location.reload();
+            }else{
+                hd_alert(data.info);
+                if (data.url) {
+                    location.href = data.url;
+                    return false;
+                }
+                location.reload();
+            }
+        },'json')
+    }
+    uploader.onUploadError = function(file, reason) {
+        hd_alert('文件上传错误：' + reason);
+    }
+}
+
+</script>
+</body>
+</html>

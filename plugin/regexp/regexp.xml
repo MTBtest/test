@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<root>
+	<item id="Title"><![CDATA[海盗云商123]]></item>
+	<item id="Version"><![CDATA[v1.1_beta]]></item>
+	<item id="Time"><![CDATA[2014-12-20 16:39:56]]></item>
+	<item id="From"><![CDATA[海盗云商123(http://www.haidao.la)]]></item>
+	<item id="Data">
+		<item id="plugin">
+			<item id="available"><![CDATA[0]]></item>
+			<item id="adminid"><![CDATA[0]]></item>
+			<item id="name"><![CDATA[注册营销]]></item>
+			<item id="identifier"><![CDATA[regexp]]></item>
+			<item id="description"><![CDATA[此插件堪称鼓励会员每天登录网站的利器，增加网站人气，提高网站流量必用！！！]]></item>
+			<item id="datatables"><![CDATA[]]></item>
+			<item id="directory"><![CDATA[regexp/]]></item>
+			<item id="copyright"><![CDATA[李春林]]></item>
+			<item id="modules">
+				<item id="0">
+					<item id="displayorder"><![CDATA[1]]></item>
+					<item id="type"><![CDATA[hook]]></item>
+					<item id="name"><![CDATA[hook]]></item>
+					<item id="menu"><![CDATA[]]></item>
+					<item id="url"><![CDATA[]]></item>
+				</item>
+				<item id="1">
+					<item id="displayorder"><![CDATA[5]]></item>
+					<item id="type"><![CDATA[5]]></item>
+					<item id="name"><![CDATA[regexp]]></item>
+					<item id="menu"><![CDATA[注册营销]]></item>
+					<item id="url"><![CDATA[]]></item>
+				</item>
+			</item>
+			<item id="version"><![CDATA[1.0]]></item>
+			<item id="author"><![CDATA[李春林]]></item>
+		</item>
+	</item>
+</root>

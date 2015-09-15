@@ -1,0 +1,92 @@
+{template header}
+		<script type="text/javascript" src="{THEME_PATH}js/common.js"></script>
+		<script src="{THEME_PATH}js/artTemplate/artTemplate.js" type="text/javascript"></script>
+		<script src="{THEME_PATH}js/artTemplate/artTemplate-plugin.js" type="text/javascript"></script>
+		<div class="main w1100">
+			 {template ucenter_left}
+				<div class="content fr">
+					<div class="weimai">
+						<h3>我收藏的商品</h3>
+						<dl class="clearfix xzcs">
+							<dt>时间：</dt>
+							<dd>
+								<a href="{U('collect/lists',array('type'=>'all'))}"
+                            	{if $type == 'all'}class="hover"{/if}>全部</a>
+								<a href="{U('collect/lists',array('type'=>1))}"
+                            	{if $type == 1}class="hover"{/if}>最近7天</a>
+								<a href="{U('collect/lists',array('type'=>2))}"{if $type == 2}class="hover"{/if}>最近一个月</a>
+								<a href="{U('collect/lists',array('type'=>3))}"{if $type == 3}class="hover"{/if}>最近三个月</a>
+								<a href="{U('collect/lists',array('type'=>4))}"{if $type == 4}class="hover"{/if}>最近半年</a>
+								<a href="{U('collect/lists',array('type'=>5))}"{if $type == 5}class="hover"{/if}>最近一年</a>
+							</dd>
+						</dl>
+						<dl class="chuc">
+							<dt><span><a href="javascript:void(0);" id="delshop">删除商品</a></span><em><a href="javascript:location.reload();"></a></em></dt>
+							<dd style="border-bottom: none;">
+								<ul class="clearfix">
+									{loop $lists['lists'] $v}
+									<li>
+										<p>
+											<a href="{U('goods/Index/detail',array('id'=>$v[goods_id]))}">
+												{if empty($v[goods_info][small_pics]) && empty($v[goods_info][list_img])}
+												<img src="{THEME_PATH}images/nopic.jpg" width="170" height="170" title="{$v[goods_info][name]}" />
+												{elseif empty($v[goods_info][small_pics])}
+												<?php $list_img = str2arr($v['goods_info']['list_img']); ?>
+													<img src="{$list_img[0]}" width="170" height="170" title="{$v[goods_info][name]}" />
+												{else}
+												<?php $small_pics = str2arr($v['goods_info']['small_pics'])?>
+												<img src="{$small_pics[0]}" width="170" height="170" title="{$v[goods_info][name]}" />
+												{/if}
+											</a>
+										</p>
+                                        <label><input type="checkbox" name='id' value="{$v[id]}" />{$v[goods_info][name]}</label>
+                                        <span>{MONUNIT}<b>{$v[goods_info][min_shop_price]}</b></span>
+                                    </li>
+                                    {/loop}
+								</ul>
+							</dd>
+						</dl>
+						<div class="page">
+							<div class="fr mr20">
+							{$lists[page]}
+							</div>
+							<div class="clear"></div>
+						</div>
+						{if !$lists}
+						<div style="color:#aaa;font-size:18px;text-align:center;margin-bottom: 20px;">您暂时没有收藏任何商品！！ </div>
+						{/if}
+					</div>
+				</div>
+				<div class="clear"></div>
+			</div>
+		</div>
+		<!--{subtemplate common/footer}-->
+	</body>
+	<script>
+		$(function() {
+			$("#delshop").click(function() {
+				var IDArray = [];
+				$("input[name='id']:checked").each(function() {
+					IDArray.push($(this).val());
+				});
+				var StrID = IDArray.join();
+				if (StrID != "") {
+					if (confirm("确定批量删除吗？")) {
+						$.post("{U('collect/delete')}", {
+							idarr: StrID
+						}, function(d) {
+							if (d.status == 1) {
+							alert(d.info);
+							location.reload();
+							return false;
+							};
+						})
+					}
+				} else {
+					alert('请选择你要删除的信息');
+					return false;
+				}
+			});
+		})
+	</script>
+</html>

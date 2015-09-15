@@ -1,0 +1,103 @@
+{template header}
+<script type="text/javascript" src="{THEME_PATH}js/area.js"></script>
+<script>var ajaxurl = "{U('Address/getArea')}";</script>
+
+    <div class="main">
+		<div class="dizi1">
+        	<ul>
+            	<li>
+                	<span>收货人</span><p><input type="text" name="address_name" value="{$info['address_name']}" class="input_2" /></p>
+                </li>
+                <li>
+                	<span>手机号码</span><p><input type="text" name="mobile" value="{$info['mobile']}" class="input_2" /></p>
+                </li>
+                <li>
+                	<span>邮政编码</span><p><input type="text" name="zipcode" value="{$info['zipcode']}" class="input_2" /></p>
+                </li>
+                <li>
+                	<span>所在地区</span>
+                    <p>
+                        <select name="province" id="province" onChange="loadArea(this.value, 'city')" style="width: 20%;">
+                            <option value="-1" selected>选择省份</option>
+                            {loop $region $v}
+                            <option value="{$v[area_id]}" {if $info[province] == $v[area_id]} selected="selected" {/if}>{$v[area_name]}</option>
+                            {/loop}
+                        </select>
+                        <select name="city" id="city" onChange="loadArea(this.value, 'district')" style="width: 20%;">
+                            <option value="-1">选择城市</option>
+                            {loop $city $v}
+                            <option value="{$v[area_id]}" {if $info[city] == $v[area_id]} selected="selected" {/if}>{$v[area_name]}</option>
+                            {/loop}
+                        </select>
+                        <select name="district" id="district" onChange="loadArea(this.value, 'null')" style="width: 20%;">
+                            <option value="-1">选择地区</option>
+                            {loop $district $v}
+                            <option value="{$v[area_id]}" {if $info[district] == $v[area_id]} selected="selected" {/if}>{$v[area_name]}</option>
+                            {/loop}
+                        </select>
+                    </p>
+                </li>
+                <li>
+                	<span>详细地址</span><p><input type="text" name="address" value="{$info['address']}" class="input_2" /></p>
+                </li>
+            </ul>
+            <div class="mar15">
+            	<input type="button" onclick="submit_mod({$info['id']});" value="保存收货地址" class="btnBlue" />
+            	<input type="button" onclick="del({$info['id']});" value="删除收货地址" class="btnRed mt10" />
+            </div>
+        </div>
+    </div>
+{template footer}
+<script type="text/javascript">
+var _referer = '{$_GET[referer]}';
+/* 保存修改 */
+function submit_mod(id) {
+    $.post("{U('User/Address/edit')}", {
+        "id": id,
+        "address_name": $("input[name='address_name']").val(),
+        "mobile": $("input[name='mobile']").val(),
+        "zipcode": $("input[name='zipcode']").val(),
+        "province": $("#province").val(),
+        "city": $("#city").val(),
+        "district": $("#district").val(),
+        "address": $("input[name='address']").val()        
+    }, function(data) {
+        if (data.status == 1) {
+            hd_alert(data.info);
+            var url = _referer || data.url;
+            location.href = url;
+            return false;
+        }else{
+            hd_alert(data.info);
+            return false;
+        }
+    }, 'json');
+}
+
+/* 删除收货地址 */
+function del(id) {
+    if (id == "") {
+        hd_alert('请选择你要删除的信息');
+        return false;
+    }
+
+    hd_alert('确定删除吗？',2000,'confirm', function() {
+        $.post("{U('User/address/addressDel')}", {
+            id: id
+        }, function(data) {
+            if (data.status == 1) {
+                hd_alert(data.info);
+                location.href = data.url;
+                return false;
+            }else{
+                hd_alert(data.info);
+                return false;
+            }
+
+        },'json');
+    });  
+}
+setTitle('编辑收货地址');
+</script>
+</body>
+</html>

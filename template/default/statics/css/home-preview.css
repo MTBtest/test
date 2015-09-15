@@ -1,0 +1,160 @@
+/**
+ *      [Haidao] (C)2013-2099 Dmibox Science and technology co., LTD.
+ *      This is NOT a freeware, use is subject to license terms
+ *
+ *      http://www.haidao.la
+ *      tel:400-600-2042
+ */
+@charset "utf-8";
+* {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+img {
+	border: 0;
+}
+.zoomimgbox {
+	width: 405px;
+	margin: 0 auto;
+	overflow: hidden;
+}
+.jqzoom {
+	float: left;
+	border: none;
+	position: relative;
+	padding: 0px;
+	cursor: pointer;
+	margin: 0px;
+	display: block;
+}
+.jqzoom img {
+	background: url(../images/loading.gif) no-repeat center center;
+	width: 400px;
+	height: 400px;
+}
+.zoomdiv {
+	z-index: 100;
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	width: 4000px;
+	height: 400px;
+	background: #ffffff;
+	border: 1px solid #CCCCCC;
+	display: none;
+	text-align: center;
+	overflow: hidden;
+}
+/*大图盒子*/
+
+.jqZoomPup {
+	z-index: 10;
+	visibility: hidden;
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	width: 20px;
+	height: 20px;
+	border: 1px solid #3c6887;
+	background: #ffffff;
+	opacity: 0.5;
+	-moz-opacity: 0.5;
+	-khtml-opacity: 0.5;
+	filter: alpha(Opacity=50);
+}
+/*图片小图预览列表*/
+
+.spec-preview {
+	width: 400px;
+	height: 400px;
+	border: 1px solid #DFDFDF;
+	overflow: hidden;
+}
+.spec-scroll {
+	/*clear:both;*/
+	margin-top: 20px;
+	height: 56px;
+	width: 402px;
+	overflow: hidden;
+}
+.spec-scroll .prev {
+	float: left;
+	margin-right: 4px;
+}
+.spec-scroll .next {
+	float: right;
+}
+.spec-scroll .prev,
+.spec-scroll .next {
+	display: block;
+	font-family: "宋体";
+	text-align: center;
+	width: 17px;
+	height: 54px;
+	line-height: 54px;
+	border: 1px solid #dddddd;
+	cursor: pointer;
+	text-decoration: none;
+	border-radius: 3px;
+}
+.spec-scroll .prev:hover {
+	background: url(../images/homeimages/left_goods.png)no-repeat 5px 22px rgb(221, 221, 221);
+	border: 1px solid #cccccc;
+}
+.spec-scroll .next:hover {
+	background: url(../images/homeimages/right_goods.png)no-repeat 6px 22px rgb(221, 221, 221);
+	border: 1px solid #cccccc;
+}
+.spec-scroll .prev.none,
+.spec-scroll .next.none {
+	border: 1px solid #dddddd;
+}
+.spec-scroll .prev,
+.spec-scroll .prev {
+	background: url(../images/homeimages/left_goods.png)no-repeat 5px 22px rgb(241, 241, 241);
+}
+.spec-scroll .prev.none {
+	background: url(../images/homeimages/left_goods_none.png)no-repeat 5px 22px;
+	cursor: default;
+}
+.spec-scroll .next,
+.spec-scroll .next {
+	background: url(../images/homeimages/right_goods.png)no-repeat 6px 22px rgb(241, 241, 241);
+}
+.spec-scroll .next.none {
+	background: url(../images/homeimages/right_goods_none.png)no-repeat 6px 22px;
+	cursor: default;
+}
+.spec-scroll .prev img,
+.spec-scroll .next img {
+	margin-top: 22px;
+}
+.spec-scroll .items {
+	float: left;
+	position: relative;
+	width: 350px;
+	height: 56px;
+	overflow: hidden;
+}
+.spec-scroll .items ul {
+	position: absolute;
+	width: 999px;
+	height: 56px;
+	margin-left: 3px;
+}
+.spec-scroll .items ul li {
+	float: left;
+	width: 70px;
+	text-align: center;
+}
+.spec-scroll .items ul li img {
+	border: 1px solid #CCC;
+	padding: 2px;
+	width: 50px;
+	height: 50px;
+}
+.spec-scroll .items ul li img:hover {
+	border: 2px solid #417eb7;
+	padding: 1px;
+}

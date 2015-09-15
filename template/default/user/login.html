@@ -1,0 +1,244 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="chrome=1,IE=edge" />
+		<meta name="renderer" content="webkit|ie-comp|ie-stand">
+		<title>{if isset($SEO['title']) && !empty($SEO['title'])}{$SEO['title']}{/if}{$SEO['site_title']}</title>
+		<link rel="stylesheet" type="text/css" href="{THEME_PATH}css/new_common.css"/>
+		<link rel="stylesheet" type="text/css" href="{THEME_PATH}css/new_index.css"/>
+		<link rel="stylesheet" type="text/css" href="{THEME_PATH}css/new_footer.css"/>
+		<link rel="stylesheet" type="text/css" href="{THEME_PATH}css/home-common.css"/>
+		<link rel="stylesheet" type="text/css" href="{THEME_PATH}css/home-style.css"/>
+		<script src="{THEME_PATH}js/jquery-1.7.2.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="{THEME_PATH}js/banner.js" type="text/javascript" charset="utf-8"></script>
+		<script src="{THEME_PATH}js/index.js" type="text/javascript" charset="utf-8"></script>
+		<script src="{THEME_PATH}js/common.js" type="text/javascript" charset="utf-8"></script>
+		<script src="{THEME_PATH}js/cart.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript" src="{THEME_PATH}js/jquery-1.7.2.min.js"></script>
+		<script type="text/javascript" src="{THEME_PATH}js/Validform_v5.3.2_min.js"></script>
+		<script src="{JS_PATH}artDialog/artDialog.js" type="text/javascript"></script>
+		<script src="{JS_PATH}artDialog/plugins/iframeTools.js" type="text/javascript"></script>
+		<script type="text/javascript" src="{THEME_PATH}js/head-list.js"></script>
+		<link rel="stylesheet" href="{JS_PATH}artDialog/skins/default.css">
+	<style>
+			/*==========以下部分是Validform必须的===========*/
+			.Validform_checktip{
+				margin-left:8px;
+				line-height:20px;
+				overflow:hidden;
+				color:#999;
+				font-size:12px;
+			}
+			.sign .Validform_checktip span{
+				width:auto;
+			}
+			.Validform_right{
+				color:#71b83d;
+				padding-left:20px;
+				background:url({THEME_PATH}images/right.png) no-repeat left center;
+			}
+			.Validform_wrong{
+				color:red;
+				padding-left:20px;
+				white-space:nowrap;
+				background:url({THEME_PATH}images/error.png) no-repeat left center;
+			}
+			.Validform_loading{
+				padding-left:20px;
+				background:url({THEME_PATH}images/onLoad.gif) no-repeat left center;
+			}
+			.Validform_error{
+				background-color:#ffe7e7;
+			}
+			#Validform_msg{color:#7d8289; font: 12px/1.5 tahoma, arial, 5b8b4f53, sans-serif; width:280px; -webkit-box-shadow:2px 2px 3px #aaa; -moz-box-shadow:2px 2px 3px #aaa; background:#fff; position:absolute; top:0px; right:50px; z-index:99999; display:none;filter: progid:DXImageTransform.Microsoft.Shadow(Strength=3, Direction=135, Color='#999999');}
+			#Validform_msg .iframe{position:absolute; left:0px; top:-1px; z-index:-1;}
+			#Validform_msg .Validform_title{line-height:25px; height:25px; text-align:left; font-weight:bold; padding:0 8px; color:#fff; position:relative; background-color:#000;}
+			#Validform_msg a.Validform_close:link,#Validform_msg a.Validform_close:visited{line-height:22px; position:absolute; right:8px; top:0px; color:#fff; text-decoration:none;}
+			#Validform_msg a.Validform_close:hover{color:#cc0;}
+			#Validform_msg .Validform_info{padding:8px;border:1px solid #000; border-top:none; text-align:left;}
+			.login_ul li .error{height: 30px;line-height: 30px;color: rgb(255, 0, 0);border: 1px solid  #e9bb89;width: 313px;text-indent: 10px;background: #fffbea;}
+		</style>
+</head>
+<body>
+		<div class="header">
+			 <!--登录条 -->
+			<div class="loginbar">
+				<div class="w1100">
+					<div class="site-nav-left fl" style="margin-left: -30px;">
+						<a href="javascript:void(0)" onclick="SetHome(this,window.location)">设为首页</a>
+					    <a href="javascript:void(0)" onclick="AddFavorite(document.title,window.location)">收藏本站</a>
+					</div>
+					<div class="site-nav-right fr">
+						{if is_login() > 0}
+						<?php $arr = getUserInfo(is_login());?>
+						<a href="">您好 {$arr[username]}</a><a href="{U('User/Public/logout')}">[退出]</a>
+						{else}
+						<a href="{U('User/Public/login')}" target="_self">登录</a>|
+						<a href="{U('User/Public/reg')}" target="_self">注册</a>|
+						{/if}
+						<a href="{U('User/Index/index')}" >会员中心</a>|
+						<a href="{U('User/order/manage')}" >我的订单</a>
+					</div>
+				</div>
+				<div class="clear"></div>
+			</div>
+			<!--登录条结束-->
+			<!--{subtemplate common/topbar}-->
+			<div class="clear"></div>
+			<div style="background: #417eb7;">
+				<div class="w1100 menu clearfix">
+					<strong class="menudown1">
+						<div class="headermenu">
+						<!--一级菜单-->全部商品分类<img class="menudown" src="{THEME_PATH}images/homeimages/down_11.png">
+						<!--一级菜单end-->
+						<!--下来二级菜单-->
+						<div class="headermenu_li">
+							{hd:category action="lists" type="nav" num="7" order="sort ASC, id ASC"}
+							<ul>
+								{loop $data $cat}
+								{php $catid = $cat['id'];}
+								<li class="listli_01">
+									<p class="listli_01-p"><a href="{U('Goods/Index/lists', array('id'=> $cat['id']))}">{$cat[name]}</a></p>
+									<!--下拉三级菜单-->
+									<div class="listli_01box list-con">
+									<!--第0个-->
+										<div class="listli_01box_div">
+											<div class="listli_01box_L fl">
+												{hd:category action="lists" catid="$cat[id]" order="id ASC"}
+												{loop $data $cat}
+												<div>
+													<div class="listli_01box_title fl"><a href="{U('Goods/Index/lists', array('id'=> $cat['id']))}">{$cat[name]}</a></div>
+													{hd:category action="lists" catid="$cat[id]" order="id ASC"}
+													<ul class="listli_01box_ul fl">
+														{loop $data $cat}
+														<li class="listli_01box_li"><a href="{U('Goods/Index/lists', array('id'=> $cat['id']))}">{$cat[name]}</a></li>
+														{/loop}
+													</ul>
+													{/hd}
+												</div>
+												{/loop}
+												{/hd}
+											</div>
+											<div class="listli_01box_R fl">
+											<!--<p>热门产品</p>-->
+											<div class="hotpro">
+												<table border=none"" cellspacing="" cellpadding="">
+													<h3>推荐品牌</h3>
+													<tr>
+														<!--品牌最大只能让他显示12个-->
+														{hd:brand action="lists" catid="$catid" num="12" return="brand"}
+														{loop $brand $r}
+														<td>{$r[name]}</td>
+														{/loop}
+														{/hd}
+													</tr>
+												</table>
+											</div>
+										</div>
+										</div>
+									</div>
+									<div class="clear"></div>
+								</li>
+								{/loop}
+							{/hd}
+							</ul>
+							<!--<img src="{THEME_PATH}images/homeimages/2e_03.png">-->
+						</div>
+						<div class="clear"></div>
+						<!--下拉二级菜单end-->
+						</div>
+					</strong>
+					<ul>
+					{hd:navigation action="lists" num="10" order="id ASC"}
+					{loop $data $r}
+						<li class="header-nav"><a href="{$r[url]}">{$r[name]}</a></li>
+					{/loop}
+					{/hd}
+					</ul>
+				</div>
+			</div>
+		</div>
+		<!--content-->
+		<!--登录-->
+			<div class="login_main w1180 clearfix">
+				<div class="loginAd fl">
+					{hd:advposition action="lists" position_id="5" type="1" num="1" order="rand()" }
+						{if isset($data)}
+							<!--type1:是图片，type2:是文字，type3:是代码，type4:是flash-->
+							{loop $data $r}
+									<a href="{$r[link]}"><img src="{$r[content]}" /></a>
+							{/loop}
+						{else}
+							<img src="{THEME_PATH}images/new/loginAd_img.png" width="700px" alt="" />
+						{/if}
+					{/hd}
+					<!--<img src="{THEME_PATH}images/new/loginAd_img.png" width="700px" alt="" />-->
+				</div>
+				<div class="login fr">
+					<h3>欢迎登录{getconfig('site_name')}</h3>
+					<form action="{U('User/Api/login_wap')}" method="post" class="registerform" >
+							<input type="hidden" name="url_forward" value="{$_GET[url_forward]}"/>
+							<ul class="login_ul">
+								<li><input type="text" placeholder="邮箱/手机/用户名" class="login-input"  name="account"  id="username" /></li>
+								<li><input type="password" placeholder="请输入密码"  class="login-input"  name="password" id="password" /></li>
+								<li><input type="checkbox" class="inputch"  name="cookie" value="1" />记住登录
+									{if getconfig('reg_isreg') == 1}
+										<a href="{U('User/Public/reg')}" class="reg fr">立即注册</a>
+										{else}
+										<a href="javascript:void(0)" class="reg disabled fr">注册已关闭</a>
+									{/if}
+								</li>
+								<li>
+									<p id="error" class="error hide"></p>
+								</li>
+								<li><input type="submit" value="登　录" class="login_btn fl" /><font><a href='{U('repwd')}' class="repwd fr">忘记密码</a></font></li>
+							</ul>
+							<div class="clear"></div>
+					</form>
+					<div class="other-login">
+						{loop $logins $login}
+							<a href="javascript:void(0)" class="{$login['login_code']}_login third_login" title="{$login['login_name']}" login-code="{$login['login_code']}"></a>
+						{/loop}
+					</div>
+				</div>
+			</div>
+			<div class="mt_50"></div>
+		<!--content结束-->
+		<!--footer-->	
+		<!--{subtemplate common/footer}-->
+<script type="text/javascript">
+$(function() {
+	$(".registerform").Validform({
+		tiptype: 4,
+		ajaxPost: true,
+		callback: function(ret) {
+			if (ret.status == 0) {
+				$('#error').css('display', 'block');
+				$('.input_1').focus(function(){
+					$('#error').css('display', 'none');
+				});
+				$('#error').html(ret.info);
+			} else {
+				location.href = ret.url;
+			}
+		}
+	});
+})
+$('#password').click(function() {
+	$(this).val('');
+});
+/* 第三方登录 */
+$('.third_login').bind('click',function(){
+	var login_code = $(this).attr('login-code');
+	$.post("{U('User/Api/third_login')}",{login_code : login_code},function(ret){
+		if (ret.status != 1) {
+			alert(ret.info);
+		} else {
+			location.href = ret.url;
+		}
+	},'json');
+})
+</script>
+</body>
+</html>

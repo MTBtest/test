@@ -1,0 +1,262 @@
+/**
+ *      [Haidao] (C)2013-2099 Dmibox Science and technology co., LTD.
+ *      This is NOT a freeware, use is subject to license terms
+ *
+ *      http://www.haidao.la
+ *      tel:400-600-2042
+ */
+.foot-tags .foot-tag1,.foot-tags .foot-tag2,.foot-tags .foot-tag3,.foot-tags .foot-tag4,.foot-tags .foot-tag5{
+background: url(../images/new/icons.png) no-repeat;
+}
+#footer{
+	margin-top: 30px;
+	background: #f2f2f2;
+	border-top:1px solid #b7683e
+}
+.foot-tags{
+	width: 1180px;
+	margin: 0 auto;
+	overflow: hidden;
+}
+.foot-tags div{
+	width: 236px;
+	height: 125px;
+	float: left;
+    bottom: -125px;
+    position: relative;
+}
+
+.foot-tags .foot-tag1{
+	background-position: -255px -542px;
+}
+.foot-tags .foot-tag2{
+	background-position: -485px -542px;
+}
+
+.foot-tags .foot-tag3{
+	background-position: -745px -542px;
+}
+
+.foot-tags .foot-tag4{
+	background-position: -975px -542px;
+}
+.foot-tags .foot-tag5{
+    background-position: -1214px -542px;
+}
+.foot-links-content a.qq,.foot-links-content a.sina,.foot-links-content a.renren,.foot-links-content a.qzone{
+	background: url(../images/new/intpng.png) no-repeat;
+}
+.foot-links{
+	margin: 5px auto 0px;
+	border-top: 1px solid #cbcbcb;
+}
+.foot-links-content{
+	width: 1150px;
+	margin: 0 auto;
+	overflow: hidden;
+	padding-top: 25px;
+	height: 155px;
+}
+.foot-links-content li{
+	width: 188px;
+	float: left;
+}
+.foot-links-content .title{
+	color: #373737;
+	font-size: 14px;
+	font-weight: bold;
+	padding-bottom: 10px;
+	padding-left: 5px;
+    font-weight: bold;
+}
+.foot-links-content  a{
+	display: block;
+	color: #838383;
+	padding: 5px;
+}
+.foot-links-content a.sina{
+	background-position: 0 -24px;
+	padding-left: 25px;
+	width:80px;
+}
+.foot-links-content a.sina:hover{
+	background-position: -144px -24px;
+}
+.foot-links-content a.qq{
+	background-position: 0 -52px;
+	padding-left: 25px;
+	width:80px;
+}
+.foot-links-content a.qq:hover{
+	background-position: -144px -52px;
+}
+.foot-links-content a.renren{
+	background-position: 0 -82px;
+	padding-left: 25px;
+	width:80px;
+}
+.foot-links-content a.renren:hover{
+	background-position: -144px -82px;
+}
+.foot-links-content a.qzone{
+	background-position: 0 4px;
+	padding-left: 25px;
+	width:80px;
+}
+.foot-links-content a.qzone:hover{
+	background-position: -144px 4px;
+}
+.foot-bt-links{
+	color: #eeeeee;
+}
+.foot-links-content a:hover,.foot-bt-links a:hover{
+	color: #488bcb;
+}
+.foot-bt{
+	height: 70px;
+	line-height: 70px;
+	background: #2b2b2b;
+    border-top: 5px solid #000;
+}
+.foot-bt-content{
+	width: 1180px;
+	margin: 0 auto;
+}
+.ft-logo a{
+    display: block;
+    width: 100px;
+    height: 20px;
+}
+.ft-logo{
+    width: 100px;
+    height: 20px;
+    background-position: -440px 0;
+    float: left;
+    text-indent: -999em;
+    margin-top: 28px;
+}
+.ft-info{
+    color: #eeeeee;
+    float: left;
+    margin-top: 15px;
+    line-height: 20px;
+    margin-left: 20px;
+}
+.ft-info a{
+    color: #FFFFFF!important;
+}
+.ft-info a:hover{
+    color: #488bcb!important;
+}
+.foot-bt-links{
+	float: right;
+}
+.foot-bt-links a{
+	padding-left: 40px;
+	color: #e2e2e2;
+	float: left;
+}
+.foot-bt-links .lang{
+	padding-right: 15px;
+	float: left;
+	position: relative;
+	background-position: 90px -972px;
+}
+.foot-bt-links .lang-tip{
+	background-position: 69px -962px
+}
+
+.lang-now{
+    cursor: pointer;
+}
+.lang-other{
+	display: none;
+	position: absolute;
+	border: 1px solid #878787;
+	top: -125px;
+	left: 20px;
+	background-color: #000;
+}
+.lang-other a{
+	display: block;
+	float: none;
+	padding: 10px 19px;
+    cursor: pointer;
+} 
+.lang-hover .lang-other{
+	display: block;
+}
+.lang-hover .lang-now{
+	visibility: hidden;
+}
+
+.kf{
+	position: fixed;
+	right: 10px;
+	top:300px;
+	display: none
+}
+.footer_logo{
+	widows: 210px;
+	height: 70px;
+	margin-bottom: 5px;
+	background: url(../images/new/footer_logo.png) no-repeat;
+	background-position: center center;
+}
+.foot-links-content .kfpic{
+	display: block;
+	width: 117px;
+	height: 34px;
+	line-height: 34px;
+	text-indent: 30px;
+	color: #FFFFFF;
+	font-weight: bold;
+	margin-left: 46px;
+	text-indent: 40px;
+	background: url(../images/new/kfpic.png) no-repeat;
+	background-position: center;
+}
+.foot-links-content .kfpic:hover{background: url(../images/new/kfpic_cur.png) no-repeat;background-position: center;color: #FFFFFF;}
+.shadow .bf-hover{
+    display: none;
+}
+.shadow:hover .bf-hover{
+    display: block;
+}
+.shadow:hover .bf{
+    display: none;
+}
+iframe .weiboShow .WB_linkB a, iframe .weiboShow .WB_linkB {
+    color: #00925f;
+}
+
+/*友情链接*/
+.linkcat{
+	min-height: 60px;
+}
+.linkcat h3{
+	text-indent: 10px;
+	height: 30px;
+	line-height: 30px;
+	font-weight: bold;
+	color: #333333;
+	border-bottom: 1px solid #e4e4e4;
+}
+.linkcat .link:after{
+	content:'';
+	display: block;
+	height: 0;
+	clear: both;
+}
+.linkcat .link a{
+	height: 30px;
+	line-height: 30px;
+	color: #333333;
+	display: block;
+	float: left;
+	min-width: 50px;
+	padding-right: 20px;
+}
+.linkcat .link a:hover{
+	color: #488bcb;
+}

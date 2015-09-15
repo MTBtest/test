@@ -1,0 +1,43 @@
+{template header}
+	<div class="main w1100">
+	   {template setting_left}
+	        <div class="content fr">
+	            <div class="dizhi">
+	                <h3 style="width: 828px;">会员账号信息</h3>
+	                <dl>
+	                    <dd>
+	                        <ul class="xinxi">
+	                            <li>姓名：<b>{$address[address_name]} </b><a href="{U('address/address')}" class="blue">修改收货人姓名</a></li>
+	                            <li>地址：<b>
+                                    {$user[userAddress][province]} {$user[userAddress][city]} {$user[userAddress][district]} {$address[address]}</b>&nbsp;<a href="{U('address/address')}" class="blue">修改默认收货地址</a></li>
+	                            <li>安全等级：<img src="{THEME_PATH}images/ico_23.png" /> <font class="green">高</font></li>
+	                        </ul>
+	                       <!--  <ul class="bangd">
+	                            <li>
+	                                <em class="mt5"><img src="{THEME_PATH}images/ico_25.png" /></em>
+	                                <p>
+	                                    <strong>手机绑定</strong>
+	                                  	  已绑定手机号码：
+	                                  	  {$user[phone]}
+	                                </p>
+	                                <span><a href="#" class="blue">修改手机号码</a></span>
+	                            </li>
+	                            <li>
+	                                <em class="mt10"><img src="{THEME_PATH}images/ico_26.png" /></em>
+	                                <p>
+	                                    <strong>邮箱绑定</strong>
+	                                	    已绑定邮箱： {$user[nemail]}
+	                                </p>
+	                                <span><a href="#" class="blue">修改邮箱</a></span>
+	                            </li>
+	                        </ul> -->
+	                    </dd>
+	                </dl>
+	            </div>
+	        </div>
+	        <div class="clear"></div>
+	    </div>
+	</div>
+	<!--{subtemplate common/footer}-->
+    </body>
+</html>

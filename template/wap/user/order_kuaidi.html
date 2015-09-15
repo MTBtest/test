@@ -1,0 +1,79 @@
+{template header}
+    <div class="main">
+		<div class="kd clearfix">
+        	<em><img src="{THEME_PATH}img/delivery_icon/{$_GET[com]}.png" /></em>
+            <p><strong>{$rs[delivery_txt]}</strong>{if $rs[delivery_sn]}运单号：{$rs[delivery_sn]}{else}-{/if}</p>
+        </div>
+        
+        <div class="flow">
+        	<h3>订单跟踪</h3>            
+            <ul id="kuaidi">
+            {if $rs[order_status] == 2}
+            <li>感谢您在{getconfig('site_name')}购物，欢迎您再次光临</li>
+            {/if}
+            {loop $tracks $track}
+            <li data-type='track'>{mdate($track[dateline])}&nbsp;{$track[track_msg]}</li>
+            {/loop}
+            <li class="org" id="loading">加载中... </li>
+            </ul>
+        </div>
+    </div>
+<script type="text/javascript">
+setTitle('查看物流');
+$(function(){
+    $("#kuaidi li:not(.org)").hide();
+    {if $rs[delivery_sn]}
+    var _html = ''; 
+    $.ajax({
+        url : '?m=user&c=order&a=kuaidi',
+        data:{order_sn:'{$rs[order_sn]}',com:'{$rs[_delivery][enname]}', nu:'{$rs[delivery_sn]}'},
+        type:'POST',
+        async:false,
+        dataType:'JSON',
+        success:function(ret) {
+            if(ret.status == 1) {           
+                $.each(ret.data, function(i, n) {
+                    _html += '<li>'+ n.time +'&nbsp;'+ n.context +'</li>';
+                });             
+                $("#kuaidi li[data-type=track]").eq(0).before(_html);
+            }
+        }
+    })
+    {/if}
+    $("#loading").remove(); 
+    $("#kuaidi li").show().eq(0).addClass('hover');
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    // $.post('?m=user&c=order&a=kuaidi', {
+    //     com:'{$rs[_delivery][enname]}',
+    //     nu:'{$rs[delivery_sn]}' 
+    // }, function(ret) {
+    //     if(ret.status == 1) {
+    //         var _html = '';
+    //         $.each(ret.data, function(i, n) {
+    //             var _s = (i == 0) ? ' class="hover"' : '';
+    //             _html += '<li'+ _s +'><p>'+ n.context +'<span>'+ n.time +'</span><em></em></p></li>';
+    //         });      
+    //     } else {
+    //         //_html = '<li class="hover">快递查询失败，请<a href="javascript:;" onclick="queryKuaidi()">重试</a></li>';
+    //     }
+    //     $('#kuaidi').html(_html).show();
+    // }, 'JSON');
+})
+</script>
+</body>
+</html>

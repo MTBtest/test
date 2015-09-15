@@ -1,0 +1,260 @@
+{template header}
+<div class="main w1100">
+	{template ucenter_left}
+	<div class="content fr">
+		<div class="weimai"><h3>我购买的商品</h3></div>
+		<dl class="ddxx clearfix">
+			<dt>订单<br />信息</dt>
+			<dd>
+				<div class="ddl fl">
+					<strong>订单号：<b class="org">{$rs[order_sn]}</b></strong><strong>订单状态：</strong>{$_config[$rs['current_step']]}
+					<p>感谢您在{getconfig('site_name')}购物，收货后欢迎您对商品进行评价。</p>
+				</div>
+				<div class="ddr fr">
+					{if ($rs[pay_type] == 0 && $rs['current_step'] == 3)}
+						<a href="javascript:void(0);" onclick="_confirm();">确认收货</a>
+					{elseif ($rs[pay_type] == 0 && $rs['current_step'] == 0 && $rs[order_status]!=4)}
+						<a href="{U('Goods/Order/detail', array('order_sn' => $rs['order_sn']))}" target="_blank">立即付款</a>
+					{elseif ($rs[order_status] == 2)}
+						<a href="{U('User/Order/repeat_buy', array('order_sn' => $rs['order_sn']))}" target="_blank">再次购买</a>
+					{/if}
+				</div>
+			</dd>
+		</dl>
+		<div class="site_d">
+			<div class="shop-step-box">
+				<span class="shopStepStart disabled shop-step-box-img fl"></span>
+				{if $rs[pay_type] == 0}
+				<span class="shopStepMiddle disabled shop-step-box-img fl"></span>
+				{/if}
+				<span class="shopStepMiddle disabled shop-step-box-img fl"></span>
+				<span class="shopStepMiddle disabled shop-step-box-img fl"></span>
+				<span class="shopStepEnd disabled shop-step-box-img fl"></span>
+			</div>
+			<!--状态-->
+			<ul class="clearfix">
+				<li style="width: 141px;"><b class="current">提交订单</b></li>
+				{if $rs[pay_type] == 0}
+				<li style="width: 141px;"><b>确认付款</b></li>
+				{/if}
+				<li style="width: 141px;"><b>确认订单</b></li>
+				<li style="width: 141px;"><b>商品发货</b></li>
+				<li style="width: 141px;"><b>确认收货</b></li>
+			</ul>
+			<!--时间-->
+			<ul class="clearfix">
+				<li style="width: 141px;"><b class="current">{mdate($rs[create_time], 'Y/m/d H:i:s')}</b></li>
+				{if $rs[pay_type] == 0}
+				<li style="width: 141px;"><b>{if $rs[pay_time]}{mdate($rs[pay_time])}{else}-{/if}</b></li>
+				{/if}
+				<li style="width: 141px;"><b>{if $rs[confirm_time]}{mdate($rs[confirm_time])}{else}-{/if}</b></li>
+				<li style="width: 141px;"><b>{if $rs[send_time]}{mdate($rs[send_time])}{else}-{/if}</b></li>
+				<li style="width: 141px;"><b>{if $rs[completion_time]}{mdate($rs[completion_time])}{else}-{/if}</b></li>
+			</ul>
+		</div>
+		<script type="text/javascript">
+		$("div.shop-step-box").find('span:lt({php echo ($rs['current_step'] + 1)})').removeClass('disabled');
+		$("div.site_d ul.clearfix").find('li:lt({php echo ($rs['current_step'] + 1)})').addClass('current');
+		</script>
+		<dl class="ddxx clearfix">
+			<dt>订单<br />跟踪</dt>
+			<dd>
+				<div class="ddl fl">
+					<strong>运单号：<b class="org">{if $rs[delivery_sn]}{$rs[delivery_sn]}{else}暂无{/if}</b></strong>
+					<strong>物流公司：{$delivery[name]}</strong>
+					<p>以下部分物流跟踪信息由<a href="http://www.kuaidi100.com/?from=haidao" target="_blank" class="blue">快递100</a>提供，如有疑问请到物流公司官网查询</p>
+				</div>
+				<div class="ddr fr"><img src="{IMG_PATH}delivery_icon/{$delivery[enname]}.png" /></div>
+			</dd>
+		</dl>
+		<ul class="kd100" id="kuaidi">
+			{if $rs[order_status] == 2}
+			<li>感谢您在{getconfig('site_name')}购物，欢迎您再次光临</li>
+			{/if}
+			{loop $tracks $track}
+			<li data-type='track'>{mdate($track[dateline])}&nbsp;{$track[track_msg]}</li>
+			{/loop}
+			<li class="org" id="loading">加载中... </li>
+		</ul>
+		<dl class="ddxx clearfix mt10">
+			<dt>买家<br />信息</dt>
+			<dd>
+				<div class="ddl" style="width:738px;">
+					<span>收货人：{$rs[accept_name]}</span>
+					<span>联系电话：{$rs[mobile]}</span>
+					<span>收货地址： [{getAreaNameById($rs[province])} {getAreaNameById($rs[city])} {getAreaNameById($rs[area])} {$rs[address]}]</span>
+					<p>买家留言：  {$rs[postscript]}</p>
+				</div>
+			</dd>
+		</dl>
+		<div class="qingd mt10">
+			<div class="qdtt clearfix">
+				<strong>商品清单</strong>
+				<p>
+					<b class="blue">运费：{MONUNIT}{$rs[payable_freight]}</b>
+					<b class="blue">付款方式：<font class="blue">{if $rs[pay_code] == 0}在线支付{else}货到付款{/if}</font></b>
+				</p>
+			</div>
+			<table>
+				<tr>
+					<th>商品</th>
+					<th>使用积分</th>
+					<th>商品单价</th>
+					<th>购买数量</th>
+					<th>操作</th>
+				</tr>
+				{loop $rs['_goods_info'] $r}
+				{php $gid_str = $r['goods_id'].','.$r[product_id];}
+				<tr data-gid="{$r[goods_id]}" data-pid="{$r[product_id]}">
+					<td><p><a href="{U('Goods/Index/detail',array('id' => $r[goods_id]))}" target="_blank" title="{$r[name]}"><img src="{if $r[thumb]}{$r[thumb]}{else}{THEME_PATH}images/nopic.jpg{/if}" width="48" height="48" title="{$r[name]}" />{$r[name]}</a></p>
+					<p>
+					{loop $r[spec_array] $v}
+					{$v[name]}:{$v[value]}&nbsp;
+					{/loop}
+					</p>
+					</td>
+					<td>{if $r[integral]}{$r[integral]}{else}无{/if}</td>
+					<td><b class="org">{MONUNIT}{$r[shop_price]}</b></td>
+					<td>{$r[shop_number]}</td>
+					<td>
+						<a href="{U('Goods/Index/detail',array('id'=>$r[goods_id]))}" target="_blank" title="{$r[name]}" class="blue">查看</a>
+						{if $rs[order_status] == 2}
+						{if ($rs[is_comment] == 1)}
+						<a href="javascript:void(0);" class="blue wyaofb disabled">已评价</a>
+						{else}
+						<a href="javascript:void(0);" onclick="addComment(this);" class="blue wyaofb">评价</a>
+						{/if}
+						{/if}
+					</td>
+				</tr>
+				{/loop}
+			</table>
+			<div class="jin clearfix">
+				<p class="fl gray">使用优惠券：{if $rs[coupons_id]} 有 {else}无{/if}</p>
+				{if $rs['order_status']!=4}<p class="fr blue">实付金额：<b class="org">{MONUNIT}{$rs[real_amount]}</b></p>{/if}
+			</div>
+		</div>
+	</div>
+	<!--endprint-->
+	<div class="clear"></div>
+</div>
+<!--评价弹窗-->
+	<div class="fabiao" id="comment" style="display: none;">
+		<dl>
+			<dd>
+				<div>
+				<span id="comment_title">商品名称：</span>
+				<span id="comment_price">购买价格：</span>
+				<span class="org">注意：此处价格为购买时价格，有可能与该商品当前价格有误差</span>
+				</div>
+				<textarea id="text" name="comment[contents]" placeholder="输入商品评论"></textarea>
+				<p>您还可以输入<font class="org" id="count">30</font>个字</p>
+			</dd>
+		</dl>
+	</div>
+</div>
+<!--{subtemplate common/footer}-->
+<script type="text/javascript">
+$(document).ready(function() {
+	queryKuaidi();
+})
+function queryKuaidi() {
+	$("#kuaidi li:not(.org)").hide();
+	{if $rs[delivery_sn]}
+	var _html = '';	
+	$.ajax({
+		url : '?m=user&c=order&a=kuaidi',
+		data:{order_sn:'{$rs[order_sn]}',com:'{$delivery[enname]}', nu:'{$rs[delivery_sn]}'},
+		type:'POST',
+		async:false,
+		dataType:'JSON',
+		success:function(ret) {
+			if(ret.status == 1) {
+				$.each(ret.data, function(i, n) {
+					_html += '<li>'+ n.time +'&nbsp;'+ n.context +'</li>';
+				});
+				$("#kuaidi li[data-type=track]").eq(0).before(_html);
+			}
+		}
+	})
+	{/if}
+	$("#loading").remove();
+	$("#kuaidi li").show().eq(0).addClass('red');
+}
+/* 确认收货 */
+function _confirm() {
+	if (confirm("确定该操作吗？")) {
+        $.post("{U('Order/confirm')}", {
+        	order_sn:'{$rs[order_sn]}'
+        }, function(ret) {
+        	if(ret.status == 1) {
+        		location.reload();
+        		return true;
+        	} else {
+        		alert(ret.info);
+        		return false;
+        	}
+        }, 'JSON')
+    }
+}
+/* 订单打印 */
+function doPrint() {
+    bdhtml = window.document.body.innerHTML;
+    sprnstr = "<!--startprint-->";
+    eprnstr = "<!--endprint-->";
+    prnhtml = bdhtml.substr(bdhtml.indexOf(sprnstr) + 17);
+    prnhtml = prnhtml.substring(0, prnhtml.indexOf(eprnstr));
+    window.document.body.innerHTML = prnhtml;
+    window.print();
+}
+//评论按钮
+function addComment(o){
+	var s = $(o).parents('tr');
+	var a = s.attr('data-gid');
+	var l = s.attr('data-pid');
+	var t = s.find('td').eq(0).text();
+	var p = s.find('td').eq(2).text();
+	var msg = $("textarea[name='comment[contents]']");
+	msg.val('');
+	$("span#comment_title").text('商品名称：' + t);
+	$("span#comment_price").text('购买价格：' + p);
+	art.dialog({
+		padding: '0px',
+		id: 'comment',
+		background: '#ddd',
+		opacity: 0.3,
+		lock:true,
+		fixed:true,
+		title: '发表商品评论',
+		content: document.getElementById('comment'),
+		okVal:'提交评论',
+		cancelVal:'取消',
+		ok:function() {
+			if(msg.val().length < 10) {
+				alert('评价内容不能低于10个字');
+				return false;
+			}
+			$.ajax({
+				type:"post",
+				url:"{U('Order/comment')}",
+				data:{order_sn:'{$rs[order_sn]}', goods_id:a, product_id:l, content:msg.val(),ajax:1},
+				dataType:'JSON',
+				async:true,
+				success:function(ret) {
+					if(ret.status == 0) {
+						alert(ret.info);
+					} else {
+						msg.val('');
+						$(o).text('已评价').removeAttr('onclick').addClass('disabled');
+						art.dialog({id:'comment'}).close();
+					}
+				}
+			});
+			return false;
+		},
+		cancel:true
+	});
+}
+</script>
+</body>
+</html>

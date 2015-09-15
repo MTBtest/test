@@ -1,0 +1,43 @@
+{template header}
+
+    <div class="main">
+		<div class="xiu">
+        	<ul>
+            	<li>
+                    <p>注册邮箱</p>
+                	<input type="text" value="{$email}" name="email" class="input_1" readonly/>                	
+                </li>
+                <li>
+                    <p>请输入新密码</p>
+                	<input type="password" name="password" class="input_1" />                	
+                </li>
+                <li>
+                    <p>请再次输入新密码</p>
+                	<input type="password" name="password1" class="input_1" />
+                	<p>&nbsp;</p>
+                </li>
+                <li><input type="button" value="下一步" class="btnBlue" onclick="dosubmit();" /></li>
+            </ul>
+        </div>
+    </div>
+{template footer}
+<script type="text/javascript">
+var referer = "{U('User/Public/repwd')}";
+/* 重置密码 */
+function dosubmit() {
+    $.post('{U("User/Public/setrepwd")}',{
+        id : '{$rs[id]}',
+        repwd_key : '{$repwd_key}',
+        email : $('input[name="email"]').val(),
+        password : $('input[name="password"]').val(),
+        password1 : $('input[name="password1"]').val()
+    },function(data){
+        hd_alert(data.info);
+        location.href = data.url;
+    },'JSON');
+        
+}
+setTitle('重置密码');
+</script>
+</body>
+</html>

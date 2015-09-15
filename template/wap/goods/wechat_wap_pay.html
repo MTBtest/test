@@ -1,0 +1,57 @@
+{template user/header} 	
+    <div class="main">
+        <div class="safety-notice">
+            <img src="{THEME_PATH}img/ico_safe.png" /><span>您正在安全支付环境中，请放心付款</span>
+        </div>
+        <div class="pay-amount">
+            <em>应付金额</em>
+            <span>￥<?php echo $product_info['total_fee'] ?></span>
+        </div>
+        <div class="order-num">
+            <strong>订单编号：</strong>
+            <span><?php echo $product_info['trade_sn']?></span>
+        </div>
+        <form name="form" method="post" action="#">
+            <div class="mar15">
+                <input type="button" value="确认支付" class="btnBlue" onclick="callpay()">
+            </div>
+        </form>
+    </div>
+    <script type="text/javascript">
+    setTitle('微信收银台');
+        function jsApiCall()
+		{
+			WeixinJSBridge.invoke(
+				'getBrandWCPayRequest',
+				<?php echo $jsApiData_json?>,
+				function(res){
+					 if(res.err_msg == "get_brand_wcpay_request:ok" ) {
+					 	hd_alert('支付成功');
+					 	location.href = "<?php echo U('Goods/Order/pay_success',array('order_sn'=>$product_info['trade_sn']))?>";
+					 }else if(res.err_msg == "get_brand_wcpay_request:cancel"){
+                        
+                     }else{
+                        hd_alert('支付失败');
+                        location.href = "<?php echo U('User/Order/detail',array('order_sn'=>$product_info['trade_sn']))?>";
+					 }
+
+				}
+			);
+		}
+
+		function callpay()
+		{
+			if (typeof WeixinJSBridge == "undefined"){
+			    if( document.addEventListener ){
+			        document.addEventListener('WeixinJSBridgeReady', jsApiCall, false);
+			    }else if (document.attachEvent){
+			        document.attachEvent('WeixinJSBridgeReady', jsApiCall); 
+			        document.attachEvent('onWeixinJSBridgeReady', jsApiCall);
+			    }
+			}else{
+			    jsApiCall();
+			}
+		}
+	</script>
+</body>
+</html>

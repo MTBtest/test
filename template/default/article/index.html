@@ -1,0 +1,70 @@
+<!--{subtemplate common/header}-->
+		<div class="Nowposition w1100">
+			<div>
+				<img src="{THEME_PATH}images/homeimages/homepic_22.png">您当前位置：
+				<a href="{__APP__}">首页</a>
+			</div>
+		</div>
+		<!--咨询consult-->
+		<div class="consult-box w1100">
+			<!--consult-L-->
+			<div class="consult-L fl">
+				<!--文章1-->
+				{hd:artcat action="lists" parent_id="1"}
+				{loop $data $r}
+				<div class="consult-L-Article-box">
+					<div class="consult-L-Article">
+						<!--文章标题-->
+						<div class="consult-L-Article-T">
+							<p class="fl">{$r[name]}</p>
+							<span class="fr"><a href="{U('Article/Index/lists', array('id'=> $r['id']))}">+更多</a></span>
+						</div>
+						<!--文章内容1-->
+						<div class="consult-L-Article-con">
+							{hd:article action="lists" catid="$r[id]" num="5" order="create_time DESC"}
+							{loop $data $r}
+							<div class="consult-L-Article-con">
+								<div class="consult-L-Article-con1">
+									<a href="{U('Article/Index/detail', array('id'=> $r[id]))}">{$r[title]}</a>
+									<p>发布时间：{mdate($r[create_time], $format='m月d日')}</p>
+								</div>
+							</div>
+							{/loop}
+							{/hd}
+						</div>
+					<!---->
+					</div>
+				</div>
+				{/loop}
+				{/hd}
+			</div>
+			<!--consult-R-->
+			<div class="consult-R fl">
+				<div class='cousult-R-t'>热门资讯</div>
+				<em></em>
+				<div class="cousult-R-article">
+					<!--热门咨询1-->
+					{hd:article action="lists" num="5" order="create_time DESC"}
+					{php $i = 0;}
+					{loop $data $r}
+					{php $i++;}
+					<div class="cousult-R-article-con">
+						<p class="cousult-R-article-con-T">
+							<a href="{U('Article/Index/detail', array('id'=> $r[id]))}">{$r[title]}</a>
+						</p>
+						<div class="hot-word{$i}">{$i}</div>
+						<div class="hot-word-con">
+							<p>{msubstr($r[description],90)}</p>
+						</div>
+					</div>
+					{/loop}
+					{/hd}
+				</div>
+			</div>
+		</div>
+		<div class="clear"></div>
+		<!--{subtemplate common/footer}-->
+	</body>
+	<script type="text/javascript">
+	</script>
+</html>

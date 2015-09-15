@@ -1,0 +1,22 @@
+{template user/header}
+    <div class="main">
+		<ul class="did">
+			<li>
+				订单编号：<span class="org">{$rs[order_sn]}</span>
+			</li>
+			<li>
+				已付金额：<span class="org">{MONUNIT}{$rs[real_amount]}</span>
+			</li>
+		</ul>
+		<ul class="navD clearfix">
+			<li><a href="{U('User/Order/detail',array('order_sn' => $rs[order_sn]))}"><img src="{THEME_PATH}img/ico_28.png" />查看订单</a></li>
+			<li><a href="{U('User/Index/index')}"><img src="{THEME_PATH}img/ico_14.png" />会员中心</a></li>
+			<li><a href="{U('Goods/Index/index')}"><img src="{THEME_PATH}img/ico_11.png" />逛逛首页</a></li>
+		</ul>
+    </div>
+<script type="text/javascript">
+var referer = "{U('User/Order/detail',array('order_sn' => $rs[order_sn]))}";
+setTitle('订单支付成功');
+</script>
+</body>
+</html>

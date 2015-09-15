@@ -1,0 +1,77 @@
+{template header}
+<script type="text/javascript" src="{THEME_PATH}js/area.js"></script>
+<script>var ajaxurl = "{U('Address/getArea')}";</script>
+    <div class="main">
+		<div class="dizi1">
+        	<ul>
+            	<li>
+                	<span>收货人</span><p><input type="text" name="address_name" placeholder="请输入收货人姓名" class="input_2" /></p>
+                </li>
+                <li>
+                	<span>手机号码</span><p><input type="text" name="mobile" placeholder="请输入手机号码" class="input_2" /></p>
+                </li>
+                <li>
+                	<span>邮政编码</span><p><input type="text" name="zipcode" placeholder="请输入邮政编码" class="input_2" /></p>
+                </li>
+                <li>
+                	<span>所在地区</span>
+                    <p>
+                        <select name="province" id="province" onChange="loadArea(this.value, 'city')" style="width: 20%;">
+                            <option value="-1" selected>选择省份</option>
+                            {loop $region $v}
+                            <option value="{$v[area_id]}">{$v[area_name]}</option>
+                            {/loop}
+                        </select>
+                        <select name="city" id="city" onChange="loadArea(this.value, 'district')" style="width: 20%;">
+                            <option value="-1">选择城市</option>
+                            {loop $city $v}
+                            <option value="{$v[area_id]}">{$v[area_name]}</option>
+                            {/loop}
+                        </select>
+                        <select name="district" id="district" onChange="loadArea(this.value, 'null')" style="width: 20%;">
+                            <option value="-1">选择地区</option>
+                            {loop $district $v}
+                            <option value="{$v[area_id]}">{$v[area_name]}</option>
+                            {/loop}
+                        </select>
+                    </p>
+                </li>
+                <li>
+                	<span>详细地址</span><p><input type="text" name="address" placeholder="请输入详细地址" class="input_2" /></p>
+                </li>
+            </ul>
+            <div class="mar15">
+            	<input type="button" onclick="submit_add();" value="添加收货地址" class="btnBlue" />
+            </div>
+        </div>
+    </div>
+{template footer}
+
+<script type="text/javascript">
+var _referer = '{htmlspecialchars_decode($_GET[referer])}';
+/* 添加 */
+function submit_add(id) {
+    $.post("{U('User/Address/edit')}", {
+        "address_name": $("input[name='address_name']").val(),
+        "mobile": $("input[name='mobile']").val(),
+        "zipcode": $("input[name='zipcode']").val(),
+        "province": $("#province").val(),
+        "city": $("#city").val(),
+        "district": $("#district").val(),
+        "address": $("input[name='address']").val()        
+    }, function(data) {
+        if (data.status == 1) {
+            hd_alert(data.info);
+            var url = _referer || data.url;
+            location.href = url;
+            return false;
+        }else{
+            hd_alert(data.info);
+            return false;
+        }
+    }, 'json');
+}
+setTitle('添加收货地址');
+</script>
+</body>
+</html>

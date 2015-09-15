@@ -1,0 +1,33 @@
+{template /user/header}
+<script type="text/javascript">
+var referer = "{U('Goods/Index/index')}";
+setTitle('全部分类');
+</script>
+		<div class="main">
+			{hd:category action="lists" num="7" order="sort ASC, id ASC"}
+			<div class="classify">
+				{loop $data $cat}
+				{php $catid = $cat['id'];}
+			<h3><strong>{$cat[name]}</strong></h3>
+				<ul class="clearfix">
+					<li><a href="{U('Goods/Index/lists', array('id'=> $cat['id']))}">全部</a></li>
+					{hd:category action="lists" catid="$cat[id]" }
+						{loop $data $cat}
+							<li><a href="{U('Goods/Index/lists', array('id'=> $cat['id']))}">{$cat[name]}</a>
+						{/loop}
+						{php $count = count($data)+1;}
+						{php $fortimes = 4 - ($count%4)}
+						{if ($fortimes > 0)}
+							{php for($i=0;$i<$fortimes;$i++){ }
+								<li><a href="jvascript:;">&nbsp;</a>
+							{php }}
+						{/if}
+					{/hd}
+				</ul>
+				{/loop}
+				{/hd}
+			</div>
+					<div class="category_bottom"></div>
+		</div>
+</body>
+</html>

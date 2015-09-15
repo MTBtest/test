@@ -1,0 +1,89 @@
+{template user/header}
+    <div class="main">
+		<div class="zhipei" id="_delivery">
+        	<ul>
+                <li data-type="delivery">
+                	<h3><img src="{THEME_PATH}img/ico_24.png" />请选择配送方式</h3>
+					<p id="delivery_list">
+                    {loop $deliverys $k $delivery}
+						<a href="javascript:;" data-delivery="{$delivery[id]}" {if $norder_keys[delivery_id] == $k}class="hover"{/if}>{$delivery[name]}</a>
+                    {/loop}
+					</p>
+                </li>
+            	<li data-type="payment">
+                	<h3><img src="{THEME_PATH}img/ico_23.png" />请选择支付方式</h3>
+					<p id="pays_list"></p>
+                </li>
+            </ul>
+            <div class="mar15">
+            	<input type="button" value="确定支付配送方式" class="btnBlue" name="dosubmit" />
+            </div>
+        </div>
+    </div>
+<script type="text/javascript">
+setTitle('支付&配送');
+var pay_type = {$norder_keys[pay_type]};
+$(function() {
+    if($('li[data-type=delivery] a[class=hover]').length == 0) {
+        $('li[data-type=delivery]').find('a').eq(0).addClass('hover');
+    }
+    getPays();
+    $('li[data-type=delivery] a').click(function() {
+        $(this).siblings().removeClass('hover');
+        $(this).addClass('hover');
+        getPays();
+    });
+    $('li[data-type=delivery] a').live('click', function(){
+        $(this).siblings().removeClass('hover');
+        $(this).addClass('hover');
+    })
+    $('li[data-type=payment] a').live('click', function(){
+        $(this).siblings().removeClass('hover');
+        $(this).addClass('hover');
+    })
+    $('input[name=dosubmit]').click(function(){
+        if($(this).hasClass('disabled')) return;
+        if($('li[data-type=payment] a[class=hover]').length == 0) {
+            hd_alert('请选择支付方式');
+            return;
+        }
+        if($('li[data-type=delivery] a[class=hover]').length == 0) {
+            hd_alert('请选择配送方式');
+            return;
+        }
+        var args = {
+            pay_type : $('li[data-type=payment] a[class=hover]').attr('data-payment'),
+            delivery_id : $('li[data-type=delivery] a[class=hover]').attr('data-delivery')
+        };
+        $.post('?m=goods&c=order&a=delivery', args, function(ret) {
+            if(ret.status == 1) {
+                window.location.href = '?m=goods&c=order&a=index';
+            } else {
+                hd_alert(ret.info);
+            }
+        }, 'JSON');
+    })
+})
+function getPays() {
+    $.getJSON("{U('Goods/Order/getOrderInfo')}", {
+        address: '{$norder_keys[address_id]}',
+        delivery_id : $('li[data-type=delivery] a[class=hover]').attr('data-delivery')
+    }, function(json) {
+        if(json.pays.length == 0) {
+            $('p#pays_list').html("系统未设置任何支付方式");
+            $("input[name=dosubmit]").attr("value", "系统未设置任何支付方式").addClass('disabled');
+        } else {
+            var _pays = '';
+            $.each(json.pays, function(i, n) {
+                var _checked = (pay_type == i) ? 'class="hover"' : '';
+                console.log(_checked)
+                _pays += '<a href="javascript:;" data-payment="'+ i +'" '+ _checked +'>'+ n.name +'</a>\r\n';
+            })
+            $('p#pays_list').html(_pays);
+            $("input[name=dosubmit]").attr("value", "确定支付配送方式").removeClass('disabled');
+        }
+    });
+}
+</script>
+</body>
+</html>

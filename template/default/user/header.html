@@ -1,0 +1,64 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+		<title>{if isset($SEO['title']) && !empty($SEO['title'])}{$SEO['title']}{/if}{$SEO['site_title']}</title>
+		<meta name="Keywords" content="{$SEO['keyword']}" />
+		<meta name="Description" content="{$SEO['description']}" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="chrome=1,IE=edge" />
+		<meta name="renderer" content="webkit|ie-comp|ie-stand">
+        <link rel="stylesheet" type="text/css" href="{THEME_PATH}css/user-common.css" />
+        <link rel="stylesheet" type="text/css" href="{THEME_PATH}css/user-style.css" />
+         <link rel="stylesheet" type="text/css" href="{THEME_PATH}css/new_common.css"/>
+   		 <link rel="stylesheet" type="text/css" href="{THEME_PATH}css/new_index.css"/>
+    	<link rel="stylesheet" type="text/css" href="{THEME_PATH}css/new_footer.css"/>
+        <script type="text/javascript" src="{THEME_PATH}js/jquery-1.7.2.min.js"></script>
+		<script type="text/javascript" src="{THEME_PATH}js/common.js"></script>
+		<script type="text/javascript" src="{THEME_PATH}js/cart.js"></script>
+		<script src="{JS_PATH}artDialog/artDialog.js" type="text/javascript"></script>
+		<script src="{JS_PATH}artDialog/plugins/iframeTools.js" type="text/javascript"></script>
+		<link rel="stylesheet" href="{JS_PATH}artDialog/skins/default.css">
+        <!--[if IE 6]>
+        <script type="text/javascript" src="js/DD_belatedPNG.js" ></script>
+        <script type="text/javascript">
+        DD_belatedPNG.fix('*');
+        </script>
+        <![endif]-->
+    </head>
+    <body>
+	<div class="header">
+	    <!--_登录条 -->
+		<div class="loginbar">
+			<div class="w1100">
+				<div class="site-nav-left fl">
+	                <a href="javascript:void(0)" onclick="SetHome(this,window.location)">设为首页</a>
+					<a href="javascript:void(0)" onclick="AddFavorite(document.title,window.location)">收藏本站</a>
+	            </div>
+	            <div class="site-nav-right fr">
+	            	{if is_login() > 0}
+					<?php $arr = getUserInfo(is_login());?>
+					<a href="">您好 {$arr[username]}</a><a href="{U('User/Public/logout')}">[退出]</a>
+					{else}
+	            	<a href="{U('User/Public/login')}" target="_self">登录</a>|
+					<a href="{U('User/Public/reg')}" target="_self">注册</a>|
+					{/if}
+					<a href="{U('User/Index/index')}" >会员中心</a>|
+					<a href="{U('User/order/manage')}" >我的订单</a>
+				</div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		<!--登录条结束-->
+	    <!--{subtemplate common/topbar}-->
+	    <div class="clear"></div>
+	    <div class="menu clearfix">
+	    	<div class="w1100">
+	    		<strong><b></b><a href="{U('Index/index')}" >我的会员中心</a></strong>
+	        <ul>
+	           <li><a href="{U('user/manage')}"  {if strtolower(MODULE_NAME) == 'user' || strtolower(MODULE_NAME) == 'address'} style="border-bottom:2px solid #fff;" {/if}>账号设置</a></li>
+	            <li><a href="{U('notice/notice')}" {if strtolower(MODULE_NAME) == 'notice'} style="border-bottom:2px solid #fff;" {/if}>我的消息</a></li>
+		        </ul>
+		        <span><a href="{__APP__}"><b></b>返回商城首页</a></span>
+	    	</div>
+	    </div>
+	</div>

@@ -1,0 +1,26 @@
+ <div class="bor">
+	<div class="side fl">
+		<div class="head clearfix">
+				<a href="{U('user/avatar')}">
+					<img src="{if $this->userinfo[ico]}<?php echo $this->userinfo[ico];?>{else}{THEME_PATH}images/default.jpg{/if}" width="50" height="50" alt="<?php echo $this->userinfo[username];?>" />
+				</a>
+					    <p>
+				            <strong><?php echo $this->userinfo[username];?></strong>
+							<span>会员等级：<?php echo group_name($this->userinfo['group_id']);?></span>
+					       </p>
+		</div>
+			    <div class="jifen clearfix">
+					<span><em></em><p><a href="{U('coupons/score')}">详细</a></p></span>积分：<font><?php echo  $this->userinfo[pay_points]?></font>
+				</div>
+				<div class="yue clearfix">
+					<span><a href="{U('Pay/init')}">充值</a></span>余额：<font>{MONUNIT}<?php echo $this->userinfo[user_money];?></font> 元
+				</div>
+			<div class="chaozuo mt10">
+        <h3>账号设置</h3>
+        <ul>
+            <li><a href="{U('notice/notice',array('stype'=>0))}" {if $stype == '' || $stype == 0} class="hover"{/if}><b class="ico_nav14"></b>站内信</a></li>
+            <li><a href="{U('notice/notice',array('stype'=>1))}" {if $stype == 1} class="hover"{/if}><b class="ico_nav15"></b>交易提醒</a></li>
+            <li><a href="{U('notice/notice',array('stype'=>2))}" {if $stype == 2} class="hover"{/if} ><b class="ico_nav16"></b>到货通知</a></li>
+        </ul>
+    </div>
+</div>

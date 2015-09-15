@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<root>
+	<item id="code"><![CDATA[sms]]></item>
+	<item id="name"><![CDATA[短信通知]]></item>
+	<item id="description"><![CDATA[最有效的通知方式，三网合一通道让用户第一时间收到重要服务通知]]></item>
+	<item id="enabled"><![CDATA[0]]></item>
+	<item id="isonline"><![CDATA[1]]></item>
+	<item id="dataline"><![CDATA[2015-07-13 10:57:09]]></item>
+	<item id="version"><![CDATA[1.0]]></item>
+	<item id="sort"><![CDATA[4]]></item>
+	<item id="blacklist"><![CDATA[n_back_pwd|n_goods_arrival|n_reg_validate|n_reg_success]]></item>
+	<item id="config">
+		<item id="sms_sign">
+			<item id="name"><![CDATA[短信签名]]></item>
+			<item id="type"><![CDATA[text]]></item>
+			<item id="value"><![CDATA[]]></item>
+			<item id="tips"><![CDATA[可填写您的站点名称]]></item>
+		</item>
+	</item>
+</root>

@@ -1,0 +1,46 @@
+{template header}
+
+    <div class="main">
+		<div class="login">
+        	<ul>
+            	<li>
+                	<input type="password" placeholder="请输入当前密码" name="pwd" class="input_3" />
+                </li>
+                <li>
+                	<input type="password" placeholder="请输入新密码" name="newpwd" class="input_3" />
+                </li>
+                <li>
+                	<input type="password" placeholder="请再次输入新密码" name="newpwd2" class="input_3" />
+                    <p>&nbsp;</p>
+                </li>
+                <li><input type="button" value="保存密码" class="btnBlue" id="dosubmit" /></li>
+            </ul>
+        </div>
+    </div>
+{template footer}
+<script type="text/javascript">
+setTitle('账户安全信息');
+var referer = "{U('User/User/userinfo')}";
+/* 保存修改 */
+$('#dosubmit').bind('click',function(){
+    if ($('input[name="pwd"]').val() == '') {
+        hd_alert('请输入旧密码');
+        return false;
+    }
+    $.post('{U("User/User/security")}',{
+        pwd : $('input[name="pwd"]').val(),
+        newpwd : $('input[name="newpwd"]').val(),
+        newpwd2 : $('input[name="newpwd2"]').val()
+    },function(data){
+        if (data.status == 1) {
+            hd_alert(data.info);
+            location.href = data.url;
+        }else{
+            hd_alert(data.info);
+            location.reload();
+        }            
+    },'JSON');
+})
+</script>
+</body>
+</html>

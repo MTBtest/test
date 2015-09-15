@@ -1,0 +1,33 @@
+{template header}
+    <div class="main">
+		<div class="xiu">
+        	<ul>
+            	<li>
+                	<input type="text" name="update_phone" value="<?php echo $this->userinfo[mobile_phone];?>" class="input_3" />
+                	<p>请输入您的新手机号码</p>
+                </li>
+                <li><input type="button" onclick="update_phone();" value="保存手机号" class="btnBlue" /></li>
+            </ul>
+        </div>
+    </div>
+{template footer}
+<script type="text/javascript">
+/* 添加 */
+function update_phone(id) {
+    $.post("{U('User/User/update_phone')}", {
+        "update_phone": $("input[name='update_phone']").val(),     
+    }, function(data) {
+        if (data.status == 1) {
+            hd_alert(data.info);
+            location.href = data.url;
+            return false;
+        }else{
+            hd_alert(data.info);
+            return false;
+        }
+    }, 'json');
+}
+setTitle('修改电话');
+</script>
+</body>
+</html>

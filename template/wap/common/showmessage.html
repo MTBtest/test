@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>loading...</title>
+    <!-- <meta http-equiv="Refresh" content="0;url={$url_forward}">  -->
+</head>
+<script type="text/javascript">
+{if $url_forward=='goback' || $url_forward==''}
+{php $url_forward = 'javascript:history.back();';}
+{elseif $url_forward=="close"}
+{php $url_forward = 'javascript:window.close()';}
+{else}
+{php $url_forward = strip_tags($url_forward);}
+{/if}
+window.location.href = '{strip_tags($url_forward)}';
+</script>
+<body>
+</body>
+</html>

@@ -1,0 +1,99 @@
+{template header}
+<script src="{THEME_PATH}js/artTemplate/artTemplate.js" type="text/javascript"></script>
+<script src="{THEME_PATH}js/artTemplate/artTemplate-plugin.js" type="text/javascript"></script>
+	<div class="main w1100">
+	{template ucenter_left}
+		<div class="content fr">
+			<dl class="dealing">
+				<dt><strong>正在进行中的交易</strong></dt>
+				<dd>
+					{if $in_trade}
+					<ul class="clearfix">
+						{loop $in_trade $v}
+						{php $goods_info = getGoodsInfoByOrderId($v['id']);}
+						<li>
+							{loop $goods_info['info'] $r}
+							{php $r['thumb'] = ($r['thumb']) ? $r['thumb'] : THEME_PATH.'images/nopic.jpg';}
+							<a href="{U('Goods/Index/detail',array('id'=> $r[goods_id]))}" title="{$r[name]}" target="_blank"><img src="{$r[thumb]}" width="50" height="50" title="{$info[name]}" /></a>
+							{if count($goods_info['info']) >3}
+							<!--超过三个商品显示，图片-->
+							<img src="{THEME_PATH}images/over_point.png" width="34" height="7" title="{$info[name]}" style="margin-left: 30px;" />
+							{/if}
+							{/loop}
+							<div style="float: right;margin-right: 20px;margin-top: 7px;">
+								<span class="Jy_name">{$v[accept_name]}</span>
+								<span class="Jy_price">{MONUNIT}{$v[real_amount]}<p>{$inOrderList[paymentInfo][pay_code]}</p></span>
+								<span class="Jy_time"><p><?php echo date('Y-m-d',$v['create_time'])?></p><p> <?php echo substr(date('Y-m-d H:i:s',$v['create_time']),10,18)?></p></span>
+								<span class="Jy_pay"></span>
+								<a href="{U('Order/detail',array('order_sn'=>$v[order_sn]))}"><span class="Jy_look">查看订单</span></a>
+							</div>
+						</li>
+						{/loop}
+					</ul>
+					{else}
+					<div class="kong">
+						<p><a href="{__APP__}">进入商城购物</a>您现在还没有任何交易在进行中哦！</p>
+					</div>
+					{/if}
+				</dd>
+			</dl>
+			<dl class="mbaob fl">
+				<dt><strong>已买到的宝贝</strong></dt>
+				<dd>
+					{if $ok_trade}
+					<ul class="clearfix">
+						{loop $ok_trade $r}
+						{php $r['thumb'] = ($r['thumb']) ? $r['thumb'] : $r['list_img'];}
+						<li><a href="{U('Goods/Index/detail',array('id'=>$r[goods_id]))}" target="_blank"><img src="{if $r[thumb]}{$r[thumb]}{else}{THEME_PATH}images/nopic.jpg{/if}" width="50" height="50" title="{$i[name]}" /></a><span>{MONUNIT}{$r[shop_price]}</span></li>
+						{/loop}
+					</ul>
+					{else}
+					<div class="skong">
+						<p>您还没有购买任何商品，快去商城够买您心仪的商品。</p>
+						<span><a href="{__APP__}">进入商城</a></span>
+					</div>
+					{/if}
+				</dd>
+			</dl>
+			<dl class="sbaob fr">
+				<dt><strong>已收藏的宝贝</strong></dt>
+				<dd>
+					{if $collect}
+					<ul class="clearfix">
+						{loop $collect $r}
+						<li><a href="{U('Goods/Index/detail',array('id'=>$r[id]))}"><img src="{if $r[thumb]}{$r[thumb]}{else}{THEME_PATH}images/nopic.jpg{/if}" width="50" height="50" title="{$r[name]}" /></a><span>{MONUNIT}{$r[shop_price]}</span></li>
+						{/loop}
+					</ul>
+					{else}
+					<div class="skong">
+						<p>您还没有收藏任何商品，加入收藏夹可以让您快速找到您心仪的商品。</p>
+						<span><a href="{__APP__}">立即查看</a></span>
+					</div>
+					{/if}
+				</dd>
+			</dl>
+			<div class="clearfix"></div>
+			<dl class="liulan">
+				<dt><strong>我最近的浏览记录</strong></dt>
+				<dd>
+					{if $historys}
+					<ul class="clearfix">
+						{loop $historys $r}
+						<li><a href="{U('Goods/Index/detail',array('id'=> $r[id]))}"><img src="{if $r[thumb]}{$r[thumb]}{else}{THEME_PATH}images/nopic.jpg{/if}" width="48" height="48"  title="{$v[name]}"/></a><span>{MONUNIT}{$r[shop_price]}</span></li>
+						{/loop}
+					</ul>
+					{else}
+					<div class="skong">
+						<p>您还没有浏览商城。</p>
+						<span><a href="{__APP__}">立即查看</a></span>
+					</div>
+					{/if}
+				</dd>
+			</dl>
+		</div>
+		<div class="clear"></div>
+	</div>
+</div>
+<!--{subtemplate common/footer}-->
+</body>
+</html>

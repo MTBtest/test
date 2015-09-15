@@ -1,0 +1,145 @@
+{template header}
+    <script type="text/javascript" src="{THEME_PATH}js/jquery_Validform.js"></script>
+	<script type="text/javascript" src="{THEME_PATH}js/Validform_Datatype.js"></script>
+    <div class="main w1100">
+        {template setting_left}
+            <div class="content fr" style="position: relative;">
+                <div class="ziliao">
+                    <h3>个人资料</h3>
+                    <dl>
+                        <dt style="border-bottom: none;"><p>
+                                <a href="{U('user/userinfo')}" class="hover">个人信息</a>
+                                <a href="{U('address/address')}">收货地址</a></p><em>
+                                <a href="javascript:location.reload();" class="shua"></a></em></dt>
+                        <dd>
+                            <strong>
+                                {$userInfoList[username]}完善更多个人信息，有助于我们为您提供更加个性化的服务；我们承诺将尊重并保护您的隐私。
+                            </strong>
+                            <ul>
+                                <form name="form1" action="{U('user/userInfo')}" method="post" class="secuform">
+                                    <li style="position: relative;">
+                                        <span>当前头像：</span>
+                                        <p>
+                                        <div id="toux">
+                                            <a href="{U('user/avatar')}" style="color:#fff;">修改头像</a>
+                                        </div>
+                                            <a href="{U('user/avatar')}"  class="toux" style="position: absolute;top: 0px;">
+                                                <img src="{if $this->userinfo[ico]}<?php echo $this->userinfo[ico];?>{else}{THEME_PATH}images/default.jpg{/if}" width="50" height="50" alt="<?php echo $this->userinfo[username];?>" />
+											</a>
+                                        </p>
+                                    </li>
+                                    <li>
+                                        <span>昵称：</span><p>{$userInfoList[username]}　<a href="javascript:void (0);" class="blue" id="xiugaibtn">修改</a></p>
+                                    </li>
+                                    <li>
+                                        <span>真实姓名：</span><p><input type="text" name="true_name" id="true_name" value="{$userInfoList[true_name]}" datatype="zh2-4"  class="input_2" nullmsg="请输入真实姓名！" errormsg="请输入2-4个中文！"/><span class="Validform_checktip"></span></p>
+                                    </li>
+                                    <li>
+                                        <span>性别：</span><p>
+                                            <label><input type="radio" name="sex" id="xb" value="0" 
+                                             {if $userInfoList[sex] == 0}checked {/if}/>保密</label>
+                                            <label><input type="radio" name="sex" id="xb" value="1" 
+                                        {if $userInfoList[sex] == 1}checked {/if}     />男</label>
+                                            <label><input type="radio" name="sex" id="xb" value="2" 
+                                        {if $userInfoList[sex] == 2}checked {/if}     />女</label></p>
+                                    </li>
+                                    <li>
+                                        <span>生日：</span><p>
+                                            <input type="text" id="date" name="birthday" class="input_2" readonly value="<?php echo date('Y-m-d',$userInfoList['birthday']); ?>"  nullmsg="请输入选择日期！"/><span class="Validform_checktip"></span>
+                                        </p>
+                                    </li>
+                                    <li>
+                                        <span>QQ：</span><p><input type="text" name="qq" id="qq" value="{$userInfoList[qq]}" class="input_2"  datatype="qq"   nullmsg="请输入QQ号！" errormsg="请输入至少5位数字！"/><span class="Validform_checktip"></span></p>
+                                    </li>
+                                    <li>
+                                        <span>&nbsp;</span><p><input type="submit" value="确认" class="btn4" /></p>
+                                    </li>
+                                </form>
+                            </ul>
+                        </dd>
+                    </dl>
+                </div>
+                <!--修改弹窗-->
+                <div class="xiugai" id="xiugai">
+                    <!--<div class="xiugai_T">
+                        <span>修改昵称</span>
+                        <span class="xiugai_close"></span>
+                    </div>-->
+                    <div class="xiugai_body">
+                        <span style="margin-left: 28px;margin-right: 10px;">请输入新的昵称:</span>
+                        <input type="text" name="user_name" id="user_name"/>
+                    </div>
+                    <div class="xiugai_btn">
+                        <div class="xiugai_btn2">确定</div>
+                    </div>
+                </div>
+                <div class="clear"></div>
+            </div>
+            <div class="clear"></div>
+        </div>
+    </div>
+    <!--{subtemplate common/footer}-->
+    <!--时间选择-->
+	<?php echo jsfile('hddate');?>
+	<script>
+		$(function() {
+			laydate({
+			    elem: '#date', 
+			    format: 'YYYY-MM-DD'
+			});
+		});
+	</script>
+    <script type="text/javascript">
+            $(function() {
+                $(".secuform").Validform({
+                    tiptype: 4,
+                    ajaxPost: true,
+                    callback: function(data) {
+                        if (data.status == '1') {
+                            alert(data.info);
+                            location.href = "{U('user/userinfo')}";
+                        }else{
+                            alert(data.info);
+                        }
+                    }
+                });
+                var sp = $(".toux img,#toux");
+                sp.hover(function(){
+                    $("#toux").stop().animate({bottom:0});
+                },function(){
+                    $("#toux").stop().animate({bottom:'-20px'});
+                });
+            });
+            $(".xiugai_btn2").click(function(){
+                 var name =$.trim($('#user_name').val());
+                 $.post("{U('user/update_name')}", {name: name},function(data){
+                     alert(data.info);
+                     if (data.status == 1) {
+                            location.reload();
+                            return false;
+                        }
+                 },'json')
+            });
+        </script>
+	<script type="text/javascript" language="JavaScript">
+			//添加规格按钮
+		 $("#xiugaibtn").click(function() {
+			art.dialog({
+				padding: '0px ',
+				id: 'xiugai',
+				background: '#ddd',
+				opacity: 0.3,
+				title: '修改头像',
+				content: document.getElementById('xiugai')
+			});
+		});
+		(function(config) {
+			config['lock'] = true;
+			config['fixed'] = true;
+			config['okVal'] = 'Ok';
+			config['cancelVal'] = 'Cancel';
+			// [more..]
+		})(art.dialog.defaults);
+	</script>
+    </body>
+</html>

@@ -1,0 +1,125 @@
+{template header}
+<div class="main w1100">
+    {template ucenter_left}
+    <div class="content fr">
+        <form action="{U('User/Pay/init')}" method="post" name="pay" target="_blank" onsubmit="return false;">
+            <input type="hidden" name="pay_bank" value="">
+        <div class="ziliao">
+            <h3>余额充值收银台</h3>
+            <dl>
+                <dt><span>在线支付成功后，充值金额会自动到账；如果需要提现，请致电商城客服办理。</span><em><a href="javascript:;" onclick="location.reload();" class="shua"></a></em></dt>
+                {if C('enable') == 1 }
+            	<dd>
+                    <ul>
+                        <li>
+                            <span>充值金额：</span><p><input type="text" name="total_fee" class="input_2" placeholder="{if C('lowest')!= 0}充值金额大于等于{C('lowest')}{/if}"/></p>
+                        </li>
+                    </ul>
+                </dd>
+                {/if}
+            </dl>
+        </div>
+        <div class="tishi">
+            <strong>温馨提示：</strong>
+            <p>
+            	1. 充值成功后，余额可能存在延迟现象，一般1到5分钟会内到账，如有问题，请咨询客服；<br /> 
+                2. 充值金额输入值必须是大于等于{C('lowest')}的正整数；
+            </p>
+        </div>
+        <dl class="pingt">
+            <dt>
+                <a href="javascript:;" class="hover">支付方式</a>
+            </dt>
+            {if C('enable') == 1 }
+                <dd>
+                    <ul class="clearfix">
+                        {loop $payment $code $pay}
+                            <li><label><input type="radio" name="pay_code" value="{$code}"/><img src="{IMG_PATH}pay/{$code}.png" /></label></li>
+                        {/loop}
+                        {loop $banks $bank}
+                            <li data-defaultbank="{$bank}"><label><input type="radio" name="pay_code" value="bank"/><img src="{IMG_PATH}pay/{$bank}.png" /></label></li>
+                        {/loop}
+                    </ul>
+                    <div class="que"><a href="javascript:;" onclick="paysubmit();">确认支付</a></div>
+                </dd>
+            {else}
+                <dd style="color:red;text-align:center;font-size:20px;padding: 20px;height: 100%;">会员充值功能已关闭！</dd>
+            {/if}
+        </dl>
+        <div class="clear"></div>
+        </form>
+    </div>
+    <div class="clear"></div>
+</div>
+</div>
+<script type="text/javascript">
+//单选支付银行
+$(".clearfix li").click(function(){
+    if($(this).attr('data-defaultbank')) {
+        $('input[name=pay_bank]').attr('value', $(this).attr('data-defaultbank'));
+    } else {
+        $('input[name=pay_bank]').attr('value', '');
+    }
+});
+document.onkeydown = function(e){ 
+    var ev = document.all ? window.event : e;
+    if(ev.keyCode==13) {
+        paysubmit();
+    }
+}
+function paysubmit() {
+    var lowest = {C('lowest')};
+    if ($('input[name=total_fee]').val() == 0) {
+        alert('请输入充值金额');
+        return false;
+    }
+    if ($('input[name=total_fee]').val() < lowest) {
+        alert('最少需要充值'+ lowest +'元或以上');
+        return false;
+    }
+    if ($("input[name='pay_code']:checked").length == 0) {
+        alert('请选择支付方式');
+        return false;
+    }
+    $("form[name=pay]").attr('onsubmit','return true;');
+    $("form[name=pay]").submit();
+    var dialog = art.dialog({
+        id: 'paysubmit',
+        title : '提示信息',
+        fixed: true,
+        lock: true,
+        content: '<p>请问您完成付款了吗?</p><p>如没有,请在新打开的网上银行页面进行付款的操作</p><p>如果遇到问题，请联系客服人员</p>',
+        okVal:'完成付款',
+        cancelVal:'返回选择其他银行',
+        ok: function() {
+            $.getJSON('<?php echo U("User/Pay/is_success") ?>', {}, function(ret) {
+                if(ret.status == 0) {
+                    pay_error();
+                    dialog.close();
+                } else {
+                    redirect('<?php echo U("User/Index/index") ?>');
+                }
+            });
+            return false;
+        },
+        cancel:function() {
+            window.location.reload();
+        }
+    });
+}
+function pay_error() {
+    art.dialog({
+        id: 'pay_error',
+        title : '提示信息',
+        fixed: true,
+        lock: true,
+        content: '<p>充值失败或未确认！</p><p>未能收到来自银行的付款成功通知</p><p>如果您确认在网上银行已付款成功，系统将与所选择的网上银行进行对账。</p><p>若您的付款得到确认，将完成充值。</p>',
+        okVal:'我知道了',
+        ok: function() {return true;}
+    });
+    return true;
+}
+</script>
+<!--{subtemplate common/footer}-->
+</body>
+</html>

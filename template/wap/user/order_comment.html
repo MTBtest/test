@@ -1,0 +1,27 @@
+{template header}
+<script type="text/javascript">
+var referer = "{U('User/Order/manage', array('type' => 'comment'))}";
+</script>
+    <div class="main">
+		<div class="plun">
+			<ul>
+            {loop $rs[_goods_info] $r}
+				<li>
+                    <em><a href="{U('Goods/Index/detail', array('id' => $r[id]))}"><img src="{if $r[thumb]}{$r[thumb]}{else}{THEME_PATH}img/ico_18.png{/if}" /></a></em>
+					<p>
+						<a href="{U('Goods/Index/detail', array('id' => $r[id]))}">{$r[name]}</a>
+					</p>
+					<span>
+                        <strong class="fl">商品实付金额：<font class="org">{MONUNIT}{$r[shop_price]}</font></strong>{if $r[is_comment]}<a href="javascript:;" class="btnB disabled">已评论</a>{else}<a href="{U('User/Order/comment_post', array('order_sn' => $rs[order_sn], 'goods_id' => $r[goods_id], 'product_id' => $r[product_id]))}" class="btnB">发表评论</a>{/if}
+					</span>
+				</li>
+            {/loop}
+            </ul>
+		</div>
+    </div>
+{template footer}
+<script type="text/javascript">
+setTitle('评价晒单');
+</script>
+</body>
+</html>

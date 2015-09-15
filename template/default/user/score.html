@@ -1,0 +1,39 @@
+{template header}
+	    <div class="main w1100">
+	    	{template ucenter_left}
+	            <div class="content fr">
+	                <div class="cash">
+	                    <h3>我的积分</h3>
+	                    <h4>可用积分：<font class="org">{$userInfoList[pay_points]}</font></h4>
+	                    <dl>
+							<dd>
+	                            <table class="casble">
+	                                <tr>
+	                                    <th>时间</th>
+	                                    <th>积分获得/支出</th>
+	                                    <th>积分详情</th>
+	                                </tr>
+	                              <?php foreach ($score as $k => $v): ?>
+	                                <tr>
+	                                	<td>{date('Y-m-d H:i:s',$v[time])}</td>
+	                                	<td><span  class="casble-c1">{if $v[pay_points] >0 }+{$v[pay_points]}{else} {$v[pay_points]} {/if}</span></td>
+	                                	<td class="casble-c2"><span>{$v[descript]}</span></td>
+	                                </tr>
+	                                 <?php endforeach ?>
+	                            </table>
+	                            <div class="page">
+									<div class="fr mr20">
+	                            	{$score[page]}
+									</div>
+									<div class="clear"></div>
+	                            </div>
+	                        </dd>
+	                    </dl>
+					</div>
+	            </div>
+	            <div class="clear"></div>
+	        </div>
+	    </div>
+	    <!--{subtemplate common/footer}-->
+    </body>
+</html>

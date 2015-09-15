@@ -1,0 +1,50 @@
+{template header}
+        <div class="main w1100">
+  {template message_left}
+                 <div class="content fr">
+                    <div class="dizhi">
+                        <h3 style="width: 826px;">{if $stype == 0}站内信{elseif $stype == 1}交易提醒{else}到货通知{/if}</h3>
+                        <dl>
+                            <dt style="border-bottom: none;">
+                                <span>
+                                    <a href="{U('notice/notice',array('stype'=>$stype))}" {if $type == 'all'} class="hover"{/if} >全部</a>
+                                    <a href="{U('notice/notice',array('type'=>'0','stype'=>$stype))}" {if $type == '0'} class="hover"{/if} >未读{if $stype == 0}站内信{elseif $stype == 1}提醒{else}通知{/if}</a>
+                                <a href="{U('notice/notice',array('type'=>1,'stype'=>$stype))}" {if $type == 1} class="hover"{/if}>已读{if $stype == 0}站内信{elseif $stype == 1}提醒{else}通知{/if}</a></span>
+                                </span><em><a href="javascript:location.reload();" class="shua"></a></em></dt>
+                            <dd>
+                                <ul class="news">
+                                   <?php foreach ($list['list'] as $k=> $v): ?>
+                                    <li>
+                                            <strong {if $v['status']  == 1} style="color: #cccccc;"{/if}>{$v[title]} <a href="javascript:void(0);" onclick="message_view('{$v[id]}')" class="bgblue" {if $v['status']  == 1}style="background-color: #cccccc;"{/if}>查看</a></strong>
+                                            <span class="notic_time"><?php echo date('Y-m-d H:i:s',$v['time']); ?></span>
+                                            <div class="clear"></div>
+                                            <p class="notic_p ">
+                                                {$v[content]}
+                                            </p>
+                                            <div class="clear"></div>
+               						</li>
+                                        <?php endforeach ?>
+                                </ul>
+                            </dd>
+                        </dl>
+                        <div class="page">
+							<div class="fr mr20">
+                           {$list[page]}
+						   </div>
+						   <div class="clear"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="clear"></div>
+            </div>
+        </div>
+        <!--{subtemplate common/footer}-->
+    </body>
+        <script>
+            function message_view(id) {
+                    $.post("{U('notice/change_status')}", {
+                        id: id
+                })
+                }
+        </script>
+</html>

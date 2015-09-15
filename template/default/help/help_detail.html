@@ -1,0 +1,90 @@
+<!--{subtemplate common/header}-->
+		<div class="Nowposition w1100">
+			<div>
+				<img src="{THEME_PATH}images/homeimages/homepic_22.png">您当前位置：
+				<a href="{__APP__}">首页</a> &nbsp;>&nbsp;
+				<a href="{U('Help/help/detail', array('id'=> $id))}">{$title}</a>
+			</div>
+		</div>
+		<!--帮助content-->
+		<div class="shopCon w1100">
+			<!--浮动菜单-->
+			<div class="help-L-box fl">
+				<div class="help-L-title">帮助主题</div>
+				<div class="help-L-con">
+					<!--内容-->
+					{hd:help action="lists" fpid="0"}
+					{loop $data $r}
+					<div class="">
+						<div class="help-L-con-1">
+							<i {if $fpid == $r[id]}class="minus"{else}class="plus"{/if}></i><span>{$r[title]}</span>
+						</div>
+						<div class="help-L-con-2" {if $fpid == $r[id]}style="display:block;"{else}style="display:none;"{/if}>
+							{hd:help action="lists" fpid="$r[id]"}
+							{loop $data $v}
+							<li><a href="{U('Help/help/detail', array('id' => $v['id']))}" {if $title == $v[title]}class="cur"{/if}>{msubstr($v[title],15)}</a></li>
+							{/loop}
+							{/hd}
+						</div>
+					</div>
+					{/loop}
+					{/hd}
+				</div>
+			</div>
+			<!--内容-->
+			<div class="help-R-box fr">
+				<div class="help-R-title">{$title}</div>
+				{$message}
+			</div>
+		</div>
+		<div class="clear"></div>
+		<!--{subtemplate common/footer}-->
+	</body>
+<script type="text/javascript">
+	//帮助菜单
+	$(function() {
+		$(".help-L-con-1").live('click',function() {
+			var _self = $(this).find("i");
+			$(this).next(".help-L-con-2").slideToggle(400, function() {
+				if (_self.attr('class') == "minus") {
+					_self.removeClass().addClass("plus");
+				} else {
+					_self.removeClass().addClass("minus");
+				}
+			})
+		})
+	});
+</script>
+<script type="text/javascript">
+	   //固定help-L-box
+            jQuery(function() {
+                //指定的高度，侧边栏距顶部距离+侧边栏高度+可视页面的高度
+                var sideTop = jQuery(".help-L-box").offset().top;
+                var scTop = function() {
+                    if (typeof window.pageYOffset != 'undefined') {
+                        return window.pageYOffset;
+                    } else if (typeof document.compatMode != 'undefined' && document.compatMode != 'BackCompat') {
+                        return document.documentElement.scrollTop
+                    } else if (typeof document.body != 'undefined') {
+                        return document.body.scrollTop;
+                    }
+                }
+                jQuery(window).scroll(function() {
+                    if (scTop() > sideTop) {
+                        if (jQuery("#fixed-help").length == 0) {
+                            //下面是要显示的模块，复制侧边栏中的标签云内容，追加到侧边栏的底部
+                            var tag = jQuery(".help-L-box").clone().html();
+                            var html = "<div id='fixed-help'><div id='fixed-wrap'><div id='fixedTag' class='widget  widget_tag_cloud' >" + tag + "</div></div></div>";
+							jQuery(".help-L-box").after(html);
+                        } else {
+							jQuery(".help-L-box").hide();
+                            jQuery("#fixed-help").show();
+                        }
+                    } else {
+						jQuery(".help-L-box").show();
+                        jQuery("#fixed-help").hide();
+                    };
+                });
+            });
+</script>
+</html>

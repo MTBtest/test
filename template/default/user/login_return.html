@@ -1,0 +1,151 @@
+<!--{subtemplate common/header}-->
+
+	<div class="clear"></div>
+	<div class=" w1100" style="margin-top: 20px;">
+		<div class="sign">
+			<h3>第三方登录账号绑定{if $_GET['username']}<span style='margin-right:35px;float:right;font-size:12px;line-height:41px;color:#666666'>来自 <img src="{THEME_PATH}images/ico_qq.png" height="14px">qq登录 的 <span style="color:#1380CB;">{$_GET['username']}</span>，您好</span>{/if}</h3>
+			<p class="tips">* 温馨提示：绑定账号后更方便、更快捷；绑定以后直接第三方登录即可使用！(离开此页面需重新登录) </p>
+			<p style="margin-top: 40px; text-align:center;">
+				<label style="margin-right:50px;"><input type="radio" name="already_acc" value="1" />已有账号</label>
+				<label><input type="radio" name="already_acc" value="0" />没有账号</label>
+			</p>
+	    	<ul class="already_acc_bind">
+	            <li style="margin-top: 30px;">
+	            	<div style="display: inline-block;margin-bottom: 10px;"><b>用户名：</b></div>
+	                <div ><p ><input type="text" placeholder="账号的用户名" class="input_1" name="username" style="font-size:12px;" /></p></div>
+	            </li>
+	         	<li>
+	         		<div style="display: inline-block;margin-bottom: 10px;"><b>密&nbsp;&nbsp;&nbsp;码：</b></div>
+	                <div ><p ><input type="password" placeholder="账号的密码" class="input_1" name="password" style="font-size:12px;" /></p></div>
+	            </li>
+				
+	            <span id="bind_tip">加载中...</span>
+	            <input type="button" id="btn_band" value="绑  定" class="btn8" />
+	        </ul>
+	        <ul class="already_acc_reg">
+	            <li style="margin-top: 30px;">
+	            	<div style="display: inline-block;margin-bottom: 10px;"><b>新注册用户名：</b></div>
+	                <div ><p ><input type="text" placeholder="注册新的用户名" class="input_1" name="username" style="font-size:12px;" /></p></div>
+	            </li>
+	         	<li>
+	         		<div style="display: inline-block;margin-bottom: 10px;"><b>新注册密码：</b></div>
+	                <div ><p ><input type="password" placeholder="注册新用户的密码" class="input_1" name="password" style="font-size:12px;" /></p></div>
+	            </li>
+	            <li>
+	         		<div style="display: inline-block;margin-bottom: 10px;"><b>确认密码：</b></div>
+	                <div ><p ><input type="password" placeholder="确认新注册用户密码" class="input_1" name="confirm_pwd" style="font-size:12px;" /></p></div>
+	            </li>
+	            <span id="reg_bind_tip">加载中...</span>
+	            <input type="button" id="btn_reg_band" value="注册并绑定" class="btn8" />
+	        </ul>
+	        <em><img src="{THEME_PATH}images/bg4.png" /></em>
+	        <div class="clear"></div>
+	    </div>
+	</div>
+	<div class="clear"></div>
+	<div class="mt10"></div>
+<!--{subtemplate common/footer}-->
+
+<script type="text/javascript">
+$('#btn_band').addClass('weqwe');
+	// 选择是否已有账号
+	$('input[name="already_acc"]').bind('click', function() {
+		$('.sign').addClass('click_acc');
+		if ($(this).val() == 1) {
+			$('.already_acc_bind').show();
+			$('.already_acc_reg').hide();
+		} else {
+			$('.already_acc_bind').hide();
+			$('.already_acc_reg').show();
+		}
+	})
+	// 已有账号 - 直接绑定
+	$('#btn_band').bind('click',function(){
+		if ($('input[name=username]').val() == '') {
+			$('#bind_tip').attr('style','display:block;').html('请输入要绑定账号的用户名');
+			setTimeout(function(){
+				$('#bind_tip').fadeOut('slow');
+			},1500);
+			return false;
+		}
+		if ($('input[name=password]').val() == '') {
+			$('#bind_tip').attr('style','display:block;').html('请输入要绑定账号的密码');
+			setTimeout(function(){
+				$('#bind_tip').fadeOut('slow');
+			},1500);
+			return false;
+		}
+		$.post("{U('User/ThirdLogin/login_return')}",{
+			type 	 : "{$_GET['login_code']}",
+			openid 	 : "{$_GET['openid']}",
+			username : $('.already_acc_bind input[name=username]').val(),
+			password : $('.already_acc_bind input[name=password]').val()
+		},function(ret){
+			$('#bind_tip').attr('style','display:block;').html(ret.info);
+			setTimeout(function(){
+				$('#bind_tip').fadeOut('slow');
+			},1500);
+			if (ret.status == 1) {
+				location.href = ret.url;
+			}
+		},'json');
+	})
+	// 没账号 - 注册并绑定
+	$('#btn_reg_band').bind('click' ,function() {
+		if ($('.already_acc_reg input[name=username]').val() == '') {
+			$('#reg_bind_tip').attr('style','display:block;').html('请输入新注册的用户名');
+			setTimeout(function(){
+				$('#reg_bind_tip').fadeOut('slow');
+			},1500);
+			return false;
+		}
+		if ($('.already_acc_reg input[name=password]').val() == '') {
+			$('#reg_bind_tip').attr('style','display:block;').html('请输入新注册的密码');
+			setTimeout(function(){
+				$('#reg_bind_tip').fadeOut('slow');
+			},1500);
+			return false;
+		}
+		if ($('.already_acc_reg input[name=password]').val() != $('.already_acc_reg input[name=confirm_pwd]').val()) {
+			$('#reg_bind_tip').attr('style','display:block;').html('两次密码不一致');
+			setTimeout(function(){
+				$('#reg_bind_tip').fadeOut('slow');
+			},1500);
+			return false;
+		}
+		$.post("{U('User/ThirdLogin/reg_band')}",{
+			type 	 : "{$_GET['login_code']}",
+			openid 	 : "{$_GET['openid']}",
+			username : $('.already_acc_reg input[name=username]').val(),
+			password : $('.already_acc_reg input[name=password]').val(),
+			confirm_pwd : $('.already_acc_reg input[name=confirm_pwd]').val()
+		},function(ret){
+			$('#reg_bind_tip').attr('style','display:block;').html(ret.info);
+			setTimeout(function(){
+				$('#reg_bind_tip').fadeOut('slow');
+			},1500);
+			if (ret.status == 1) {
+				location.href = ret.url;
+			}
+		},'json');
+	})
+</script>
+
+<style type="text/css">
+.sign{ position:relative;width:900px;margin:0 auto;padding:15px 0 60px;border:1px solid #dadada; background:#f9f9f9;}
+.click_acc {min-height: 471px;}
+.sign .tips{margin-top: 40px; color:#b10;text-align:center;}
+.not-reg{color: #999999;font-size: 26px;text-align: center;line-height: 400px;}
+.sign h3{color:#417eb7;font-size:22px;padding-left:30px;line-height:40px;border-bottom: 1px dashed #417DB7;}
+.sign h4{color:#999999;padding-left:30px;line-height:26px;border-bottom:1px dashed #e3e3e3;padding-bottom:12px;}
+.sign em{ position:absolute;right:-1px;bottom:-1px;}
+.sign li{width:100%; clear:both; overflow:hidden;padding-top:20px;}
+.sign li span{ display:block;float:left;line-height:38px;padding-right:6px;text-align:right;width:180px;}
+.sign li p{float:left;color:#999999;}
+.sign li font{ display:block;line-height:20px;padding-top:20px;line-height:20px;}
+.sign li div p input.input_1,.sign li div p input.input_1:hover{width: 260px;height: 16px;line-height: 14px;padding-top:12px;padding-bottom: 12px;color: #363636;padding-left: 10px;border: none;outline：none;margin-right: 15px;}
+.sign ul {margin:0 auto; width: 280px;}
+.sign .already_acc_bind,.sign .already_acc_reg {display: none;}
+.sign .btn8 { margin-bottom: 0; }
+#bind_tip ,#reg_bind_tip{color:red;display:block;margin-top: 40px;text-align: center;display: none;}
+</style>

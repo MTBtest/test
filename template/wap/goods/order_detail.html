@@ -1,0 +1,122 @@
+{template user/header}
+<?php if (strpos($_SERVER['HTTP_USER_AGENT'], 'MicroMessenger') == false ) {?>
+    <div class="main">
+		<ul class="did">
+			<li>
+				订单编号：<span class="org">{$rs[order_sn]}</span>
+			</li>
+		</ul>
+		<ul class="did">
+			<li>应付金额：<span class="org">{MONUNIT}{$rs[real_amount]}</span></li>
+			<li>支付方式：{$pay[name]}</li>
+		</ul>
+		{if $rs['pay_type'] == 1}
+		<ul class="navD clearfix">
+			<li><a href="{U('User/Order/detail', array('order_sn' => $rs[order_sn]))}"><img src="{THEME_PATH}img/ico_28.png" />查看订单</a></li>
+			<li><a href="{U('User/Index/index')}"><img src="{THEME_PATH}img/ico_14.png" />会员中心</a></li>
+			<li><a href="{U('Goods/Index/index')}"><img src="{THEME_PATH}img/ico_11.png" />逛逛首页</a></li>
+		</ul>
+		{else}
+		<ul class="fuku" id="pays">
+			{loop $payment $code $pay}
+			{if $pay[pay_code]!='wechat_js'}
+			<li pay_code="{$pay[pay_code]}">
+				<em><img src="{IMG_PATH}pay/small_{$code}.png"></em>
+				<div class="zhifu2"><p><strong>{$pay[pay_name]}</strong><font class="item-name">{$pay[pay_desc]}</font></p></div>
+			</li>
+			{/if}
+			{/loop}
+		</ul>
+		<div class="mar15">
+			<input type="button" value="确认支付" class="btnBlue" name="dosubmit">
+		</div>
+		{/if}
+    </div>
+<script type="text/javascript">
+setTitle('收银台');
+var referer = "{U('User/Order/detail',array('order_sn' => $rs[order_sn]))}";
+$(function() {
+    $("input[name=dosubmit]").click(function() {
+    	var $dom = $(this);
+        if($("#pays").find(".hover").length == 0) {
+            hd_alert("请选择支付方式");
+            return;
+        }
+        var pay_code = $("#pays").find(".hover").parent("li").attr("pay_code");
+        if($dom.hasClass('disabled')) return;
+        $dom.attr('value', '提交中').addClass('disabled');
+        if(pay_code!='wechat_js'){
+		        $.post("{U('Goods/order/detail')}", {
+		            order_sn : "{$rs[order_sn]}",
+		            pay_code : pay_code,
+		            pay_bank : ""
+		        }, function(ret) {
+		            if(ret.status == 1) {
+		            	$dom.attr('value', '正在跳转支付...');
+		            	setTimeout("redirect('"+ ret.url +"');", 100);
+		                // redirect(ret.url);
+		            } else {
+		                hd_alert(ret.info);
+		                return;
+		            }
+		        }, 'JSON');
+		}else{
+	    	$.post("{U('Goods/order/detail')}", {
+	            order_sn : "{$rs[order_sn]}",
+	            pay_code : pay_code,
+	            pay_bank : ""
+	        }, function(ret) {
+	            if(ret.status == 1) {
+	            	return true;
+	            } else {
+	                hd_alert(ret.info);
+	                return;
+	            }
+	        }, 'JSON');
+	    }
+    })
+})
+</script>
+<?php }else{?>
+<div class="main">
+		<ul class="did">
+			<li>
+				订单编号：<span class="org">{$rs[order_sn]}</span>
+			</li>
+		</ul>
+		<ul class="did">
+			<li>应付金额：<span class="org">{MONUNIT}{$rs[real_amount]}</span></li>
+			<li>支付方式：{$pay[name]}</li>
+		</ul>
+		{if $rs['pay_type'] == 1}
+		<ul class="navD clearfix">
+			<li><a href="{U('User/Order/detail', array('order_sn' => $rs[order_sn]))}"><img src="{THEME_PATH}img/ico_28.png" />查看订单</a></li>
+			<li><a href="{U('User/Index/index')}"><img src="{THEME_PATH}img/ico_14.png" />会员中心</a></li>
+			<li><a href="{U('Goods/Index/index')}"><img src="{THEME_PATH}img/ico_11.png" />逛逛首页</a></li>
+		</ul>
+		{else}
+		<form action="{U('Goods/order/detail')}" method="POST" target="_blank" name="pay">
+		<input type="hidden" name='order_sn' value="{$rs['order_sn']}">
+		<ul class="fuku" id="pays">
+			{loop $payment $code $pay}
+			{if $pay[pay_code]!='ws_wap'}
+            <label><li pay_code="{$pay[pay_code]}"><input type="radio" name="pay_code" value="{$pay[pay_code]}" style="display:none" />
+                <em><img src="{IMG_PATH}pay/small_{$code}.png"></em>
+				<div class="zhifu2"><p><strong>{$pay[pay_name]}</strong><font class="item-name">{$pay[pay_desc]}</font></p></div>
+			</li>
+			</label>
+			{/if}
+			{/loop}
+		</ul>
+		<div class="mar15">
+			<input type="submit" value="确认支付" class="btnBlue" name="dosubmit">
+		</div>
+		</form>
+		{/if}
+    </div>
+<script type="text/javascript">
+setTitle('收银台');
+</script>
+<?php }?>
+</body>
+</html>

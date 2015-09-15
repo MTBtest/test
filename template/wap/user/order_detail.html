@@ -1,0 +1,95 @@
+{template header}
+    <div class="main">
+        <div class="addr">
+            <h3><span>订单号：<b class="org">{$rs[order_sn]}</b></span><img src="{THEME_PATH}img/ico_20.png" />订单状态：<b class="org">{if $rs['order_status']==4}已取消{else}{$_config[$rs['current_step']]}{/if}</b></h3>
+            <a href="{U('User/Order/kuaidi', array('delivery_name' => $delivery[name], 'com' => $delivery[enname], 'nu' => $rs[delivery_sn], 'order_sn' => $rs['order_sn']))}"><h3>{if $rs[order_status] == 2 || $rs['order_status']==4}感谢您在{getconfig('site_name')}购物，欢迎您再次光临{else}{$tracks[0][track_msg]}{/if}</h3></a>
+            <ul>
+                <li>
+                    <strong>收货人：{$rs[accept_name]}</strong><span>{$rs[mobile]}</span>
+                    <p>{getAreaNameById($rs[province])} {getAreaNameById($rs[city])} {getAreaNameById($rs[area])} {$rs[address]}</p>
+                </li>
+            </ul>
+        </div>
+
+        <ul class="zhifu">
+            <li><strong>支付方式</strong><span>{if $rs[pay_type] == 0}在线支付{else}货到付款{/if}</span></li>
+            <li><strong>配送方式</strong><span><a href="#">{$delivery[name]}</a></span></li>
+        </ul>
+
+        {if $rs['invoice_title'][0]}
+        <div class="piao">
+            <h3>发票信息</h3>
+            <p>发票抬头：{$rs[invoice_title][1]}<br />发票内容：{$rs['invoice_title'][0]}</p>
+        </div>
+        {/if}
+
+        {if $rs[postscript]}
+        <div class="piao">
+            <h3>订单备注</h3>
+            <p>{$rs[postscript]}</p>
+        </div>
+        {/if}
+        <div class="dan">
+            <h3>商品清单</h3>
+            <ul>
+            {loop $rs['_goods_info'] $r}
+            {php $gid_str = $r['goods_id'].','.$r[product_id];}
+                <li>
+                    <em><a href="{U('Goods/Index/detail', array('id' => $r['goods_id']))}"><img src="{if $r[thumb]}{$r[thumb]}{else}{THEME_PATH}images/nopic.jpg{/if}" /></a></em>
+                    <p>
+                        <a href="{U('Goods/Index/detail', array('id' => $r['goods_id']))}">{$r[name]}</a>
+                        <span>规格：{if $r[spec_text]}{$r[spec_text]}{else}无{/if}</span>
+                        <strong><b class="org">{MONUNIT}{$r[shop_price]}</b>x{$r[shop_number]}</strong>
+                    </p>
+                </li>
+            {/loop}
+            </ul>
+        </div>
+
+        <div class="money">
+            <ul>
+                <li><span>{MONUNIT}{$rs[payable_amount]}</span><strong>商品总额</strong></li>
+                <li><span>{MONUNIT}{$rs[payable_freight]}</span>+运费</li>
+                <li><span>{MONUNIT}{$rs[discount]}</span>- 订单促销</li>
+                <li><span>{$rs[give_point]}</span>获得积分</li>
+            </ul>                    
+            <p>{if $rs['order_status']!=4}<font>实付款：<b class="org">{MONUNIT}{$rs[real_amount]}</b></font>{/if}下单时间：{mdate($rs[create_time])}</p>
+        </div>
+    </div>
+    
+	<div class="btnD">
+        {if ((($rs[order_status] == 0 && $rs[pay_type] == 1) || ($rs[pay_type] == 0 && $rs[pay_status] != 1)) && $rs[delivery_status] == 0 && $rs[order_status] < 2)}
+    	<a href="javascript:;" onclick="_cancel('{$rs[order_sn]}');">取消订单</a>
+        {/if}
+        {if $rs[order_status] == 0 && $rs[delivery_status] == 0 && (($rs[pay_type] == 0 && $rs[current_step] == 1) || ($rs[pay_type] == 1 && $rs[current_step] == 0))}
+        <a href="#" style="color:#D8D8D8">请等待系统确认</a>
+        {/if}
+        {if $rs[order_status] == 1 && $rs[delivery_status] == 0}
+        <a href="#" style="color:#D8D8D8">即将发货</a>
+        {/if}       
+        {if ($rs[pay_type] == 0 && $rs[current_step] == 0 && $rs['order_status']!=4)}
+        <a href="{U('Goods/Order/detail', array('order_sn' => $rs['order_sn']))}" class="hover">立即付款</a>
+        {/if}
+        {if $rs['order_status']==4}
+        <a href="{U('User/Order/repeat_buy', array('order_sn' => $rs['order_sn']))}" class="hover">再次购买</a>
+        {/if}
+        {if ($rs[pay_type] == 0 && $rs[current_step] == 3) || ($rs[pay_type] == 1 && $rs[current_step] == 2)}
+        <a href="{U('User/Order/kuaidi', array('delivery_name' => $delivery[name], 'com' => $delivery[enname], 'nu' => $rs[delivery_sn], 'order_sn' => $rs['order_sn']))}">查看物流</a>
+        {/if}
+        {if ($rs[pay_type] == 0 && $rs[current_step] == 3)}
+        <a href="javascript:void(0);" class="hover" onclick="_confirm('{$rs[order_sn]}');">确认收货</a>
+        {/if}
+
+        {if ($rs[order_status] == 2)}
+        <a href="{U('User/Order/repeat_buy', array('order_sn' => $rs['order_sn']))}" {if $rs[is_comment] == 1}class="hover"{/if}>再次购买</a>
+        {/if}
+        {if $rs[order_status] == 2 && $rs[delivery_status] == 1 && $rs[pay_status] == 1 && $rs[is_comment] == 0}
+        <a href="{U('User/Order/comment', array('order_sn' => $rs[order_sn]))}" class="hover">评价晒单</a>
+        {/if}
+    </div>
+<script type="text/javascript" src="{THEME_PATH}js/order.js"></script>
+<script type="text/javascript">
+setTitle('订单详情');
+</script>
+</body>
+</html>

@@ -1,0 +1,80 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="x-ua-compatible" content="text/html" />
+<title></title>
+<link rel="stylesheet" type="text/css" href="{THEME_PATH}css/home-common.css" />
+<link rel="stylesheet" type="text/css" href="{THEME_PATH}css/home-style.css" />
+<link rel="stylesheet" type="text/css" href="{THEME_PATH}css/new_footer.css"/>
+<!--[if IE 6]>
+<script type="text/javascript" src="../style/js/DD_belatedPNG.js" ></script>
+<script type="text/javascript">
+DD_belatedPNG.fix('*');
+</script>
+<![endif]-->
+<script type="text/javascript" src="{THEME_PATH}js/jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="{JS_PATH}Validform_v5.3.2_min.js"></script>
+<script type="text/javascript" src="{THEME_PATH}js/artDialog4.1.7/artDialog.js?skin=default"></script>
+<script type="text/javascript" src="{THEME_PATH}js/artDialog4.1.7/plugins/iframeTools.js" ></script>
+</head>
+<style type="text/css">
+	#Validform_msg{display: none;}
+</style>
+<body class="bglogin">
+	<div class="headLogo">
+		<a href="index.html"><img src="{THEME_PATH}images/logo2.png" width="204" height="91" alt="" /></a>
+	</div>
+	<div class="clear"></div>
+	<div class=" w1100" style="margin-top: 20px;">
+		<form action="{U('User/Public/setrepwd')}" method="post" class="repwdform" >
+		<div class="sign">
+	    	<h3>重设密码</h3>
+	    	<ul style="margin-left:315px;margin-top: 100px;">
+	            <li >
+	                <div style="display: inline-block;margin-bottom: 10px;">注册邮箱</div>
+	                <div ><p><input type="text" placeholder="注册邮箱" class="input_1 fl" name="email" value='{$email}' readonly /></p></div>
+	            </li>
+	            <li >
+	                <div style="display: inline-block;margin-bottom: 10px;">新密码</div>
+	                <div ><p><input type="password" placeholder="请输入新密码" class="input_1 fl" datatype="*6-15" errormsg="密码范围在6~15位之间！" name="password" nullmsg='请填写密码' /><span class="Validform_checktip"></span></p></div>
+	            </li>
+	            <li >
+	                <div style="display: inline-block;margin-bottom: 10px;">重复新密码</div>
+	                <div ><p><input type="password" placeholder="请重复新密码" class="input_1 fl" name="password1" datatype="*" recheck="password" errormsg="您两次输入的账号密码不一致！" nullmsg='请确认密码' /><span class="Validform_checktip"></span></p></div>
+	            </li>
+	            	<input type="hidden" name="id" id="id" value="{$rs[id]}" />
+	            	<input type="hidden" name="repwd_key" id="repwd_key" value="{$repwd_key}" />
+	            	<span>&nbsp;</span><p><input type="button" id="btn_sub" value="确认修改" class="btn8" /></p>
+	            </li>
+	        </ul>
+	        <em><img src="{THEME_PATH}images/bg4.png" /></em>
+	        <div class="clear"></div>
+	    </div>
+	   </form>
+	</div>
+	<div class="clear"></div>
+	<!--{subtemplate common/footer}-->
+	<script type="text/javascript">
+		var url = "<?php echo U('User/Public/login')?>";
+		$(function(){
+			$(".repwdform").Validform({
+				btnSubmit:"#btn_sub",
+				tiptype:function(msg,o,cssctl){
+					if(!o.obj.is("form")){//验证表单元素时o.obj为该表单元素，全部验证通过提交表单时o.obj为该表单对象;
+						var objtip=o.obj.siblings(".Validform_checktip");
+						cssctl(objtip,o.type);
+						objtip.text(msg);
+					}
+				},
+				ajaxPost:true,
+				callback:function(data){
+					art.dialog(data.info, function(){
+						window.location.href=url;
+					});
+				}
+			});
+		});
+	</script>
+</body>
+</html>

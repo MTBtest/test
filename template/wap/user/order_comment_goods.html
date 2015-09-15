@@ -1,0 +1,43 @@
+{template header}
+    <div class="main">
+		<div class="pic clearfix">
+			<em><img src="{if $goods[thumb]}{$goods[thumb]}{else}{THEME_PATH}img/ico_18.png{/if}" /></em>
+			<p>
+                <a href="{U('Goods/Index/detail', array('id' => $goods['id']))}">{$goods[name]}</a>
+			</p>
+		</div>		
+		<div class="text">
+            <textarea name="content" placeholder="亲，写点什么吧！"></textarea>
+		</div>		
+		<div class="mar15">
+			<input type="button" value="发表评论" class="btnBlue" onclick="addcomment();"/>
+        </div>
+        </form>
+    </div>
+{template footer}
+<script type="text/javascript">
+setTitle('发表评价');
+function addcomment() {
+    var params = {
+        order_sn : "{$order_sn}",
+        goods_id : "{$goods_id}",
+        product_id : "{$product_id}"
+    };
+    var content = $("textarea[name=content]").val();
+    if(content.length < 10) {
+        hd_alert('评价内容不能少于10个字');return;
+    }
+    params.content = content;
+    $.post("{U('comment')}", params, function(ret) {
+        if(ret.status == 1) {
+            window.location.href = "?m=user&c=order&a=comment&order_sn={$order_sn}";
+            return false;
+        } else {
+            hd_alert(ret.info);
+            return false;
+        }
+    }, "JSON");
+}
+</script>
+</body>
+</html>

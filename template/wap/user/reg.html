@@ -1,0 +1,77 @@
+{template header}
+    <div class="main">
+		<div class="login">
+        	<ul>            	
+                <li>
+                	<input type="text" placeholder="请输入您的用户名" name="username" class="input_3" />
+                </li>
+                <li>
+                	<input type="password" placeholder="请输入6-18位密码" name="password" class="input_3" />
+                </li>
+                <li>
+                	<input type="password" placeholder="请确认您的密码" name="userpassword2" class="input_3" />
+                </li>
+                <li>
+                    <input type="text" placeholder="请输入手机号码" name='mobile_phone' class="input_3" />
+                </li>
+                <li>
+                    <input type="text" placeholder="请输入您的邮箱" name='email' class="input_3" />
+                </li>
+            </ul>
+            <div class="mar15">
+            	<input type="button" onclick="dosubmit();" value="立即注册" class="btnBlue" />
+            	<a href="{U('user/public/login')}"><input type="button" value="已有账号？登录" class="btnPink mt10" /></a>
+            </div>
+            <div class="other-login">
+            {loop $logins $login}
+            {if $login['login_code'] != 'wechat'}
+                <span><a href="javascript:void(0)" class="{$login['login_code']}_login third_login" login-code="{$login['login_code']}"></a><em>|</em></span>
+            {/if}
+            {/loop}
+            </div>
+            <style>
+                .other-login { margin-top: 28px; text-align: center; }
+                .other-login span { display: inline-block; padding-right: 17px; }
+                .other-login a { float: left; display: block; width: 44px; height: 44px; background: url({THEME_PATH}img/other-login.png) no-repeat; }
+                .other-login em { float: right; margin-left: 20px; line-height: 44px; color: #ccc; font-style: normal; }
+                .other-login .sina_login { background-position: 0 -44px; }
+                .other-login .qq_login { background-position: -60px -44px; }
+                .other-login .alipay_login { background-position: -180px -44px; }
+                .other-login span:last-child em { display: none; }
+            </style>
+        </div>
+    </div>
+
+{template footer}
+
+<script type="text/javascript">
+function dosubmit() {
+    $.post('{U("user/api/reg_wap")}',{
+        username:$('input[name="username"]').val(),
+        password:$('input[name="password"]').val(),
+        userpassword2:$('input[name="userpassword2"]').val(),
+        mobile_phone:$('input[name="mobile_phone"]').val(),
+        email:$('input[name="email"]').val()
+    },function(data){
+        if (data.status==1) {
+            hd_alert(data.info);
+            window.location.href = data.url;
+        } else {
+            hd_alert(data.info);
+        }
+    },'JSON');
+}
+setTitle('注册');
+$('.third_login').bind('click',function(){
+    var login_code = $(this).attr('login-code');
+    $.post("{U('User/Api/third_login')}",{login_code : login_code},function(ret){
+        if (ret.status != 1) {
+            alert(ret.info);
+        } else {
+            location.href = ret.url;
+        }
+    },'json');
+})
+</script>
+</body>
+</html>

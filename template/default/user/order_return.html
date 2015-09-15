@@ -1,0 +1,240 @@
+{template header}
+
+<div class="main w1100">
+    {template ucenter_left}
+        <div class="content fr">
+            <div class="cus-service-tit"><strong>申请退货</strong></div>
+            <table class="cus-service">
+                <tr>
+                    <th><img src="{THEME_PATH}/images/bd-img.png" />{mdate($order_info['create_time'])}</th>
+                    <th>订单号：{$order_info['order_sn']}</th>
+                    <th>收件人</th>
+                    <th>购买价格</th>
+                    <th>购买情况</th>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        {loop $order_info['_goods_info'] $goods}
+                        <a href="{U('Goods/Index/detail', array('id' => $goods['goods_id']))}" target="_blank"><img src="{$goods['thumb']}" title="{$goods['name']}" /></a>
+                        {/loop}
+                    </td>
+                    <td>{$order_info['accept_name']}</td>
+                    <td>￥{$order_info['real_amount']}</td>
+                    <td>{$order_info[_config][$order_info[current_step]]}</td>
+                </tr>
+            </table>
+
+            <div class="return-goods">
+                <div class="dt clearfix">
+                    <div class="line">
+                        <span><em>*</em>服务类型：</span>
+                        <div class="right return_type"><a class="" href="javascript:;" data-type="1">退货</a></div>
+                        <input type="hidden" name="return_type" value="" />
+                    </div>
+                </div>
+                <div class="dd">
+                    <div class="line">
+                        <span><em>*</em>提交数量：</span>
+                        <div class="right">
+                        {loop $order_info['_goods_info'] $goods}
+                            <div class="goods">
+                                <div><img src="{$goods['thumb']}" title="{$goods['name']}" /></div>
+                                <div class="num">
+                                    <a class="reduce" href="javascript:;">-</a>
+                                    <input type="text" class="return_id_nums" data-id="{$goods['id']}" max-value="{$goods['shop_number']}" value="0" />
+                                    <a class="add" href="javascript:;">+</a>
+                                </div>
+                                <div class="tips">可提交数量不能超过购买数量</div>
+                            </div>
+                        {/loop}
+                        </div>
+                    </div>
+                    <div class="line">
+                        <span><em>*</em>快递方式：</span>
+                        <div class="right"><input class="input" type="text" name="return_delivery_name" placeholder='请输入快递方式,多个以"|"分隔' /></div>
+                    </div>
+                    <div class="line">
+                        <span><em>*</em>快递单号：</span>
+                        <div class="right"><input class="input" type="text" name="return_delivery_sn" placeholder='请输入快递单号,多个以"|"分隔(与快递方式对应)' /></div>
+                    </div>
+                    <div class="line">
+                        <span><em>*</em>问题描述：</span>
+                        <div class="right">
+                            <textarea id="return_descript"></textarea>
+                            <p style="text-align:right;color:#999;">10-500字</p>
+                        </div>
+                    </div>
+                    <div class="line">
+                        <span>图片信息：</span>
+                        <div class="right">
+                            <label class="file" id="picker">上传图片</label>
+                            <p style="margin-top:8px;color:#030303;">为了帮助我们更好的解决问题，请您上传图片</p>
+                            <div class="manage-file clearfix"></div>
+                            <p style="color:#999;">最多可上传5张图片，每张图片大小不超过5M，支持bmp,gif,jpg,png,jpeg格式文件</p>
+                        </div>
+                    </div>
+                    <div class="clear"></div>
+                </div>
+            </div>
+            <input class="returnBtn" type="submit" name="" value="提交"/>
+        </div>
+        <div class="clear"></div>
+    </div>
+</div>
+<!--{subtemplate common/footer}-->
+
+<link href="{JS_PATH}webuploader/webuploader.css" rel="stylesheet" />
+<script src="{JS_PATH}webuploader/webuploader.js" type="text/javascript"></script>
+<script type="text/javascript">
+$(function(){
+    //数量增减
+    $(".num .reduce").click(function(){
+        var val = $(this).next("input");
+        if(val.val()<=0){
+            val.val(0);
+        }else{
+            val.val(val.val()-1);
+        }
+    });
+    $(".num .add").click(function(){
+        if($(this).prev("input").val()<$(this).prev("input").attr("max-value")){
+            $(this).prev("input").val(parseInt($(this).prev("input").val())+1);
+        }else{
+            $(this).parent(".num").next(".tips").show();
+            setTimeout(function(){
+                $(".tips").fadeOut('300');
+            },1500);
+            $(this).prev("input").val($(this).prev("input").attr("max-value"));
+        }
+    });
+    $(".num input").keyup(function(){
+        var val = $(this).val();
+        var val2 = val.replace(/[^\d]/g, '');
+        if(val2>parseInt($(this).attr("max-value"))){
+            $(this).val($(this).attr("max-value"));
+            $(this).parent(".num").next(".tips").show();
+            setTimeout(function(){
+                $(".tips").fadeOut('300');
+            },1500);
+        }else{
+            $(this).val(val2);
+        }
+    });
+
+    $(".return_type").click(function(){
+        $(this).children('a').addClass("focus");
+        $(this).siblings().children('a').removeClass('focus');
+        $(".dd").show();
+        $("input[name='return_type']").val($(this).children('a').attr('data-type'));
+    })
+    //显示隐藏删除小按钮
+    $(".manage-file .box").live("mouseover",function(){
+        $(this).children("i").show();
+    });
+    $(".manage-file .box").live("mouseout",function(){
+        $(this).children("i").hide();
+    });
+    // 删除上传的图片
+    $(".manage-file .box i").live("click",function(){
+        var obj = $(this).parent('.box');
+        $.getJSON("{U('User/OrderReturn/delete_img')}", {
+            img_url: $(this).prev('img').attr('src')
+        }, function(ret) {
+            obj.fadeOut('300',function() { obj.remove();});
+        });
+    });
+})
+
+// 图片上传
+var uploader = WebUploader.create({
+
+    fileVal:'upfile',
+
+    // 选完文件后，是否自动上传。
+    auto: true,
+
+    // swf文件路径
+    swf: '{JS_PATH}webuploader/webuploader.swf',
+
+    // 文件接收服务端。
+    server: "{U('Attachment/Upload/swfupload',array('file_name'=>'order'))}",
+
+    // 内部根据当前运行是创建，可能是input元素，也可能是flash.
+    pick: '#picker',
+
+    // 限制上传文件格式
+    accept:{
+        title: '图片文件',
+        extensions: 'gif,jpg,jpeg,bmp,png',
+        mimeTypes: 'image/*'
+    },
+
+    //验证文件总数量, 超出则不允许加入队列。
+    fileNumLimit: 5,
+
+    // 限制上传文件总大小(100M)
+    fileSizeLimit: 100 * 1024 * 1024,
+
+    // 限制单图上传大小(5M)
+    fileSingleSizeLimit: 5 * 1024 * 1024,
+
+    // 不压缩image, 默认如果是jpeg，文件上传前会压缩一把再上传！
+    resize: false
+
+});
+uploader.onUploadSuccess = function( file, response ) {
+    $(".manage-file").show();
+    $(".manage-file").append('<div class="box"><img src="'+ response.url +'" /><i>×</i><input type="hidden" class="return_imgs" value="'+ response.url +'"/></div>');
+}
+uploader.on('error', function(handler) {
+    switch (handler) {
+        case "Q_EXCEED_NUM_LIMIT":
+            alert("超出最大张数(5张)");
+            break;
+        case "F_DUPLICATE":
+            alert("该图片已上传过");
+            break;
+        case "F_EXCEED_SIZE":
+            alert("每张图片大小不超过5M");
+            break;
+        case "Q_TYPE_DENIED":
+            alert("上传文件类型错误");
+            break;
+    }
+});
+uploader.on( 'uploadError', function( file ) {
+    alert('上传文件出错');
+});
+
+// 提交
+$('input[type="submit"]').bind('click',function() {
+    var goods_ids   = new Array();
+    var return_nums = new Array();
+    $('.return_id_nums').each(function() {
+        goods_ids.push($(this).attr('data-id'));
+        return_nums.push($(this).val());
+    });
+    var return_imgs = new Array();
+    $('.return_imgs').each(function(index, el) {
+        return_imgs.push($(this).val());
+    });
+
+    $.post("{U('User/OrderReturn/order_return')}", {
+        order_sn             : "{$order_info['order_sn']}",
+        return_type          : $('input[name ="return_type"]').val(),
+        goods_ids            : goods_ids,
+        return_nums          : return_nums,
+        return_imgs          : return_imgs,
+        return_delivery_name : $('input[name="return_delivery_name"]').val(),
+        return_delivery_sn   : $('input[name="return_delivery_sn"]').val(),
+        return_descript      : $('#return_descript').val()
+    }, function(ret) {
+        if (ret.status == 1) {
+            alert(ret.info);
+            location.href = ret.url;
+        } else {
+            alert(ret.info);
+        }
+    },'json');
+})
+</script>

@@ -1,0 +1,102 @@
+{template header}
+<script type="text/javascript">
+var referer = "{U('User/Index/index')}";
+</script>
+    <div class="main">
+		<dl class="dldt">
+        	<dt>
+                <strong class="w20"><a{if $type == ''} class="hover"{/if} href="{U('User/Order/manage')}">全部</a></strong>
+                <strong class="w20"><a{if $type == 'pay'} class="hover"{/if} href="{U('User/Order/manage', array('type' => 'pay'))}">待付款</a></strong>
+                <strong class="w20"><a{if $type == 'delivery'} class="hover"{/if} href="{U('User/Order/manage', array('type' => 'delivery'))}">待发货</a></strong>
+                <strong class="w20"><a{if $type == 'finish'} class="hover"{/if} href="{U('User/Order/manage', array('type' => 'finish'))}">待收货</a></strong>
+                <strong class="w20"><a{if $type == 'comment'} class="hover"{/if} href="{U('User/Order/manage', array('type' => 'comment'))}">待评价</a></strong>
+            </dt>
+            <dd>
+            	<div class="swiper-container">
+                    <div class="swiper-wrapper">
+                        <div class="swiper-slide" id='waterfall-content'>
+                        	<div class="list_d">
+                                <ul id="container"></ul>
+                            </div>
+                        </div>
+                        <div class="swiper-slide" id='waterfall-empty'>
+                        	<div class="none">
+                                <img src="{THEME_PATH}img/bg_3.png" />
+                                <p>您还没有相关的订单</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </dd>
+        </dl>
+    </div>
+{template footer}
+<script src="{THEME_PATH}js/waterfall.min.js"></script>
+<script type="text/javascript" src="{THEME_PATH}js/order.js"></script>
+<script type="text/javascript">
+$('#container').waterfall({
+    dataType: 'json',
+    path: "{U('User/Api/order')}",
+    params:{method:"getlists", user_id:"{is_login()}", type: "{$type}"},
+    callbacks: {
+        loadingFinished: function($loading, isBeyondMaxPage, data) {
+            if (!isBeyondMaxPage ) {
+                $loading.fadeOut();
+            } else {
+                $loading.hide();
+                $('#meiyou').show();
+            }
+            var _html = '', order_txt = '待付款';
+            if(!data.lists && $('#container').html().length == 0) {
+                $("#waterfall-content").hide();
+                $("#waterfall-empty").show();
+                return false;
+            }
+            $.each(data.lists, function(items, item) {
+                if (item.order_status==4) {
+                    _html += '<li><strong><span class="org">已取消</span><img src="{THEME_PATH}img/ico_17.png" />订单号：'+ item.order_sn + '</strong>';
+                }else{                    
+                    _html += '<li><strong><span class="org">'+ item._currstep.step_txt +'</span><img src="{THEME_PATH}img/ico_17.png" />订单号：'+ item.order_sn + '</strong>';
+                }
+                
+                _html += '';
+                if(item._goods.info) {
+                    _html += '<em>';
+                    $.each(item._goods.info, function(goods_info, goods) {
+                        _html += '<a href="?m=goods&c=index&a=detail&id='+ goods.goods_id +'"><img src="'+ goods.thumb +'" /></a>';
+                    })
+                    _html += '</em>';
+                }                
+                _html += '<p><font>共 '+ item._goods.nums +' 件商品</font><font>实付:<b class="org">￥'+ item.real_amount +'</b></font></p><p>';
+                if((((item.order_status == 0 && item.pay_type == 1) || (item.pay_type == 0 && item.pay_status != 1)) && item.delivery_status == 0 && item.order_status < 2)) {
+                    _html += '<a href="javascript:;" onclick="_cancel(\''+ item.order_sn +'\');">取消订单</a>';
+                }                
+                if(item.pay_type == 0 && item.pay_status == 0 && item.delivery_status == 0 && item.order_status == 0) {
+                    _html += '<a href="?m=goods&c=order&a=detail&order_sn='+ item.order_sn +'">立即付款</a>';
+                }
+                
+                if(item.pay_type == 0 && item._currstep.step_id == 3 || item.pay_type == 1 && item._currstep.step_id == 2) {
+                    _html += '<a href="?m=user&c=order&a=kuaidi&delivery_name='+ item._delivery.name +'&com='+ item._delivery.enname +'&nu='+ item.delivery_sn +'">查看物流</a>';
+                }
+                if (item.pay_type == 0 && item._currstep.step_id == 3) {                    
+                    _html += '<a href="javascript:;" onclick="_confirm(\''+ item.order_sn +'\')">确认收货</a>';
+                }
+                if(item.order_status == 2 && item.is_comment == 0 && item.delivery_status == 1) {
+                    _html += '<a href="?m=user&c=order&a=comment&order_sn='+ item.order_sn +'">评价晒单</a>';
+                }
+                
+                if(item.order_status == 2 || item.order_status == 4) {
+                    _html += '<a href="?m=user&c=order&a=repeat_buy&order_sn='+ item.order_sn +'">再次购买</a>';
+                }                
+                _html += '<a href="index.php?m=user&c=order&a=detail&order_sn='+item.order_sn+'">查看订单</a>';
+                _html += '</p></li>';
+                
+            })
+            $('#container').append(_html);
+        }
+    } 
+});
+setTitle('我的订单');
+</script>
+</body>
+</html>

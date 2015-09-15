@@ -1,0 +1,625 @@
+<!--{subtemplate common/header}-->
+<script src="{THEME_PATH}js/artTemplate/artTemplate.js" type="text/javascript"></script>
+<script src="{THEME_PATH}js/artTemplate/artTemplate-plugin.js" type="text/javascript"></script>
+<script src="{THEME_PATH}js/jquery.jqzoom.js" type="text/javascript"></script>
+<script src="{THEME_PATH}js/preview.js" type="text/javascript"></script>
+<script type="text/javascript" src="{THEME_PATH}js/goods_goods.js"></script>
+<script type="text/javascript" src="{THEME_PATH}js/json2.js"></script>
+<!--表单验证-->
+<script src="{JS_PATH}/Validform_v5.3.2_min.js" type="text/javascript"></script>
+<link href="{THEME_PATH}css/home-preview.css" rel="stylesheet" type="text/css" />
+<!--MD5-->
+<script src="{THEME_PATH}js/jquery.md5.js" type="text/javascript"></script>
+<script src="{JS_PATH}artDialog/artDialog.js" type="text/javascript"></script>
+<script src="{JS_PATH}artDialog/plugins/iframeTools.js" type="text/javascript"></script>
+<link rel="stylesheet" href="{JS_PATH}artDialog/skins/default.css">
+<script src="{JS_PATH}common.js" type="text/javascript"></script>
+<style>
+.Validform_error {background-color: #ffcccc;}
+#contents img{ max-width:864px;}
+.goods-number{top:3px}
+</style>
+<script src="{THEME_PATH}js/goods.js" type="text/javascript"></script>
+<script type="text/javascript">
+var site_cartsetup = '{C('site_cartsetup')}';
+var goods = {
+	"goods_id"		: "{$id}",
+	"product_id" 	: 0,
+	"title"			:"{$title}",
+	// 促销类型
+	"prom_type"		: "{$prom_type}"
+};
+</script>
+<div class="Nowposition w1100">
+<!--您当前位置-->
+	<div>
+		<img src="{THEME_PATH}images/homeimages/homepic_22.png">您当前位置：
+		<a href="{__APP__}">首页</a>&nbsp;>&nbsp;{catpos($cat_id)}{$name}
+	</div>
+	<!--您当前位置end-->
+	<!--购买商品页面-->
+</div>
+<div class="details_content w1100">
+	<div class="details_topbox">
+		<!--标题开始-->
+		<div class="topbox-Title">
+			<span class="more-commodity-1">{$name}</span>
+			<span class="more-commodity">
+						<a href="{U('Goods/Index/lists', array('id'=> $cat_parent['id']))}">查看更多同类商品</a>
+						<img src="{THEME_PATH}images/homeimages/more-goods_03.png">
+					</span>
+		</div>
+		<!--标题结束-->
+		<!--焦点图容器-->
+		<div class="details_main">
+			<!--焦点图-->
+			<div class="details_mainleft fl">
+				<div class="zoomimgbox">
+					<!-- 大图begin -->
+					<div id="preview" class="spec-preview">
+						{if $list_img}
+						<span class="jqzoom"><img jqimg="{$list_img[0]}" src="{$list_img[0]}" /></span> {/if}
+					</div>
+					<!-- 大图end -->
+					<!-- 缩略图begin -->
+					<div class="spec-scroll">
+						<a class="prev"></a>
+						<a class="next"></a>
+						<div class="items">
+							<ul>
+								{if $list_img} {loop $list_img $img}
+								<li>
+									<img bimg="{$img}" src="{$img}" onmousemove="preview(this);">
+								</li>
+								{/loop} {/if}
+							</ul>
+						</div>
+					</div>
+					<!-- 缩略图end -->
+				</div>
+			</div>
+			<!--end-->
+			<div class="details_mainright fl">
+				<div class="goods-msg">
+					<div class="goods-new">
+						{if $brief}
+						<div class="goods-hot">{$brief}</div>
+						{/if}
+						<ul id="specpanel">
+							{if $prom_type == 'timed' && $prom_id > 0 && $promotion[$prom_type]}
+								<li class="goods-new-li01">
+									<dl>
+										<dt>促销价：</dt>
+										<dd class="goods-price " id="data_shopPrice"> {MONUNIT}{$shop_price}</dd>
+										<dd class="goods-price-old1 " id="data_marketPrice">原价：{MONUNIT}{$min_shop_price}</dd>
+										<dd class="goods-price-old1" id="timed"><script type="text/javascript">count_down('{$promotion[$prom_type][end_time]}');</script></dd>
+									</dl>
+								</li>
+								<style type="text/css">
+									#timed {color: #666;}
+									#timed em {font-style: normal;font-size: 16px;color: red;}
+								</style>
+							{else}
+								<li class="goods-new-li01">
+									<dl>
+										<dt>销售价：</dt>
+										<dd class="goods-price " id="data_shopPrice"> {MONUNIT}{$cruuent_price}</dd>
+										<dd class="goods-price-old " id="data_marketPrice">市场价：{MONUNIT}{$market_price}</dd>
+									</dl>
+								</li>
+							{/if}
+
+							<li class="goods-new-li02 ">
+								<dl>
+									<dt>货&nbsp;&nbsp;&nbsp;号：</dt>
+									<dd id="data_products_sn">{if $products_sn}{$products_sn}{else}-{/if}</dd>
+								</dl>
+							</li>
+							<!--促销-->
+							{if $prom_type == 'goods' && $prom_id > 0 && $promotion[$prom_type]}
+								<li class="goods-new-li02 ">
+									<dl>
+										<dt>活&nbsp;&nbsp;&nbsp;动：</dt>
+										<div class="discount_box fl" >
+											<font><i class="discount_0{$promotion[$prom_type][award_type]}"></i>{$promotion[$prom_type][description]}</font>
+										</div>
+									</dl>
+								</li>
+							{elseif $prom_type == 'timed' && $prom_id > 0 && $promotion[$prom_type]}
+								<li class="goods-new-li02 ">
+									<dl>
+										<dt>活&nbsp;&nbsp;&nbsp;动：</dt>
+										<div class="discount_box fl" >
+											<font>【限时促销】{$promotion[$prom_type][descript]}</font>
+										</div>
+									</dl>
+								</li>
+							{/if}
+							<div class="clear"></div>
+							<div class="specrow">
+								<?php foreach(unserialize($rs[ 'spec_array']) as $k=>$v):?>
+								<li class="goods-new-li02 specCol">
+									<dl>
+										<dt><?php echo $v['name']?>： </dt>
+										<div class="goods-new-li022">
+										<?php foreach(str2arr($v[ 'value']) as $kk=>$vv):?>
+										<dd class="goods-color-1 " data-id="<?php echo $v['id']?>" data-name="<?php echo $v['name']?>" data-value="<?php echo $vv?>" class="goods-color-1" style="margin-top:5px;">
+											<?php echo $vv?>
+										</dd>
+										<?php endforeach;?></div>
+									</dl>
+								</li>
+								<?php endforeach;?>
+							</div>
+							<!--<input type="hidden" name="goods_number" id="data_goodsNumber"/>-->
+							<li class="goods-new-li04">
+								<dl>
+									<dt>评&nbsp;&nbsp;&nbsp;论：</dt>
+									<!--<dd class="goods-star s_5">{hd:comment action="lists" goods_id="$id" page="$page"}{$count}{/hd}　条评论　|　{hd:consult action="lists" goods_id="$id" page="$page"}{$count}{/hd}　条咨询</dd>-->
+									<dd class="goods-appraise">
+										<span class="goods-appraise-p1 comment_count">0</span>　条评论　|
+										<span class="goods-appraise-p2 consult_count" >0</span>&nbsp;&nbsp;条咨询
+									</dd>
+								</dl>
+							</li>
+						</ul>
+					</div>
+					<!--商品名称end-->
+					<div class="goods-pay">
+						<div class="goods-pay-number">
+							<div class="fl">
+								<span>购买数量&nbsp;：</span>
+								<span class="goods-num-reduce">-</span>
+								<input type="text" class="goods-number" name='cart_num' onkeyup="this.value=this.value.replace(/[^\d]/g,'') " onafterpaste="this.value=this.value.replace(/[^\d]/g,'') " value="1" />
+								<span class="goods-num-add">+</span>
+							</div>
+							<div class="fl" style="margin-left: 150px;">库存数量&nbsp;：
+								<span id="data_goodsNumber">{$cruuent_num}</span>
+							</div>
+							<div class="fl xz-notic">
+								<p>请选择你要购买的商品规格</p>
+							</div>
+						</div>
+						<div></div>
+						<div class="goods-pay-btn">
+							<span class="goods-pay-btn-c goods-add " id="joinCarButton" onclick="page_detail.cart_add();">加入购物车</span>
+							<span class="goods-pay-btn-c goods-notice hide" id="noticeButton" onclick="page_detail.notify();">到货通知</span>
+							<a href="javascript:;" onclick="page_detail.collect({$id});"><span class="goods-pay-btn-c goods-like">收藏</span></a>
+						</div>
+						<input name="data_specKey" type="hidden" />
+					</div>
+					<!--end-->
+					<div></div>
+				</div>
+			</div>
+			<div class="clear"></div>
+		</div>
+	</div>
+	<!--topbox-end-->
+	<div class="goods-details-box">
+		<div class="goods-details-L fl">
+			<div class="goods-details-L-title"><p>您浏览过的商品</p></div>
+			{hd:goods action="history" num="4"}
+				{loop $data $v}
+				<div class="goods-details-L-other">
+					<span class="fl">
+	                    <a href="{U('Goods/Index/detail', array('id'=> $v['id']))}">
+							{if empty($v[thumb]) && empty($v[list_img])}
+							<img src="{THEME_PATH}images/homeimages/nopic.jpg" width='72' height="72" title="{$v[name]}">
+							{elseif empty($v[thumb])}
+							<?php $list_img = str2arr($v[list_img]);?>
+							<img src="{$list_img[0]}" width='72' height="72" title="{$v[name]}">
+							{else}
+							<?php $thumb = str2arr($v[thumb]);?>
+							<img src="{$thumb[0]}" width='72' height="72" title="{$v[name]}">
+							{/if}
+						</a>
+	                </span>
+					<span class="datails-text fl">
+						<p class="datails-text-black"><a href="{U('Goods/Index/detail', array('id'=> $v['id']))}">{$v[name]}</a></p>
+	                    <p class="datails-text-red">{MONUNIT}{$v[shop_price]}</p>
+	                    <p class="datails-text-gray">关注:<span>{$v[hits]}</span></p>
+					</span>
+				</div>
+				{/loop}
+			{/hd}
+		</div>
+		<div class="goods-details-R fl">
+			<ul class="goods-details-R-float" style="background-color: #fff;">
+				<li class="pro-datails-2 pro-datails-cursor">商品详情
+				</li>
+				<li class="pro-datails-2">
+					商品评价&#40;<span class="product-datails-2-num comment_count">{hd:comment action="lists" goods_id="$id" page="$page"}{$count}{/hd}</span>&#41;
+				</li>
+				<li class="pro-datails-2">
+					商品咨询&#40;<span class="product-datails-2-num consult_count">{hd:consult action="lists" goods_id="$id" page="$page"}{$count}{/hd}</span>&#41;
+				</li>
+			</ul>
+            <div class="goods-details-txt">
+                <em class="wihte"></em>
+                <ul>
+                    <li title="{$name}">商品名称：<?php echo mb_substr($name,0,10,'utf-8')?></li>
+                    <li title="{$brand_name}">品牌：{$brand_name}</li>
+					{if $price_name != null}
+                    <li title="{$price_grade}">价格区间：{$price_grade}</li>
+					{/if}
+					<?php foreach($attr_name as $k => $v){?>
+					<?php echo '<li title='.$v.'>'.$k.'：'.$v.'</li>'?>
+					<?php }?>
+                </ul>
+                <div class="clear"></div>
+            </div>	
+			<!--商品图片详情-->
+			<div class="goods-R-bot-box">
+				<div class="goods-details-R-pic botbox" id='xiangqin'>
+					<section id="contents">{$descript}</section>
+				</div>
+				<!--商品评论-->
+				<div class="botbox" id="pingjia">
+					<div class="goods-details-R-comment">
+						<div class="goods-details-R-comment-T">
+							<span>
+                            	<span class="conment-line"></span>
+								<span class="conment-line-t" id='pingjia'>用户评论</span>
+								<span class="conment-line-x fr">只有购买过该商品的用户才能评论</span>
+							</span>
+						</div>
+						<!--评论区-->
+						<div id="commentRowBody">
+							<script id="commentRowTemplate" type="text/html">
+							    <%for(var i in list){%>
+							    <%item = list[i]%>
+							    <div class="goods-details-R-comment-1">
+							        <span class="headpto">
+							            <img src=" <% if(item['ico']){ %><%=item['ico']%><% }else{ %>   {THEME_PATH}images/default.jpg<% } %>">
+							        </span>
+							        <span class="conment-text">
+							            <p class="user-name">
+							                <%=item['user_name']%>
+							            </p>
+							            <p class="user-comment"><%=item['content']%></p>
+							        </span>
+							        <% if(item['reply']){ %>
+							        <div class="admin-comment">
+							            <span class="admin-comment-1">管理员回复：</span>
+							            <span class="admin-comment-1-text"><%=item['reply']%></span>
+							        </div>
+							        <% } %>
+							    </div>
+							    <%}%>
+							</script>
+						</div>
+						<div class="clear"></div>
+						<div class="pagefooter pageactivity ">
+							{if empty($r[content])}
+							<p class="nocomment" style="color:#858585;margin-left:45%;margin-top: -4px;height: 50px;line-height: 50px;">商品目前尚未评论</p>
+							{/if}
+							<div class="pagefooter-01 comment_page"></div>
+						</div>
+					</div>
+					<!--商品咨询-->
+					<div class="botbox" id="zixun">
+						<div class="goods-details-R-comment">
+							<div class="goods-details-R-comment-T">
+								<span>
+									<span class="conment-line"></span>
+									<span class="conment-line-t">用户咨询</span>
+									<span class="wyao consult fr " id="Consulbtn"><p>我要咨询</p></span>
+								</span>
+							</div>
+                            <!--咨询区-->
+                                <div id="consultRowBody"></div>
+								<script id="consultRowTemplate" type="text/html">
+								    <%for(var i in list){%>
+								    <%item = list[i]%>
+								    <div class="goods-details-R-comment-1">
+								        <span class="headpto">
+								            <img src=" <% if(item['ico']){ %><%=item['ico']%><% }else{ %>   {THEME_PATH}images/default.jpg<% } %>"/>
+								        </span>
+								        <span class="conment-text">
+								            <p class="user-name">
+								                <%=item['user_name']%>
+								            </p>
+								            <p class="user-comment"><%=item['question']%></p>
+								        </span>
+								        <% if(item['reply']){ %>
+								        <div class="admin-comment">
+								            <span class="admin-comment-1">管理员回复：</span>
+								            <span class="admin-comment-1-text"><%=item['reply']%></span>
+								        </div>
+								        <%}%>
+								    </div>
+								    <% } %>
+								</script>
+							<!--end-->
+							<div class="clear"></div>
+							<div class="pagefooter pageactivity ">
+								<div class="pagefooter-01 consult_page"></div>
+							</div>
+						</div>
+					</div>
+					<!---->
+				</div>
+			</div>
+		</div>
+		<div class="clear"></div>
+	</div>
+</div>
+<!--商品咨询弹窗-->
+<div class="fabiao" id="testID2" style="display: none;">
+	<dl style="height:auto;">
+		<dd>
+			<div><span>{$name}</span></div>
+			<textarea id="t1" name="question" placeholder='请输入咨询内容……' datatype="*"></textarea>
+			<p>您还可以输入<font class="org" id="consult_conlen">30</font>个字</p>
+		</dd>
+	</dl>
+</div>
+<!--footer-->
+<!--{subtemplate common/footer}-->
+<!-- 返回列表页 -->
+<a href="{U('Goods/Index/lists', array('id'=> $cat_parent['id']))}" id="rollList" title="返回列表页"></a>
+</body>
+<!--缩图展示-->
+<script type="text/javascript">
+//验证
+var demo
+$(function(){
+    //表单验证
+    demo = $(".addform").Validform({
+        btnSubmit: ".btn_sub",
+        btnReset: ".btn_reset",
+        ajaxPost:true,
+        tiptype:function(msg,o,cssctl){
+            var e=o.obj.context.name;
+        },
+        showAllError: false,
+        callback:function(data){
+           	alert(data.info);
+            $(".fabiao").hide();
+            if(data.status ==1){
+                location.reload(true);
+            }
+		}
+    });
+})
+</script>
+<script>
+//初始货品
+var product_json = <?php echo json_encode($products_arr)?>;
+//货币符号
+var symbol  = '<?php echo $cruuent_symbol?>';
+//初始规格
+var id = "{$id}";
+$(function() {
+    
+    //根据产品的货品显示是否购买
+    if ($('.specCol').length === 0) {
+	    if (<?php echo $cruuent_num?> > 0) {
+            openBuy();
+        } else {
+            closeBuy();
+        }
+    } else {
+        //模拟点击第一个
+        $('.specCol').each(function() {
+			//$(this).find('dd:first').click();
+        });
+    }
+    //加载评论
+    $.get("{U('Comment/ajax_lists')}", {"goods_id": id, "random": Math.random}, function(json) {
+        if (json.list === null) return;
+        $(".nocomment").hide();
+        var commentRowHtml = template('commentRowTemplate', json);
+        $('#commentRowBody').html(commentRowHtml);
+        $('.comment_page').html(json.page);
+        $('.comment_count').text(json.total);
+    });
+    //加载咨询
+    $.get("{U('Consult/ajax_lists')}", {"goods_id": id, "random": Math.random}, function(json) {
+        if (json.list === null)	return;
+        var consultRowHtml = template('consultRowTemplate', json);
+        $('#consultRowBody').html(consultRowHtml);
+        $('.consult_page').html(json.page);
+        $('.consult_count').text(json.total);
+    });
+    //处理ajax分页
+    $('.comment_page').on('click', 'a', function() {
+        $.ajax({
+            type: "GET",
+            url: $(this).attr('href'), //取得分页a标签链接地址，正好是要提交的控制器和传参：Index/ajaxPage/p/1
+            success: function(json) {
+                if (json.list === null) return;
+                var commentRowHtml = template('commentRowTemplate', json);
+                $('#commentRowBody').html(commentRowHtml);
+                $('.comment_page').html(json.page);
+            }
+        });
+        return false; //使a标签失效，防止页面跳转
+    });
+    $('.consult_page').on('click', 'a', function() {
+        $.ajax({
+            type: "GET",
+            url: $(this).attr('href'), //取得分页a标签链接地址，正好是要提交的控制器和传参：Index/ajaxPage/p/1
+            success: function(json) {
+                if (json.list === null) return;
+                var consultRowHtml = template('consultRowTemplate', json);
+                $('#consultRowBody').html(consultRowHtml);
+                $('.consult_page').html(json.page);
+            }
+        });
+        return false; //使a标签失效，防止页面跳转
+    });
+});
+/**
+ * 规格选择
+ */
+$(function(){
+ /*首次进入为隐藏*/
+ $(".xz-notic").html('<p>请选择你要购买的商品规格</p>').hide();
+	$(".specrow dd").on("click",function(){
+	    /*点击加入购物车再点击规格的样式*/
+	    $(".xz-notic").html('<p>请选择你要购买的商品规格</p>').hide();
+		//不能选择时处理
+		if($(this).hasClass('disabled')){
+			$(this).addClass("disabled");
+			$(".xz-notic").html('<p>请选择你要购买的商品规格</p>').show();
+			return;
+		}
+		$(this).siblings("dd").removeClass("goods-color-choose");
+		if($(this).hasClass('goods-color-choose')){
+			$(this).removeClass('goods-color-choose');
+		}else{
+			$(this).addClass('goods-color-choose');
+		}
+		changeStatus();
+		//选择后的处理
+		//整理规格值
+		var specKey = '';
+        $('.specCol').each(function() {
+            spec_id = $(this).find('dd.goods-color-choose').attr('data-id');
+            spec_name = $(this).find('dd.goods-color-choose').attr('data-name');
+            spec_value = $(this).find('dd.goods-color-choose').attr('data-value');
+            //选择值 加入数组
+            if ($(this).find('dd.goods-color-choose').length === 0) {
+                return false;
+            } else {
+                specKey += spec_id+':'+spec_value+';' ;
+            }
+        });
+		//返回处理结果
+		goods.product_id = 0;
+		if($('.specCol').length == $('.specCol .goods-color-choose').length){
+			if(product_json[specKey] != undefined){
+                var item = product_json[specKey];
+                //普通货品数据渲染
+                $('#data_goodsNo').text(item.products_no);
+                //限时促销的不需要更改价格
+                var prom_name = "{$promotion[$prom_type]['name']}";
+                if (goods.prom_type != 'timed' || prom_name.length == 0) {
+					$('#data_shopPrice').text(symbol + item.shop_price);
+	                $('#data_marketPrice').text("市场价："+symbol + item.market_price);
+                }
+                $('#data_weight').text(item.weight);
+                $('#data_goodsNumber').text(item.goods_number);
+                $('#data_products_sn').text(item.products_sn);
+                $('input[name="data_specKey"]').val(specKey);
+                $('input[name="data_goodsNumber"]').val(item.goods_number);
+                goods.product_id = item.id;
+                //根据库存显示操作
+                if (item.goods_number > 0) {
+	                openBuy();
+	            } else {
+	                closeBuy();
+	            }
+            }
+			$(".xz-notic").html('<p>请选择你要购买的商品规格</p>').hide();
+		} else {
+		     //$(".xz-notic").html('<p>请选择你要购买的商品规格</p>').show();	
+		}
+	});
+})
+/**
+ *规格状态处理
+ */
+ function changeStatus(){
+ 	var specs_array = new Array();
+ 	var regexp = '';
+ 	/* 取出所有在规格数据 */
+ 	$(".specrow li").each(function(i){
+        var selected = $(this).find("dd.goods-color-choose");
+        if(selected.length>0) specs_array[i] = selected.attr("data-id") + ':' + selected.attr("data-value");
+        else specs_array[i] = "\\\d+:\.+";
+ 	});
+ 	$(".specrow li").each(function(k){
+ 		var selected = $(this).find("dd.goods-color-choose");
+        /* 遍历属性 */
+       	$(this).find("dd").each(function(){
+       		$(this).removeClass('disabled');
+       		var flage = false;
+       		var temp = specs_array.slice();
+       		temp[k] = $(this).attr('data-id') + ':' + $(this).attr('data-value');
+            for(gi in product_json){
+	    		var item = product_json[gi];
+	    		var item_text = JSON.stringify(item);
+                var reg = new RegExp(temp.join(";"));
+                flage = reg.test(item_text);
+                if(flage) break;
+            }
+            if(!flage) $(this).addClass("disabled");
+       	});
+ 	});
+}
+/**
+ *选择购买数量
+ */
+$("input[name='cart_num']").on("change",function(){
+    var value = $(this).val();
+    var max = parseInt($("#data_goodsNumber").text());
+    if((/^\d+$/i).test(value)){
+        value = Math.abs(parseInt(value));
+        if(value<1) value = 1;
+        if(value>max) value = max;
+    }else{
+        value = 1;
+    }
+    $(this).val(value);
+})
+/**
+ * 禁止购买
+ */
+function closeBuy() {
+    if ($('#joinCarButton').length > 0) {
+        $('#joinCarButton').addClass('hide');
+    }
+    if ($('#noticeButton').length > 0) {
+        $('#noticeButton').removeClass('hide');
+    }
+}
+/**
+ * 开放购买
+ */
+function openBuy() {
+    if ($('#joinCarButton').length > 0) {
+        $('#joinCarButton').removeClass('hide');
+        $(".xz-notic").addClass('hide');
+    }
+    if ($('#noticeButton').length > 0) {
+        $('#noticeButton').addClass('hide');
+    }
+}
+</script>
+<script type="text/javascript">
+/* 商品咨询 */
+$("#Consulbtn").click(function() {
+	var dialog = art.dialog({
+		padding: '0px ',
+		id: 'consul_btn',
+		background: '#ddd',
+		opacity: 0.3,
+		title: '商品咨询',
+		lock:true,
+		fixed:true,
+		content: document.getElementById('testID2'),
+		ok:function() {
+			var question = $('textarea[name=question]');
+			$.post("{U('Goods/Consult/add')}", {
+				goods_id:"{$id}",
+				product_id:goods.product_id,
+				question:question.val(),
+			}, function(ret) {
+				if(ret.status == 1) {
+					dialog.title(ret.info);
+					setTimeout("window.location.reload();", ret.ms);
+				} else {
+					alert(ret.info);
+					return false;
+				}
+			}, 'JSON');
+			return false;
+		},
+		cancel:true
+	});
+});
+</script>
+</html>

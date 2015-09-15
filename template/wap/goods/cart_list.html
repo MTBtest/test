@@ -1,0 +1,93 @@
+{template user/header}
+    <div class="main pad50">
+    {if $lists}
+    	{loop $lists $k $r}
+    	<form action="keyword" onsubmit="return false;">
+		<dl class="shop selected" data-id="{$k}" data-price="{$r[shop_price]}" data-num="{$r[goods_num]}" checked_ids="{$r['id']}">
+			<dt><strong><img src="{THEME_PATH}img/ico_26.png" />规格：{if $r[spec_text]}{$r[spec_text]}{else}无{/if}</strong><span><a href="javascript:;" onclick="goods_cart.delete('{$k}');"><img src="{THEME_PATH}img/ico_27.png" /></a></span></dt>
+			<dd class="clearfix">
+				<em class="hover"><img src="{$r['goods_img']}" alt="{$r[name]}"/></em>
+				<p>
+					<a href="{U('Goods/Index/detail', array('id' => $r[id]))}">{$r[name]}</a>
+					<span><b class="org">{MONUNIT}{$r[shop_price]}</b> × <input type="number" class="goods_num" data-key="{$k}" value="{$r[goods_num]}" autocomplete="off"/></span>
+					<input type="submit" value="submit" class="hide">
+				</p>
+			</dd>
+		</dl>
+		</form>
+		{/loop}
+		<div class="btnF">
+			<span class="hover">全选</span>
+			<a href="javascript:;" id="btn_buy" class="btnBlue1 hover">结算</a>
+			<p>
+				<strong class="org">合计：<em class="normal" id="total">{MONUNIT}{$count_price}</em></strong>
+				结算商品数量：<em class="normal" id="nums">{$goods_num}</em> 件
+			</p>
+	    </div>
+	{else}
+		<div class="none1">
+			<img src="{THEME_PATH}img/bg_5.png" />
+			<p>您的购物车还是空的</p>
+			<p><a href="{U('Goods/Index/index')}">先去逛逛</a></p>
+		</div>
+	{/if}
+    </div>
+<script type="text/javascript" src="{THEME_PATH}js/goods_cart.js"></script>
+<script type="text/javascript">
+setTitle('购物车');
+$(function(){
+	goods_cart.initialize();
+})
+$(".shop em").click(function(){
+	if($(this).hasClass("hover")) {
+		$(this).removeClass("hover");
+		$(this).parents("dl.shop").removeClass('selected');
+		$(".btnF span").removeClass("hover");
+	} else {
+		$(this).addClass("hover");
+		$(this).parents("dl.shop").addClass('selected');
+	}
+	if($(".shop em.hover").length == $(".shop em").length ) {
+		$(".btnF span").addClass("hover");
+	}
+	goods_cart.initialize();
+});
+$(".btnF span").click(function(){
+	if($(this).hasClass("hover")) {
+		$(this).removeClass("hover");
+		$(".shop em").removeClass("hover");
+		$("dl.shop").removeClass('selected');
+	} else {
+		$(this).addClass("hover");
+		$(".shop em").addClass("hover");
+		$("dl.shop").addClass('selected');
+	}
+	if($(".shop em.hover").length == $(".shop em").length ) {
+		$(".btnF span").addClass("hover");
+	}
+	goods_cart.initialize();
+});
+$('input.goods_num[type=number]').blur(function(){
+	if($(this).val().length < 1) {
+		hd_alert('请输入购买数量');
+		$(this).focus();
+		return;
+	}
+	var num = parseInt($(this).val());
+	if(num < 1) {
+		num = 1;
+	}
+	$(this).val(num);
+	$(this).parents('dl.shop').attr('data-num', num);
+	goods_cart.update($(this).parents('dl.shop').attr('data-id'), num);
+});
+$("#btn_buy").click(function() {
+	if($(this).hasClass('disabled')) {
+		hd_alert('请选择结算的商品');
+		return false;
+	}
+	goods_cart.createOrder();
+});
+</script>
+</body>
+</html>

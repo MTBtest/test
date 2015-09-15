@@ -1,0 +1,64 @@
+<!--{subtemplate common/header}-->
+<script type="text/javascript" src="{THEME_PATH}js/artDialog.js?skin=default"></script>
+	<!--购物车（有商品）-->
+	<div class="Nowposition w1100">
+			<div>
+				<img src="{THEME_PATH}images/homeimages/homepic_22.png">您当前位置：
+				<a href="{__APP__}">首页</a> &nbsp;>&nbsp;
+				<a href="{U('Goods/Brand/index')}">品牌中心</a>
+			</div>
+		</div>
+	<div class="shop_last w1100">
+		<div class="hr">
+			<p class="hr-text">共 0 个品牌</p>
+		</div>
+		<div >
+			<ul>
+				{hd:brand action="lists" num="3" order="sort asc,id desc"}
+				{loop $data $r}
+				<li class="brand-pro fl">
+					<div class="brand-img">
+						<a href="{U('Goods/Brand/detail', array('id'=> $r['id']))}">
+						{if !empty($r[logo])}
+							<img src="{$r[logo]}" alt="{$r[name]}" title="{$r[name]}" />
+						{else}
+							<img src="{THEME_PATH}images/homeimages/nopic.jpg" alt="{$r[name]}" title="{$r[name]}"/>
+						{/if}
+						</a>
+					</div>
+					<p style=""><a href="{U('Goods/Brand/detail', array('id'=> $r['id']))}">{$r[name]}</a></p>
+				</li>
+				{/loop}
+				{/hd}
+			</ul>
+		</div>
+		<div class="clear"></div>
+		<div class="hr mt30">
+			<p class="hr-text">更多品牌</p>
+		</div>
+		<div class="more-brand">
+			<ul class="fl">
+				{hd:brand action="lists" num="1000" order="id asc"}
+				{loop $data $r}
+					<li>
+						<a href="{U('Goods/Brand/detail', array('id'=> $r['id']))}">{$r[name]}</a>
+					</li>
+				{/loop}
+				{/hd}
+			</ul>
+		</div>
+	    <div class="clear"></div>
+	</div>
+	<!--footer-->
+	<!--{subtemplate common/footer}-->
+</body>
+	<script type="text/javascript">
+    $(function(){
+        $(".other_shopr_ul li div:last").css("border","none");
+    });
+	$(function(){
+        var brandNum = $(".more-brand .fl li").length;
+		$(".shop_last .hr:eq(0) .hr-text").text("共" + " " + brandNum + " " + "个品牌");
+    });
+</script>
+</html>

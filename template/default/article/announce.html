@@ -1,0 +1,68 @@
+<!--{subtemplate common/header}-->
+		<div class="Nowposition w1100">
+			<div>
+				<img src="{THEME_PATH}images/homeimages/homepic_22.png">您当前位置：
+				<a href="{__APP__}">首页</a>{catposArticle($category_id)}&nbsp;>&nbsp;<a href="{U('Article/ArticleAnnounces/detail', array('id'=> $id))}">{$title}</a>
+			</div>
+		</div>
+		<!--咨询consult-->
+		<div class="consult-box w1100">
+			<!--consult-L-->
+			<div class="consult-L fl">
+				<div class="consult-L-Article-box">
+					<div class="consult-L-Article">
+						<!--文章内容1-->
+						<div class="consult-L-Article-con3">
+							<!--文章标题-->
+							<div class="Title-article">
+								<p>{$title}</p>
+							</div>
+							<!--文章内容-->
+							<div class="article-body">
+								<!--正文-->
+								<p class="article-body-p">{$content}</p>
+							</div>
+							<!--上一篇，下一篇-->
+							<div class="othe-consult">
+                                {if $prenext[pre][id]>0}
+								<span class="fl"><a href="{U('Article/ArticleAnnounces/detail', array('id'=> $prenext[pre][id]))}">上一篇　{$prenext[pre][title]}</a></span>
+                                {/if}
+                                {if $prenext[next][id]>0}
+								<span class="fr"><a href="{U('Article/ArticleAnnounces/detail', array('id'=> $prenext[next][id]))}">下一篇　{$prenext[next][title]}</a></span>
+                                {/if}
+							</div>
+						</div>
+					</div>
+					<!---->
+				</div>
+			</div>
+			<!--consult-R-->
+			<div class="consult-R fr">
+				<div class='cousult-R-t'>热门资讯</div>
+				<em></em>
+				<div class="cousult-R-article">
+					<!--热门咨询1-->
+					{hd:article action="lists" num="5" order="create_time DESC"}
+					{php $i = 0;}
+					{loop $data $r}
+					{php $i++;}
+					<div class="cousult-R-article-con">
+						<p class="cousult-R-article-con-T">
+							<a href="{U('Article/Index/detail', array('id'=> $r[id]))}">{$r[title]}</a>
+						</p>
+						<div class="hot-word{$i}">{$i}</div>
+						<div class="hot-word-con">
+							<p>{msubstr($r[description],90)}</p>
+						</div>
+					</div>
+					{/loop}
+					{/hd}
+				</div>
+			</div>
+		</div>
+		<div class="clear"></div>
+		<!--{subtemplate common/footer}-->
+	</body>
+	<script type="text/javascript">
+	</script>
+</html>

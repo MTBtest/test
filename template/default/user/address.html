@@ -1,0 +1,195 @@
+{template header}
+    <script type="text/javascript" src="{THEME_PATH}js/area.js"></script>
+    <script>var ajaxurl = "{U('Address/getArea')}";</script>
+    <script>
+        function del(id) {
+            if (id != "") {
+                if (confirm("确定删除吗？")) {
+                    $.post("{U('address/addressDel')}", {
+                        id: id
+                    }, function(data) {
+                        if (data.status == 1) {
+                            alert(data.info);
+                            location.href = data.url;
+                            return false;
+                        } else {
+                            alert(data.info);
+                            location.href = data.url;
+                            return false;
+                        }
+                    },'json');
+                }
+            } else {
+                alert('请选择你要删除的信息');
+                return false;
+            }
+        }
+        function mr(id) {
+            if (id != "") {
+                if (confirm("确定设置为默认地址吗？")) {
+                    $.post("{U('address/addressDefaut')}", {
+                        id: id
+                    }, function(data) {
+                        alert(data.info);
+                        if (data.status == 1) {
+                            location.reload();
+                            return false;
+                        }
+                    },'json')
+                }
+            } else {
+                alert('请选择你要操作的信息');
+                return false;
+            }
+        }
+        function submit_add() {
+            if($("#status").attr("checked")=="checked"){
+                 var status = $("#status").val();
+            }else{
+                var status = 0;
+            }
+            $.post("{U('Address/address')}", {
+                "type": "add",
+                "address_name": $("#username").val(),
+                "address": $("#address").val(),
+                "zipcode": $("#zip").val(),
+                "mobile": $("#mobile").val(),
+                "status": status,
+                "province": $("#province").val(),
+                "city": $("#city").val(),
+                "district": $("#district").val()
+            }, function(data) {
+                alert(data.info);
+                if(data.info=='操作成功'){
+                    location.reload();
+                }
+                if (data.status == 1){
+                    location.reload();
+                    return false;
+                }
+            }, 'json');
+        }
+        function submit_mod(id) {
+            if($("#status").attr("checked")=="checked"){
+                 var status = $("#status").val();
+            }else{
+                var status = 0;
+            }
+            $.post("{U('Address/address')}", {
+                "type": "mod",
+                "id": id,
+                "address_name": $("#username").val(),
+                "address": $("#address").val(),
+                "zipcode": $("#zip").val(),
+                "mobile": $("#mobile").val(),
+                "status": status,
+                "province": $("#province").val(),
+                "city": $("#city").val(),
+                "district": $("#district").val()
+            }, function(data) {
+                alert(data.info);
+                if(data.info=='操作成功'){
+                    location.reload();
+                }
+                if (data.status = 1) {
+                    location.reload();
+                    return false;
+                }
+            }, 'json');
+        }
+    </script>
+	<div class="main w1100">
+       {template setting_left}
+	        <div class="content fr">
+	            <div class="dizhi">
+	                <h3 style="width: 826px;">个人资料</h3>
+	                <dl>
+	                    <dt style="border-bottom: none;">
+	                                <span >
+	                                    <a href="{U('user/userinfo')}">个人信息</a>
+	                                    <a href="{U('address/address')}" class="hover">收货地址</a>
+	                                </span>
+	                        <em style="bottom: -8px;"><a  href="javascript:location.reload();" class="shua"></a></em></dt>
+	                    <dd>
+	                        <table class="ditable">
+	                            <tr>
+	                                <th>收件人</th>
+	                                <th style="min-width: 350px;">地址</th>
+	                                <th>邮编</th>
+	                                <th>联系电话</th>
+	                                <th>操作</th>
+	                            </tr>
+                                {loop $addressList $v}
+                                <tr>
+                                  <td>{$v[address_name]}</td>
+                                  <td>{$v[addressInfo]}</td>
+                                  <td>{$v[zipcode]}</td>
+                                  <td>{$v[mobile]}</td>
+                                    <td>
+                                        <?php if ($v['id'] == $this->userinfo['address_id']): ?>
+                                        	默认地址&nbsp; 
+                                        <?php else: ?>
+                                        	<a href="javascript:void(0)" onclick="mr({$v[id]})">设为默认</a>
+                                        <?php endif ?>
+                                        <a href="{U('address/address',array('id'=>$v[id]))}" >编辑</a><a href="javascript:void(0)" onclick="del({$v[id]})">删除</a></td>
+                                </tr>
+                                  {/loop}
+	                        </table>
+	                        <ul class="tjdz">
+                                <li>
+                                    <span>收件人姓名：</span><p><input type="text" name="username" id="username" value="{$editList[address_name]}" placeholder="请填写收件人姓名" class="input_3" /> 请输入2-12个字符，支持中文，英文</p>
+                                </li>
+                                <li style="margin-top:-2px">
+                                    <span>寄送区域：</span><p>
+                                    <div class="list_border_box2">
+                                        <select name="province" id="province" onChange="loadArea(this.value, 'city')">
+                                            <option value="-1" selected>--请选择省份--</option>
+                                           {loop $region $v}
+                                            <option value="{$v[area_id]}" {if $editList[province] == $v[area_id]} selected="selected" {/if}>{$v[area_name]}</option>
+                                            {/loop}
+                                        </select>
+                                    </div>
+                                    <div class="list_border_box3">
+                                        <select name="city" id="city" onChange="loadArea(this.value, 'district')">
+                                            {if $editList}
+                                             <option value="{$editList['city']}">{$editList[cityName]} </option>
+                                             {else}
+                                               <option value="-1">--请选择城市--</option>
+                                             {/if}
+                                        </select>
+                                    </div>
+                                    <div class="list_border_box3">
+                                        <select name="district" id="district" onChange="loadArea(this.value, 'null')">
+                                              {if $editList}
+                                             <option value="{$editList['district']}">{$editList[districtName]} </option>
+                                             {else}
+                                              <option value="-1">--请选择地区--</option>
+                                             {/if}
+                                        </select>
+                                    </div>
+                                    </p>
+                                </li>
+                                <li>
+                                    <span>详细地址：</span><p><input type="text" name="address" id="address" value="{$editList[address]}" placeholder="请填写详细街道地址，不含省市区" class="input_3" style="width:400px;" /> 请填写详细街道地址，不含省市区</p>
+                                </li>
+                                <li>
+                                    <span>邮政编码：</span><p><input type="text" value="{$editList[zipcode]}" name="zip"  id="zip" placeholder="请填写邮编" class="input_3" /> 请输入6位数字</p>
+                                </li>
+                                <li>
+                                    <span>联系电话：</span><p><input type="text"  value="{$editList[mobile]}" name="mobile" id="mobile" placeholder="请填写联系电话" class="input_3" /> 请输入正确的电话号码<br /><label>
+                                    <input type="checkbox" name="status"value="1" id="status"/>设为默认地址</label></p>
+                                </li>
+                                <li>
+                                    <span>&nbsp;</span><p><input type="button" onclick="{if $editList} submit_mod({$id}) {else}submit_add(){/if}" placeholder="{if $editList}编辑{else}添加{/if}地址" value="{if $editList}编辑{else}添加{/if}地址"  class="btn3" /></p>
+                                </li>
+							</ul>
+	                    </dd>
+	                </dl>
+	            </div>
+	        </div>
+	        <div class="clear"></div>
+	    </div>
+	</div>
+	<!--{subtemplate common/footer}-->
+</body>
+</html>

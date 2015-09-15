@@ -1,0 +1,234 @@
+<!--{subtemplate common/header}-->
+<script src="{JS_PATH}artDialog/artDialog.js" type="text/javascript"></script>
+<script src="{JS_PATH}artDialog/plugins/iframeTools.js" type="text/javascript"></script>
+<link rel="stylesheet" href="{JS_PATH}artDialog/skins/default.css">
+<!--购物车（有商品）-->
+<div class="shopCarbox w1100">
+	<div class="shopCar_nav">
+		<div class="shopCar_Title-2">成功提交订单</div>
+		<div class="shopCar_msg">
+			<span class="shopCar_msg_01"><img src="{THEME_PATH}/images/homeimages/1_03.png">放入购物车<img src="{THEME_PATH}/images/homeimages/9qw_10.png"></span>
+			<span class="shopCar_msg_02-2"><img src="{THEME_PATH}images/homeimages/11_03.png">填写核对订单<img src="{THEME_PATH}/images/homeimages/9qw_10.png"></span>
+			<span class="shopCar_msg_02-3"><img src="{THEME_PATH}images/homeimages/shop-car-3.png">成功提交订单</span>
+		</div>
+	</div>
+	<div class="w1100" style="margin-top: 8px;">
+		<!--支付方式-->
+		{if $rs[pay_type] != 1}
+		<div class="order-title-num">
+			<span class="order-title-num-span1">订单提交成功，请您尽快付款！</span>
+			<span class="order-title-num-span2">订单号：{$rs['order_sn']}</span>
+		</div>
+		<div class="pay-total">
+			<span>应付订单金额：</span>
+			<span class="pay-total-color1">{MONUNIT}{$rs[real_amount]}</span>
+			<span class="pay-total-color2">请选择以下付款方式并进行付款</span>
+		</div>
+		<form action="{U('Goods/order/detail')}" method="POST" target="_blank" name="pay">
+		<input type="hidden" name="order_sn" value="{$rs[order_sn]}"/>
+		<input type="hidden" name="pay_bank" value="">
+		<!-- 余额支付 -->
+		{if C('balance_enable')==1}
+		<input type="hidden" name="user_money_check" value="{if $u_info['user_money']==0 && $rs['balance_amount']==0}0{else}1{/if}">
+		<div class="money_box {if $u_info['user_money'] > 0}active{/if}" id="money_box">
+			<div class="item">
+				<input type="checkbox" name="money_check" {if $u_info['user_money']==0}disabled{/if} {if $u_info['user_money'] > 0}checked{/if}/>
+				账户余额 &nbsp;<em class="black">{$u_info['user_money']}</em>&nbsp;元
+				<span style="color:gray;">【当前冻结总金额：{$u_info['freeze_money']} 元{if $rs['balance_amount'] > 0} ; 当前订单已支付余额<em class="red">{$rs['balance_amount']}</em>元{/if}】</span>
+				<span class="money_pay">支付&nbsp;<em class="red">
+					{if $u_info['user_money']>$rs[real_amount]}
+						<?php echo sprintf("%.2f", $rs['real_amount']-$rs['balance_amount']); ?>
+					{else}
+						{if $rs['balance_amount'] > 0 && ($u_info['user_money'] >= $rs['real_amount']-$rs['balance_amount'])}
+							<?php echo sprintf("%.2f", $rs['real_amount']-$rs['balance_amount']); ?>
+						{else}
+							{$u_info['user_money']}
+						{/if}
+					{/if}
+					</em> 元
+				</span>
+			</div>
+		</div>
+		<style type="text/css">
+			.item {padding: 18px 30px;}
+			.money_pay {float:right; display: block;}
+			.money_box {height:56px; margin:10px auto 0;cursor: pointer;border: 3px solid #e8e8e8; }
+			.money_box:hover {border:3px solid #CAD6EF;}
+			.active{border:3px solid #728EC9; }
+			.money_box em {font-style:normal;font-size: 16px;}
+			em.black {color:#4d4d4d;}
+			em.red{color: #F60;}
+		</style>
+		<script type="text/javascript">
+			var real_amount = parseFloat('<?php echo $rs[real_amount] ?>');//应付金额
+			var user_money = parseFloat('<?php echo $u_info[user_money] ?>');//当前余额
+			var balance_amount = parseFloat('<?php echo $rs[balance_amount] ?>');//已支付余额
+			$(document).ready(function(){
+				if (user_money >= real_amount || (balance_amount > 0 && user_money > (real_amount-balance_amount))) {
+					$(".payway-box").find('div').hide();
+					$('#pay_type').css('height','100px');
+				} else if(balance_amount > 0) {
+					if (user_money == 0) {
+						$('#money_box').addClass('active');
+						$('input[name=money_check]').prop('checked', 'checked');
+					}
+				}
+				// 还需支付多少金额
+				var need_pay = (real_amount - balance_amount - user_money).toFixed(2);
+				if (need_pay < 0) need_pay = (0).toFixed(2);
+				$('#need_pay').html(need_pay);
+			});
+			$('input[name=money_check], #money_box').click(function(){
+				if (user_money > 0) {
+					money_check();
+				} else {
+					alert('余额不足，请充值！');
+				}
+			})
+			function money_check() {
+				var $dom = $('#money_box');
+				var need_pay = '';
+				if($('input[name=money_check]:checked').length == 1) {
+					$dom.addClass('active');
+				} else {
+					$dom.removeClass('active');
+				}
+				if ($dom.hasClass('active')) {	//取消选中
+					$('input[name=money_check]').prop('checked', '');
+					$(".payway-box").find('div').show();
+					$dom.removeClass('active');
+					$('#pay_type').css('height','');
+					$('input[name=user_money_check]').attr('value','0');
+					// 还需支付金额
+					need_pay = (real_amount - balance_amount).toFixed(2);
+					$('#need_pay').html(need_pay);
+				} else {
+					$('input[name=money_check]').prop('checked', 'checked');
+					if (user_money >= real_amount || (balance_amount > 0 && user_money > (real_amount-balance_amount))) {
+						$(".payway-box").find('div').hide();
+						$('#pay_type').css('height','100px');
+					}
+					$dom.addClass('active');
+					$('input[name=user_money_check]').attr('value','1');
+					// 还需支付金额
+					need_pay = (real_amount - balance_amount - user_money).toFixed(2);
+					if (need_pay < 0) need_pay = (0).toFixed(2);
+					$('#need_pay').html(need_pay);
+				}
+			}
+		</script>
+		{/if}
+		<div class="payway-box" id="pay_type" style="position: relative;">
+			<div class="payway-01">
+				<ul>
+					<li class="payselect-cursor">支付方式</li>
+				</ul>
+				{if C('enable') == 1}
+				<em style='float:right;margin-right:40px;font-style:normal;' class="red">
+					您还需支付&nbsp;<b style="font-size:16px;" id="need_pay">0.00</b>&nbsp;元
+				</em>
+				{/if}
+			</div>
+			<div class="pay-bank">
+				<div class="pay-way01">
+					{loop $payment $code $pay}
+					<li class="choose-bank"><label><input type="radio" name="pay_code" value="{$code}"><span class="cursor-bank"><img src="{IMG_PATH}pay/{$code}.png" alt="" /></span></label></li>
+					{/loop}
+					{loop $banks $bank}
+					<li class="choose-bank" data-defaultbank="{$bank}"><label><input type="radio" name="pay_code" value="bank"><span class="cursor-bank"><img src="{IMG_PATH}pay/{$bank}.png" alt="" /></span></label></li>
+					{/loop}
+					<div class="clear"></div>
+				</div>
+			</div>
+			<a class="pay-bankbtn" href="javascript:;" onclick="paysubmit();">立即支付</a>
+		</div>
+		</form>
+		{else}
+		<div class="order-title-num">
+			<span class="order-title-num-span1">订单提交成功</span>
+			<span class="order-title-num-span2">订单号：{$rs['order_sn']}</span>
+		</div>
+		<div class="pay-total">
+			<span>订单金额：</span>
+			<span class="pay-total-color1">{MONUNIT}{$rs[real_amount]}</span>
+			<span class="pay-total-color2">我们会尽快为您发货</span>
+		</div>
+		<div class="shopCarbox2">
+			<div class="kindly-box">
+				<div class="kindly-a" style="left:410px">
+					<div class="kindly-title">我们会在最短时间处理您的订单</div>
+		            <p>
+		            	本订单您将获得{getconfig('site_integralname')}：<span class="cred">{$rs['give_point']}</span><br>
+		             	您选择的配色支付方式：<span class="cblue">货到付款</span><br>
+		             	到其他地方去逛逛： <a href="{U('Home/Index/index')}">商城首页</a> |<a href="{U('User/Index/index')}">会员中心 </a>
+		            </p>
+		        </div>
+		         <a class="pay-bankbtn" href="{U('User/Order/detail/', array('order_sn'=>$rs['order_sn']))}">查看订单</a>
+		    </div>
+		    <div class="clear"></div>
+		</div>
+		{/if}
+	</div>
+	<div class="clear"></div>
+</div>
+<!--{subtemplate common/footer}-->
+<!--添加新地址-->
+</body>
+<script type="text/javascript">
+//单选支付银行
+$(".pay-bank li").click(function(){
+	if($(this).attr('data-defaultbank')) {
+		$('input[name=pay_bank]').attr('value', $(this).attr('data-defaultbank'));
+	} else {
+		$('input[name=pay_bank]').attr('value', '');
+	}
+});
+function paysubmit() {
+	var is_success = true;
+	var order_sn = $("input[name=order_sn]").val();
+	if(($('input[name=money_check]:checked').length == 1 && user_money < (real_amount-balance_amount)) || $('input[name=money_check]:checked').length == 0) {
+		is_success = false;
+	}
+	if ($("input[name='pay_code']:checked").length == 0 && is_success == false) {
+		alert('请选择支付方式');
+		return false;
+	}
+	$("form[name=pay]").submit();
+	var dialog = art.dialog({
+		id: 'paysubmit',
+		title : '提示信息',
+		fixed: true,
+		lock: true,
+		content: '<p>请问您完成付款了吗?</p><p>如没有,请在新打开的网上银行页面进行付款的操作</p><p>如果遇到问题，请联系客服人员</p>',
+		okVal:'完成付款',
+		cancelVal:'返回选择其他银行',
+		ok: function() {
+			$.getJSON('?m=goods&c=order&a=getOrderPayState', {order_sn:order_sn}, function(ret) {
+				if(ret.pay_status == 0) {
+					pay_error();
+					dialog.close();
+				} else {
+					redirect('?m=goods&c=order&a=pay_success&order_sn=' + order_sn);
+				}
+			});
+			return false;
+		},
+		cancel:function() {
+			window.location.reload();
+		}
+	});
+}
+function pay_error() {
+	art.dialog({
+		id: 'pay_error',
+		title : '提示信息',
+		fixed: true,
+		lock: true,
+		content: '<p>充值失败或未确认！</p><p>未能收到来自银行的付款成功通知</p><p>如果您确认在网上银行已付款成功，系统将与所选择的网上银行进行对账。</p><p>若您的付款得到确认，订单将完成支付。</p>',
+		okVal:'我知道了',
+		ok: function() {return true;}
+	});
+	return true;
+}
+</script>
+</html>

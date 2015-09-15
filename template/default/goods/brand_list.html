@@ -1,0 +1,76 @@
+<!--{subtemplate common/header}-->
+    <script type="text/javascript" src="{THEME_PATH}js/artDialog.js?skin=default"></script>
+	<!--购物车（有商品）-->
+	<div class="Nowposition w1100">
+			<div>
+				<img src="{THEME_PATH}images/homeimages/homepic_22.png">您当前位置：
+				<a href="{__APP__}">首页</a> &nbsp;>&nbsp;
+				<a href="{U('Goods/Brand/index')}">品牌中心</a> &nbsp;>&nbsp;
+				<a href="{U('Goods/Brand/detail', array('id' => $id))}">{$name}</a>
+			</div>
+		</div>
+	<div class="shop_last w1100">
+		<div class="h73 bcolor">
+    		<div class="brand_logo brcolor fl">
+				{if $logo}
+    			<img src="{$logo}" alt="{$name}" />
+				{else}
+				{$name}
+				{/if}
+    		</div>
+    		<div class="brand_text  fl">
+    			<p>{msubstr($descript,233)}</p>
+    		</div>
+    	</div>
+    	<div class="clear"></div>
+	    <div>
+	        <div class="other_user_shop">
+	        <div class="other_user_shop_shop">
+				{hd:goods action="lists" brandid="$id" num="10" page="$page" order="id DESC"}
+				{loop $data $r}
+	            <div class="shop_01 fl Mleft_1">
+	                <div class="shop_01-imgbox">
+	                    <a href="{U('Goods/Index/detail', array('id'=> $r[id]))}" target="_blank">
+							{if empty($r[small_pics]) && empty($r[list_img])}
+							<img src="{THEME_PATH}images/homeimages/nopic.jpg">
+							{elseif empty($r[small_pics])}
+							<?php $list_img = str2arr($r['list_img']);?>
+							<img src="{$list_img[0]}">
+							{else}
+							<?php $small_pics = str2arr($r['small_pics'])?>
+							<img src="{$small_pics[0]}">
+							{/if}
+						</a>
+	                </div>
+	                <p class="p1"><a href="{U('Goods/Index/detail', array('id'=> $r[id]))}" target="_blank">{$r[name]}</a></p>
+					<div class="p2">
+	                    <p>销售价<span>{MONUNIT}{$r[shop_price]}</span></p>
+	                    <div class="btnshop">
+	                        <!--<div class="joincar fl">加入购物车</div>-->
+	                        <div class="rate fl">关注({$r[hits]})</div>
+	                        <a href="{U('User/Collect/add', array('goods_id' => $r[id]))}"><div class="collect fr">收藏</div></a>
+	                    </div>
+	                </div>
+	            </div>
+				{/loop}
+				{/hd}
+	        </div>
+	        <div class="clear"></div>
+	        </div>
+	        <div class="clear"></div>
+	    </div>
+		<!--分页-->
+		<div class="pagefooter pageactivity">
+			<div class="pagefooter-01 fr">{$pages}</div>
+		</div>
+	    <div class="clear"></div>
+	</div>
+	<!--footer-->
+	<!--{subtemplate common/footer}-->
+</body>
+	<script type="text/javascript">
+    $(function(){
+        $(".other_shopr_ul li div:last").css("border","none");
+    })
+</script>
+</html>

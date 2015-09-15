@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<head>
+<meta charset="UTF-8" />
+<meta id="viewport" name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>{if isset($SEO['title']) && !empty($SEO['title'])}{$SEO['title']}{/if}{$SEO['site_title']}</title>
+<meta name="Keywords" content="{$SEO['keyword']}" />
+<meta name="Description" content="{$SEO['description']}" />
+<!-- 针对移动端优化 -->
+<meta name="apple-touch-fullscreen" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<meta name="apple-mobile-app-status-bar-style" content="black" />
+<meta name="format-detection" content="email=no" />
+<meta name="format-detection" content="telephone=no" />
+<link rel="apple-touch-icon-precomposed" href="touch.ico" />
+<link rel="stylesheet" href="{THEME_PATH}css/style.css" />
+<link rel="stylesheet" href="{THEME_PATH}css/swiper.min.css">
+<script src="{THEME_PATH}js/jquery-1.7.2.min.js"></script>
+<script src="{THEME_PATH}js/idangerous.swiper.min.js"></script>
+<script src="{THEME_PATH}js/script.js"></script>
+<!--[if lt IE 9]>
+<script src="{THEME_PATH}{THEME_PATH}js/html5shiv.js"></script>
+<![endif]-->
+</head>
+<body>
+<header class="header">
+	<form action="{__APP__}" method="get">
+	<input type="hidden" name="m" value="goods"/>
+    <input type="hidden" name="c" value="index"/>
+	<input type="hidden" name="a" value="lists"/>
+    <div class="search">
+    	<div class="logo">
+			<img src="{THEME_PATH}img/logo.png" class="logo_img"/>
+    	</div>
+		<p class="clearfix">
+			<input type="image" src="{THEME_PATH}img/ico_32.png" class="input_img" />
+			<input type="search" name="keyword" placeholder="搜索商品标题" class="input_ss" />
+		</p>
+	</div>
+	</form>
+    <div class="nav_index">
+    	<a href="{U('Goods/Index/category')}"><img src="{THEME_PATH}img/ico_37.png" /></a>
+    </div>
+</header>
+    <div class="main bgeee">
+		<div class="banner1">
+			<div class="swiper-container">
+				<div class="swiper-wrapper">
+					{hd:focus action="lists" num="5" order="sort ASC, id DESC" }
+					{loop $data $r}
+					{if $r[pic]}
+						<div class="swiper-slide">
+							<a href="{$r[url]}"><img src="{$r[pic]}" title="{$r[text]}"/></a>
+						</div>
+					{/if}
+					{/loop}
+					{/hd}
+				</div>
+			</div>
+		</div>
+		<div class="menuNav">
+			<ul class="clearfix">
+				<li><a href="{U('Goods/Index/category')}"><img src="{THEME_PATH}img/ico_n1.png" /><p>全部分类</p></a></li>
+				<li><a href="{U('User/Order/manage')}"><img src="{THEME_PATH}img/ico_n2.png" /><p>我的订单</p></a></li>
+				<li><a href="{U('Goods/Cart/index')}"><img src="{THEME_PATH}img/ico_n3.png" /><p>购物车</p></a></li>
+				<li><a href="{u('User/Collect/lists')}"><img src="{THEME_PATH}img/ico_n4.png" /><p>我的收藏</p></a></li>
+				<li><a href="{U('User/Index/index')}"><img src="{THEME_PATH}img/ico_n5.png" /><p>会员中心</p></a></li>
+			</ul>
+		</div>
+		{hd:goods action="lists" statusext="3" num="5" return="infos1"}
+			<dl class="bimg">
+				{if $infos1}
+					<dt>新品到货</dt>
+				{/if}
+				<dd>
+					<div class="swiper-container">
+						<div class="swiper-wrapper">
+							{loop $infos1 $v}
+								{php $ids[$n] = $v['id'];}
+								{if $n < 4}
+								<div class="swiper-slide">
+									<a href="{U('Goods/Index/detail', array('id'=> $v['id']))}">
+										{if empty($v[small_pics]) && empty($v[list_img])}
+											<img src="{THEME_PATH}images/homeimages/nopic.jpg" />
+										{else}
+											{php $list_img = str2arr($v[list_img]);}
+											<img src="{$list_img[0]}"/>
+										{/if}
+									</a>
+									<p>
+									<div class="tall">
+										<a href="{U('Goods/Index/detail', array('id'=> $v['id']))}">{$v[name]}</a>
+									</div>
+										<b class="org">￥{$v[shop_price]}元</b>
+									</p>
+								</div>
+								{/if}
+							{/loop}
+						</div>
+					</div>
+				</dd>
+			</dl>
+			<div class="list">
+				<ul class="clearfix">
+					{loop $infos1 $v}
+						{if $n >3}
+						<li>
+							<a href="{U('Goods/Index/detail', array('id'=> $v['id']))}">
+								{if empty($v[small_pics]) && empty($v[list_img])}
+									<img src="{THEME_PATH}images/homeimages/nopic.jpg" />
+								{elseif empty($v[small_pics])}
+									$list_img = str2arr($v[list_img]);}
+									<img src="{$list_img[0]}"/>
+								{else}
+									<img src="{$v[small_pics]}" />
+								{/if}
+							</a>
+							<p>
+								<div class="tall">
+									<a href="{U('Goods/Index/detail', array('id'=> $v['id']))}">{msubstr($v[name],20)}</a>
+								</div>
+								<b class="org">￥{$v[shop_price]}元</b>
+							</p>
+						</li>
+						{/if}
+					{/loop}
+				</ul>
+			</div>
+		{/hd}
+		{hd:goods action="lists" statusext="1" num="5" return="infos2"}
+			<dl class="bimg">
+				{if $infos2}
+				<dt>促销商品</dt>
+				{/if}
+				<dd>
+					<div class="swiper-container">
+						<div class="swiper-wrapper">
+							{loop $infos2 $v}
+								{php $ids[count($infos1)+$n] = $v['id'];}
+								{if $n < 4}
+								<div class="swiper-slide">
+									<a href="{U('Goods/Index/detail', array('id'=> $v['id']))}">
+										{if empty($v[small_pics]) && empty($v[list_img])}
+											<img src="{THEME_PATH}images/homeimages/nopic.jpg" />
+										{else}
+											{php $list_img = str2arr($v[list_img]);}
+											<img src="{$list_img[0]}"/>
+										{/if}
+									</a>
+									<p>
+									<div class="tall">
+										<a href="{U('Goods/Index/detail', array('id'=> $v['id']))}">{$v[name]}</a>
+									</div>
+										<b class="org">￥{$v[shop_price]}元</b>
+									</p>
+								</div>
+								{/if}
+							{/loop}
+						</div>
+					</div>
+				</dd>
+			</dl>
+			<div class="list">
+				<ul class="clearfix">
+					{loop $infos2 $v}
+						{if $n >3}
+						<li>
+							<a href="{U('Goods/Index/detail', array('id'=> $v['id']))}">
+								{if empty($v[small_pics]) && empty($v[list_img])}
+									<img src="{THEME_PATH}images/homeimages/nopic.jpg" />
+								{elseif empty($v[small_pics])}
+									$list_img = str2arr($v[list_img]);}
+									<img src="{$list_img[0]}"/>
+								{else}
+									<img src="{$v[small_pics]}" />
+								{/if}
+							</a>
+							<p>
+							<div class="tall">
+								<a href="{U('Goods/Index/detail', array('id'=> $v['id']))}">{msubstr($v[name],20)}</a>
+							</div>
+								<b class="org">￥{$v[shop_price]}元</b>
+							</p>
+						</li>
+						{/if}
+					{/loop}
+				</ul>
+			</div>
+		{/hd}
+		{hd:goods action="lists" statusext="2" num="5" return="infos3"}
+			<dl class="bimg">
+				{if $infos3}
+				<dt>爆款热卖</dt>
+				{/if}
+				<dd>
+					<div class="swiper-container">
+						<div class="swiper-wrapper">
+							{loop $infos3 $v}
+								{php $ids[count($infos1)+count($infos2)+$n] = $v['id'];}
+								{if $n < 4}
+								<div class="swiper-slide">
+									<a href="{U('Goods/Index/detail', array('id'=> $v['id']))}">
+										{if empty($v[small_pics]) && empty($v[list_img])}
+											<img src="{THEME_PATH}images/homeimages/nopic.jpg" />
+										{else}
+											{php $list_img = str2arr($v[list_img]);}
+											<img src="{$list_img[0]}"/>
+										{/if}
+									</a>
+									<p>
+									<div class="tall">
+										<a href="{U('Goods/Index/detail', array('id'=> $v['id']))}">{$v[name]}</a>
+									</div>
+										<b class="org">￥{$v[shop_price]}元</b>
+									</p>
+								</div>
+								{/if}
+							{/loop}
+						</div>
+					</div>		
+				</dd>
+			</dl>
+			<div class="list">
+				<ul class="clearfix">
+					{loop $infos3 $v}
+						{if $n >3}
+						<li>
+							<a href="{U('Goods/Index/detail', array('id'=> $v['id']))}">
+								{if empty($v[small_pics]) && empty($v[list_img])}
+									<img src="{THEME_PATH}images/homeimages/nopic.jpg" />
+								{elseif empty($v[small_pics])}
+									$list_img = str2arr($v[list_img]);}
+									<img src="{$list_img[0]}"/>
+								{else}
+									<img src="{$v[small_pics]}" />
+								{/if}
+							</a>
+							<p>
+							<div class="tall">
+								<a href="{U('Goods/Index/detail', array('id'=> $v['id']))}">{msubstr($v[name],20)}</a>
+							</div>
+								<b class="org">￥{$v[shop_price]}元</b>
+							</p>
+						</li>
+						{/if}
+					{/loop}
+				</ul>
+			</div>
+		{/hd}
+		{hd:goods action="lists" order="rand()" where="$_where" num="10"}
+		{if ($infos1 || $infos2 || $infos3) && $data}
+		<div class="love">
+			<h3><strong>猜您喜欢</strong></h3>
+		</div>
+		{/if}
+		<div class="list1">
+			<ul class="clearfix">
+				<?php
+					$ids = array_unique(array_unique($ids));
+					sort($ids);
+					for ($i = 0;$i<count($ids);$i++) {
+						if ($i >= (count($ids)-1)) {
+							$str .= $ids[$i];
+						}else{
+							$str .= $ids[$i].',';
+						}
+					}
+					$_where = " `id` not in (".$str.")";
+				?>
+					{loop $data $v}
+					<li style="display:inline-block">
+						<a href="{U('Goods/Index/detail', array('id'=> $v['id']))}">
+							{if empty($v[small_pics]) && empty($v[list_img])}
+								<img src="{THEME_PATH}images/homeimages/nopic.jpg" />
+							{elseif empty($v[small_pics])}
+								$list_img = str2arr($v[list_img]);}
+								<img src="{$list_img[0]}"/>
+							{else}
+								<img src="{$v[small_pics]}" />
+							{/if}
+						</a>
+						<p>
+						<div class="tall">
+							<a href="{U('Goods/Index/detail', array('id'=> $v['id']))}">{msubstr($v[name],20)}</a>
+						</div>
+							<b class="org">￥{$v[shop_price]}元</b>
+						</p>
+					</li>
+					{/loop}
+			</ul>
+		</div>
+		{/hd}
+    </div>
+    <footer class="footer">
+        <div class="copy">
+        	Powered by Haidao<br />
+            © 2013-2015 Dmibox Inc.
+        </div>
+    </footer>
+    <script>
+    var tabsSwiper = new Swiper('.swiper-container',{
+        speed:500,
+        onSlideChangeStart: function(){
+            $(".dldt strong a").removeClass('hover');
+            $(".dldt strong").eq(tabsSwiper.activeIndex).find("a").addClass('hover');
+        }
+    });
+    $(".dldt strong").on('touchstart mousedown',function(e){
+        e.preventDefault()
+        $(".dldt strong a").removeClass('hover');
+        $(this).find("a").addClass('hover');
+        tabsSwiper.slideTo($(this).index());
+    });
+    $(".dldt strong").click(function(e){
+        e.preventDefault();
+    });
+    </script>
+</body>
+</html>

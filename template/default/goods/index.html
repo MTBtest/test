@@ -1,0 +1,689 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta http-equiv="x-ua-compatible" content="text/html; charset=utf-8" />
+	<title>{if isset($SEO['title']) && !empty($SEO['title'])}{$SEO['title']}{/if}{$SEO['site_title']}</title>
+	<meta name="Keywords" content="{$SEO['keyword']}" />
+	<meta name="Description" content="{$SEO['description']}" />
+	<link rel="shortcut icon"  href="{THEME_PATH}images/homeimages/favicon.ico"/>
+	<link rel="stylesheet" type="text/css" href="{THEME_PATH}css/home-common.css" />
+	<link rel="stylesheet" type="text/css" href="{THEME_PATH}css/home-style.css" />
+	<link rel="stylesheet" type="text/css" href="{THEME_PATH}css/adv-style.css"/>
+ 	<link rel="stylesheet" type="text/css" href="{THEME_PATH}css/new_common.css"/>
+	<link rel="stylesheet" type="text/css" href="{THEME_PATH}css/new_index.css"/>
+	<link rel="stylesheet" type="text/css" href="{THEME_PATH}css/new_footer.css"/>
+	<script type="text/javascript" src="{THEME_PATH}js/jquery-1.7.2.min.js"></script>
+	<script type="text/javascript" src="{THEME_PATH}js/common.js"></script>
+	<script src="{THEME_PATH}js/slider.js" type="text/javascript" charset="utf-8"></script>
+	<script src="{THEME_PATH}js/MSClass.js" type="text/javascript"></script>
+	<script type="text/javascript" src="{THEME_PATH}js/cart.js"></script>
+	<script type="text/javascript" src="{THEME_PATH}js/advall.js"></script>
+	<script type="text/javascript" src="{THEME_PATH}js/jquery.lazyload.min.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function(){
+			$("img").lazyload({
+				placeholder:'{THEME_PATH}images/loading.gif'
+			});
+			$("img:above-the-top").lazyload({    
+				placeholder : "{THEME_PATH}images/loading.gif",    
+				event : "sporty"   
+			}); 
+			$(window).bind("load", function() {    
+				var timeout = setTimeout(function() {$("img").trigger("sporty")}, 100);    
+			});   
+		});    
+	</script>
+	<!--[if IE 6]>
+	<script type="text/javascript" src="{THEME_PATH}js/DD_belatedPNG.js" ></script>
+	<script type="text/javascript">
+		DD_belatedPNG.fix('*');
+	</script>
+	<![endif]-->
+	<style type="text/css">
+		#focuscontent{padding: 0px; list-style: outside none none; font-size: 12px;}
+			#ulid .active{
+				display:block;
+			}
+			#ulid li{
+				display:none;
+			}
+		.headermenu_li {
+			position: absolute;
+			top: 40px;
+			left: 0px;
+			z-index: 999;
+			display: none;
+			min-height: 287px;
+			max-height: 287px;
+			/*overflow:hidden;*/
+			background: #3c6887;
+			font-size: 14px;
+		}
+	</style>
+</head>
+<body>
+	<!--页头通栏广告 id="1"-->
+	{hd:advposition action="lists" position_id="1" type="1" num="1" order="rand()"}
+			<!--type1:是图片，type2:是文字，type3:是代码，type4:是flash-->
+			{loop $data $r}
+				<div class="advid1 w1100">
+					<a href="{$r[link]}"><img src="{$r[content]}"/></a>
+					<a class="advid1_close" href="javascript:void(0);">关闭广告</a>
+				</div>
+			{/loop}
+	{/hd}
+	{hd:advposition action="lists" position_id="1" type="2" num="1" order="rand()"}
+			<!--type1:是图片，type2:是文字，type3:是代码，type4:是flash-->
+			{loop $data $r}
+				<div class="advid1 w1100">
+					<a href="{$r[link]}" style="color:#636363">{$r[content]}</a>
+					<a class="advid1_close" href="javascript:void(0);" style="color:#636363">关闭广告</a>
+				</div>
+			{/loop}
+	{/hd}
+	{hd:advposition action="lists" position_id="1" type="3" num="1" order="rand()"}
+			<!--type1:是图片，type2:是文字，type3:是代码，type4:是flash-->
+			{loop $data $r}
+				<div class="advid1 w1100">
+					{$r[content]}
+					<a class="advid1_close" href="javascript:void(0);" style="color:#636363">关闭广告</a>
+				</div>
+			{/loop}
+	{/hd}
+	<!--右下角广告id=2-->
+	{hd:advposition action="lists" position_id="2" type="1" num="1" order="rand()"}
+			<!--type1:是图片，type2:是文字，type3:是代码，type4:是flash-->
+			{loop $data $r}
+				<div id="pop" style="display:none;" >
+					<div id="popHead"> <a id="popClose" title="关闭">关闭</a>
+						<h2>{$r[title]}</h2>
+					</div>
+					<div id="popContent">
+						<dl>
+							<a href="{$r[link]}"><img src="{$r[content]}" alt="" width="260px";/></a>
+						</dl>
+						<p id="popMore"><a href="#" target="_blank">查看 »</a></p>
+					</div>
+				</div>
+			{/loop}
+	{/hd}
+	{hd:advposition action="lists" position_id="2" type="2" num="1" order="rand()"}
+			<!--type1:是图片，type2:是文字，type3:是代码，type4:是flash-->
+			{loop $data $r}
+				<div id="pop" style="display:none;">
+					<div id="popHead"> <a id="popClose" title="关闭">关闭</a>
+						<h2>{$r[title]}</h2>
+					</div>
+					<div id="popContent">
+						<dl>
+							<a href="{$r[link]}" style="color:#636363">{$r[content]}</a>
+						</dl>
+						<p id="popMore"><a href="#" target="_blank">查看 »</a></p>
+					</div>
+				</div>
+			{/loop}
+	{/hd}
+	{hd:advposition action="lists" position_id="2" type="3" num="1" order="rand()"}
+			<!--type1:是图片，type2:是文字，type3:是代码，type4:是flash-->
+			{loop $data $r}
+				<div id="pop" style="display:none;">
+					<div id="popHead"> <a id="popClose" title="关闭">关闭</a>
+						<h2>{$r[title]}</h2>
+					</div>
+					<div id="popContent">
+						<dl>
+							{$r[content]}
+						</dl>
+						<p id="popMore"><a href="#" target="_blank">查看 »</a></p>
+					</div>
+				</div>
+			{/loop}
+	{/hd}
+	<!--滚屏居中广告id3-->
+	{hd:advposition action="lists" position_id="3" type="1" num="1" order="rand()"}
+		<!--type1:是图片，type2:是文字，type3:是代码，type4:是flash-->
+		{loop $data $r}
+				<!-- 遮罩 -->
+			<div class="mask"></div>
+			<!-- 弹框 -->
+			<div class="login-box">
+				<div class="loginCon">
+					<a href="{$r[link]}"><img src="{$r[content]}" alt="";/></a>
+					<div class="close" title="点击关闭">X</div>
+				</div>
+			</div>
+		{/loop}
+	{/hd}
+	{hd:advposition action="lists" position_id="3" type="2" num="1" order="rand()"}
+			<!--type1:是图片，type2:是文字，type3:是代码，type4:是flash-->
+			{loop $data $r}
+				<div class="mask"></div>
+			<!-- 弹框 -->
+			<div class="login-box">
+				<div class="loginCon">
+					<a href="{$r[link]}" style="color:#636363">{$r[content]}</a>
+					<div class="close" title="点击关闭">X</div>
+				</div>
+			</div>
+			{/loop}
+	{/hd}
+	{hd:advposition action="lists" position_id="3" type="3" num="1" order="rand()"}
+			<!--type1:是图片，type2:是文字，type3:是代码，type4:是flash-->
+			{loop $data $r}
+				<div class="mask"></div>
+			<!-- 弹框 -->
+			<div class="login-box">
+				<div class="loginCon">
+					{$r[content]}
+					<div class="close" title="点击关闭">X</div>
+				</div>
+			</div>
+			{/loop}
+	{/hd}
+	<!--对联广告id=4-->
+	{hd:advposition action="lists" position_id="4" type="1" num="1" order="rand()"}
+		<!--type1:是图片，type2:是文字，type3:是代码，type4:是flash-->
+		{loop $data $r}
+			<div class="fixediv leftadv">
+				<a href="{$r[link]}"><img src="{$r[content]}" width="140" height="186" alt="对联广告" /></a>
+				<a class="close" href="javascript:void(0);">关闭广告</a>
+			</div>
+		{/loop}
+	{/hd}
+	{hd:advposition action="lists" position_id="4" type="1" num="1" order="rand()"}
+		<!--type1:是图片，type2:是文字，type3:是代码，type4:是flash-->
+		{loop $data $r}
+			<div class="fixediv rightadv">
+				<a href="{$r[link]}"><img src="{$r[content]}" width="140" height="186" alt="对联广告" /></a>
+				<a class="close" href="javascript:void(0);">关闭广告</a>
+			</div>
+		{/loop}
+	{/hd}
+	{hd:advposition action="lists" position_id="4" type="2" num="1" order="rand()"}
+		<!--type1:是图片，type2:是文字，type3:是代码，type4:是flash-->
+		{loop $data $r}
+			<div class="fixediv leftadv">
+				    <a href="{$r[link]}" style="color:#636363">{$r[content]}</a>
+					<a class="advid1_close" href="javascript:void(0);">关闭广告</a>
+				</div>
+		{/loop}
+	{/hd}
+	{hd:advposition action="lists" position_id="4" type="2" num="1" order="rand()"}
+		<!--type1:是图片，type2:是文字，type3:是代码，type4:是flash-->
+		{loop $data $r}
+			<div class="fixediv rightadv">
+				    <a href="{$r[link]}" style="color:#636363">{$r[content]}</a>
+					<a class="advid1_close" href="javascript:void(0);">关闭广告</a>
+				</div>
+		{/loop}
+	{/hd}
+    {hd:advposition action="lists" position_id="4" type="3" num="1" order="rand()"}
+		<!--type1:是图片，type2:是文字，type3:是代码，type4:是flash-->
+		{loop $data $r}
+			<div class="fixediv leftadv">
+				    {$r[content]}
+					<a class="advid1_close" href="javascript:void(0);">关闭广告</a>
+				</div>
+		{/loop}
+	{/hd}
+	{hd:advposition action="lists" position_id="4" type="3" num="1" order="rand()"}
+		<!--type1:是图片，type2:是文字，type3:是代码，type4:是flash-->
+		{loop $data $r}
+			<div class="fixediv rightadv">
+					{$r[content]}
+					<a class="advid1_close" href="javascript:void(0);">关闭广告</a>
+				</div>
+		{/loop}
+	{/hd}
+	<!--对联广告end-->
+	<div class="header">
+		 <!--登录条 -->
+			<div class="loginbar">
+				<div class="w1100">
+					<div class="site-nav-left fl" style="margin-left: -30px;">
+						<a href="javascript:void(0)" onclick="SetHome(this,window.location)">设为首页</a>
+						<a href="javascript:void(0)" onclick="AddFavorite(document.title,window.location)">收藏本站</a>
+					</div>
+					<div class="site-nav-right fr">
+						{if is_login() > 0}
+						<?php $arr = getUserInfo(is_login());?>
+						<a href="">您好 {$arr[username]}</a><a href="{U('User/Public/logout')}">[退出]</a>
+						{else}
+						<a href="{U('User/Public/login')}" target="_self">登录</a>|
+						<a href="{U('User/Public/reg')}" target="_self">注册</a>|
+						{/if}
+						<a href="{U('User/Index/index')}" >会员中心</a>|
+						<a href="{U('User/order/manage')}" >我的订单</a>
+					</div>
+				</div>
+				<div class="clear"></div>
+			</div>
+			<!--登录条结束-->
+		<!--{subtemplate common/topbar}-->
+		<div class="clear"></div>
+		<div style="background: #417eb7;">
+			<div class="w1100 menu clearfix">
+				<strong class="menudown1">
+					<div class="headermenu">
+					<!--一级菜单-->全部商品分类<img class="menudown" src="{THEME_PATH}images/homeimages/down_11.png">
+					<!--一级菜单end-->
+					<!--下来二级菜单-->
+					<div class="headermenu_li" style="display: block;">
+						{hd:category action="lists" type="nav" num="7" order="sort ASC, id ASC"}
+						<ul>
+							{loop $data $cat}
+							{php $catid = $cat['id'];}
+							<li class="listli_01">
+								<p class="listli_01-p"><a href="{U('Goods/index/lists', array('id'=> $cat['id']))}">{$cat[name]}</a></p>
+								<!--下拉三级菜单-->
+								<div class="listli_01box list-con">
+								<!--第0个-->
+								<div class="listli_01box_div">
+									    <div class="listli_01box_L fl">
+											{hd:category action="lists" catid="$cat[id]" order="sort ASC, id ASC"}
+											{loop $data $cat}
+											<div>
+												<div class="listli_01box_title fl"><a href="{U('Goods/Index/lists', array('id'=> $cat['id']))}">{$cat[name]}</a></div>
+												{hd:category action="lists" catid="$cat[id]" order="sort ASC, id ASC"}
+												<ul class="listli_01box_ul fl">
+													{loop $data $cat}
+													<li class="listli_01box_li"><a href="{U('Goods/Index/lists', array('id'=> $cat['id']))}">{$cat[name]}</a></li>
+													{/loop}
+												</ul>
+												{/hd}
+											</div>
+											{/loop}
+											{/hd}
+										</div>
+										<div class="listli_01box_R fl">
+											<!--<p>热门产品</p>-->
+											<div class="hotpro">
+												<table border="none" cellspacing="" cellpadding="">
+													<h3>推荐品牌</h3>
+													<tr>
+														<!--品牌最大只能让他显示12个-->
+														{hd:brand action="lists" catid="$catid" num="12" isrecommend="1" return="brand"}
+														{loop $brand $r}
+															<td><a href="{U('Goods/Brand/detail',array('id'=>$r[id]))}" target="_blank">{$r[name]}</a></td>
+														{/loop}
+														{/hd}
+													</tr>
+												</table>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="clear"></div>
+							</li>
+							{/loop}
+						{/hd}
+						</ul>
+					</div>
+					<div class="clear"></div>
+					<!--下拉二级菜单end-->
+					</div>
+				</strong>
+				<ul>
+				{hd:navigation action="lists" num="10" order="sort ASC,id ASC"}
+				{loop $data $r}
+					<li class="header-nav"><a href="{$r[url]}">{$r[name]}</a></li>
+				{/loop}
+				{/hd}
+				</ul>
+		  </div>
+	</div>
+	</div>
+	<!--幻灯片banner-->
+	<div class="clear"></div>
+	<div class="banner-content">
+		<div class="banner-con w1100">
+			<!--banner-->
+			<div id="demo01" class="flexslider">
+				<ul class="slides">
+					{hd:focus action="lists" num="5" order="sort ASC, id DESC" }
+					{loop $data $r}
+					{if $r[pic]}
+					<li><div class="img"><a target="view_window" href="{$r[url]}"><img src="{$r[pic]}" title="{$r[text]}"></a></div></li>
+					{/if}
+					{/loop}
+					{/hd}
+				</ul>
+			</div>
+			<!--最新资讯-->
+			<div class="serv-login">
+				<div class="gg_tab">
+					<dl class="tab">
+						<dt class="tabt">
+							<span id="t1" class="">商城公告</span>
+							<span id="t2" class="cur">最新资讯</span>
+						</dt>
+						<dd class="t1" style="display: block;">
+						  <!--商城公告-->
+						   <ul id="notice">
+						   	{hd:notice action="lists" num="3" order="id DESC"}
+								{php $i = 0;}
+								{loop $data $r}
+								{php $i++;}
+								<!--{p($r)}-->
+						  		<li>
+						  			{if $r[hits]>=5}
+						  			<a class="newNotice" href="{U('Article/Index/announce', array('id'=> $r[id]))}" target="_blank" title="">{msubstr($r[title],20)}</a>&nbsp;<img alt="" class="newImg" src="{THEME_PATH}images/hot.gif">
+						  			{elseif $r[create_time]>=(NOW_TIME-86400*3)}
+									<a class="newNotice" href="{U('Article/Index/announce', array('id'=> $r[id]))}" target="_blank" title="">{msubstr($r[title],20)}</a>&nbsp;<img alt="" class="newImg" src="{THEME_PATH}images/new.png">
+						  			{else}
+						  			<a href="{U('Article/Index/announce', array('id'=> $r[id]))}" target="_blank" title="">{msubstr($r[title],20)}</a>&nbsp;
+						  			{/if}
+						  		</li>
+						  		{/loop}
+							{/hd}
+						  </ul>
+						</dd>
+						<dd class="t2" style="display: none;">
+						 <!--最新资讯-->
+						  <ul id="activ">
+						  	{hd:article action="lists" num="3" order="create_time DESC"}
+								{php $i = 0;}
+								{loop $data $r}
+								{php $i++;}
+						  		<li>
+						  			{if $r[hits]>=5}
+						  			<a class="newNotice" href="{U('Article/Index/detail', array('id'=> $r[id]))}" target="_blank" title="">{msubstr($r[title],20)}</a>&nbsp;<img alt="" class="newImg" src="{THEME_PATH}images/hot.gif">
+						  			{elseif $r[create_time]>=(NOW_TIME-86400*3)}
+									<a class="newNotice" href="{U('Article/Index/detail', array('id'=> $r[id]))}" target="_blank" title="">{msubstr($r[title],20)}</a>&nbsp;<img alt="" class="newImg" src="{THEME_PATH}images/new.png">
+						  			{else}
+						  			<a href="{U('Article/Index/detail', array('id'=> $r[id]))}" target="_blank" title="">{msubstr($r[title],20)}</a>&nbsp;
+						  			{/if}
+						  		</li> 
+						  		{/loop}
+							{/hd}
+						  </ul>
+						</dd>
+					</dl>
+				</div>
+				<!--咨询，公告end-->
+				<!--卖家保障-->
+				<div class="sell_Promise">
+					<ul>
+						<li class="Promise_c">
+							<a href="javascript:void(0)" class="Promise_c_img">7天退换货，买得放心</a>
+						</li>
+						<li class="Promise_b">
+							<a href="javascript:void(0)" class="Promise_b_img">多样化付款，保障交易安全</a>
+						</li>
+						<li class="Promise_a" style="width: 180px;">
+							<a href="javascript:void(0)" class="Promise_a_img hover">正规渠道，正品保障</a>
+						</li>
+					</ul>
+				</div>
+				<!--新品推荐-->
+				<div class="new_pro_show_box">
+					<div class="new_pro_show_a">
+						<h3 class="fl">新品推荐</h3>
+						<!--切换li的按钮-->
+						<span class="new_pro_show_next fr" id="right">&gt</span>
+						<span class="new_pro_show_prev fr" id="left">&lt</span>
+					</div>
+					<div class="clear"></div>
+					<ul id="ulid" class="new_pro_show_b">
+						<!--一个li代表一个新品-->
+						{hd:goods action="lists" statusext="3" catid="0" num="9"  order="sort ASC, id DESC"}
+						{loop $data $r}
+						<li class="active">
+							<div class="clearfix">
+								<a class="new_pro_show_img fl" href="{U('Goods/Index/detail', array('id'=> $r['id']))}"  target="_blank">
+									{if empty($r[thumb]) && empty($r[list_img])}
+									<img  width="85px"  data-original="{THEME_PATH}images/homeimages/nopic.jpg" src="{THEME_PATH}images/homeimages/nopic.jpg"  style="display:inline;">
+									{elseif empty($r[thumb])}
+									<?php $list_img = str2arr($r[list_img]);?>
+									<img  width="85px"  data-original="{$list_img[0]}" src="{$list_img[0]}"  style="display: inline;">
+									{else}
+									<?php $thumb = str2arr($r[thumb]);?>
+									<img  width="85px"  data-original="{$thumb[0]}" src="{$thumb[0]}"  style="display: inline;">
+									{/if}
+								</a>
+								<div class="new_pro_show_instr fl">
+									<span class="new_pro_show_titel">{$r[name]}</span>
+									<span class="new_pro_show_price">价格：<font>{MONUNIT}{$r[shop_price]}</font></span>
+									<div class="new_pro_show_word">{$r[brief]}</div>
+								</div>
+							</div>
+						</li>
+						{/loop}
+						{/hd}
+					</ul>
+				</div>
+				<!--end-->
+			</div>
+		</div>
+	</div>
+	<!--主要内容区域-->
+	<div class="clear"></div>
+	<!--品牌-->
+	<div class="w1170 catalogue">
+		{hd:category action="lists" type="normal" order="sort ASC, id ASC"}
+		{loop $data $r}
+		<div class="catalogue-1">
+			<div class="catalogue-T w1100">
+				<h3 class="fl">|&nbsp;&nbsp;{$r[name]}</h3>
+				<span class="other-catalogue fr">
+					{hd:category action="lists" catid="$r[id]"}
+					{loop $data $v}
+					<a href="{U('Goods/Index/lists', array('id'=> $v['id']))}">{$v[name]}</a>&nbsp;|&nbsp;
+					{/loop}
+					{/hd}
+				</span>
+			</div>
+			<!--对应图片-->
+			<div class="catalogue-pro">
+				<!--品牌-->
+				{hd:goods action="lists" order="id DESC" catid="$r[id]" num="4"}
+					{loop $data $k}
+					<div class="module_pro">
+	 					<a target="_blank" href="{U('Goods/Index/detail', array('id'=> $k['id']))}" class="module_pro_img">
+ 						{if empty($k[small_pics]) && empty($k[list_img])}
+	 						<img class="lazy" width="240px"  data-original="{THEME_PATH}images/homeimages/nopic.jpg" style="display: inline;">
+ 						{elseif empty($k[small_pics])}
+ 							<?php $list_img = str2arr($k[list_img]);?>
+	 						<img class="lazy" width="240px" data-original="{$list_img[0]}" style="display: inline;">
+ 						{else}
+ 							<?php $small_pics = str2arr($k[small_pics]);?>
+	 						<img width="240px" data-original="{$small_pics[0]}" style="display: inline;">
+ 						{/if}
+	 					</a>
+	 					<!--定位-->
+	 					<div class="pro_description">
+	 						<ul class="pro_name">
+	 							<li class="pro_lists_title">{$k[name]}</li>
+	 							<li class="pro_lists">
+	 								<!--<span>育儿母婴1</span>-->
+	 							</li>
+	 							<li class="pro_lists_title_02">
+	 								<!--<span>育儿母婴</span>-->
+	 							</li>
+	 						</ul>
+	 						<div class="price_con">
+	 							<span class="products_prices fl"><font>{MONUNIT}{$k[shop_price]}</font>元</span>
+	 							<span class="hot fr">人气：<font>{$k[hits]}</font></span>
+	 						</div>
+	 					</div>
+	 				</div>
+ 				{/loop}
+					{/hd}
+			</div>
+		</div>
+		{/loop}
+		{/hd}
+	</div>
+	<div class="clear"></div>
+	<!--footer-->
+	<!--new_footer-->
+<div id="footer">
+			<div class="foot-tags">
+				<div class="foot-tag1" init="true" style="bottom: 0px;"></div>
+				<div class="foot-tag2" init="true" style="bottom: 0px;"></div>
+				<div class="foot-tag3" init="true" style="bottom: 0px;"></div>
+				<div class="foot-tag4" init="true" style="bottom: 0px;">
+					<a style="width: 236px;height:125px;float:left;" href="javascript:void(0)" target="_blank"></a>
+				</div>
+				<div class="foot-tag5" init="true" style="bottom: 0px;">
+					<a style="width: 236px;height:125px;float:left;" href="javascript:void(0)" target="_blank"></a>
+				</div>
+			</div>
+			<div class="foot-links">
+				<ul class="foot-links-content">
+					{hd:help action="lists" fpid="0" num="5" order="sort ASC, id ASC"}
+					{loop $data $r}
+					<li>
+						<div class="title">{$r[title]}</div>
+					   {hd:help action="lists" fpid="$r[id]" num="4"}
+						{loop $data $r}
+						<a href="{U('Help/help/detail', array('id' => $r['id']))}">{$r[title]}</a>
+						{/loop}
+						{/hd}
+					</li>
+					{/loop}
+					{/hd}
+					<li style="width: 210px;float: left;text-indent: 50px;">
+						<div class="footer_logo"></div>
+						<a href="javascript:void(0)" class="kfpic">在线咨询</a>
+						<a href="javascript:void(0)" style="margin-left: -10px;cursor: default;">周一至周六 9:00-18:00</a>
+					</li>
+				</ul>
+		   </div>
+		   <!--友情链接-->
+		   <div class="linkcat w1150">
+		   	<h3>友情链接</h3>
+		   	<div class="link">
+	   			{hd:links action="lists" num="5" order="sort ASC, id DESC"}
+				{loop $data $r}
+		   		<a href="{$r[url]}" target="_blank" >{$r[name]}</a>
+	   			{/loop}
+				{/hd}
+		   	</div>
+		   </div>
+		   <div class="foot-bt">
+				<div class="foot-bt-content">
+					<div class="left">
+						<div class="ft-info fl">
+							<a href="{getconfig('site_companyurl')}">{getconfig('site_company')}</a>  <a href="http://www.miitbeian.gov.cn" target="_blank" >{getconfig('site_icp')}</a><br />
+							Powered by <a href="http://www.haidao.la" target="_blank" >Haidao</a> {getconfig('version')} © 2013-2015 Dmibox Inc.{stripslashes(getconfig('site_countcode'))}</div>
+					</div>
+					<div class="foot-bt-links fr">
+					  <div>{date_default_timezone_get()}, {date('Y-m-d H:i:s')}</div>
+					</div>
+				</div>
+			</div>
+		</div>
+</body>
+<script type="text/javascript">
+	//广告位
+	$(".closeAdv4").click(function(){
+		$(".advBox4").hide();
+	})
+	//菜单折叠
+	$(function() {
+		$(".headermenu").hover(function() {
+				},function(){
+					$(".headermenu_li ul li").removeClass('listli_01hover').addClass('listli_01');
+				}
+		)
+	});
+	//子菜单
+	$('.headermenu_li ul li').hover(function() {
+		$(this).removeClass('listli_01').addClass('listli_01hover').siblings('li').removeClass('listli_01hover').addClass('listli_01');
+		$(".listli_01box_ul li").removeClass("listli_01").removeClass("listli_01hover");
+//			$('.list-con').hide();
+		$(this).find('.list-con').show().siblings("li").find(".list-con").hide();
+	}, function() {
+		$('.list-con').hide();
+	});
+//mall-banner幻灯片
+	$(".foucs li").mousemove(function(){
+		$(this).removeClass("").addClass("n").siblings("li").removeClass("n").addClass("");
+		$('.banner-box li').eq($(this).index()).show().siblings('li').hide();
+	});
+	//公告和咨询切换
+	$("#t1").hover(function(){
+		$(this).removeClass("cur").siblings('span').addClass("cur");
+		$(".t1").show();
+		$(".t2").hide();
+	});
+	 $("#t2").hover(function(){
+		$(this).removeClass("cur").siblings('span').addClass("cur");
+		$(".t2").show();
+		$(".t1").hide();
+	})
+</script>
+<script type="text/javascript">
+$(function(){
+	$('#demo01').flexslider({
+		animation: "slide",
+		direction:"horizontal",
+		easing:"swing"
+	});
+	//把商品第一个li的margin值去除
+	$(".catalogue-pro li:first-child").css('margin-left','0px');
+	$(".catalogue-pro ul:first-child").css('display','block');
+	//切换其他商品
+	$('.other-catalogue a').click(function(){
+		$(this).parent().parent().siblings('.catalogue-pro').find('ul').eq($(this).index()).show().siblings('ul').hide();
+	});
+	//首页商品推荐切换
+	var self = $(".smt h3");
+	self.each(function(index){
+		$(this).on("mousemove",function(){
+			var left_value = 258*(index)
+			$('.tab-arrow').css("left",left_value);
+			$(".smc").hide();
+			$(".smc:eq("+index+")").show();
+		})
+	}) 
+});
+</script>
+<!--新品推荐-->
+	<script>
+		 //得到ul
+		 var ul = document.getElementById("ulid"),
+		 //得到箭头
+			 right = document.getElementById("right"),
+			 left = document.getElementById("left"),
+			 li = ul.getElementsByTagName("li");
+		 var len = li.length;
+		 right.onclick = function(){
+			 for(var i = 0;i < len;i++){
+				 if(li[i].className == "active"){
+					 //更改当前节点的className（不适合当li有多个class时）
+					 li[i].className = "";
+					 //获得下一个li
+					 if(i == len - 1){
+						 i = 0;
+					 }else{
+						 i = i + 1;
+					 }
+					 li[i].className = "active";
+					 break;
+				 }
+			 }
+		 }
+		 left.onclick = function(){
+			 for(var i = 0;i < len;i++){
+				 if(li[i].className == "active"){
+					 //更改当前节点的className
+					 li[i].className = "";
+					 //获得上一个li
+					 if(i == 0){
+						 i = len - 1;
+					 }else{
+						 i = i - 1;
+					 }
+					 li[i].className = "active";
+					 break;
+				 }
+			 }
+		 }
+	  </script>
+</html>
+<!--返回顶部-->
+<script src="{THEME_PATH}js/jqScroll.js" type="text/javascript"></script>
+<div class="toTop" id="roll_top" title="返回顶部"></div>

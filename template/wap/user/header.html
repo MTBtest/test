@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8" />
+    <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>{if isset($SEO['title']) && !empty($SEO['title'])}{$SEO['title']}{/if}{$SEO['site_title']}</title>
+    <meta name="Keywords" content="{$SEO['keyword']}" />
+    <meta name="Description" content="{$SEO['description']}" />
+    <meta content="telephone=no" name="format-detection" />
+    <meta content="email=no" name="format-detection" />
+	<link rel="stylesheet" href="{THEME_PATH}css/style.css" />
+	<link rel="stylesheet" href="{THEME_PATH}css/swiper.min.css">
+    <script src="{THEME_PATH}js/jquery-1.7.2.min.js"></script>
+    <script src="{THEME_PATH}js/script.js"></script>
+	<!--[if lt IE 9]>
+	<script src="{THEME_PATH}js/html5shiv.js"></script>
+	<![endif]-->
+    <script type="text/javascript">
+    var referer = -1;
+    </script>
+</head>
+<body>    	
+    <header class="header">
+        <div class="back"><a href="javascript:goback(referer);"><img src="{THEME_PATH}img/ico_1.png" /></a></div>
+        <h2 id="title">loading</h2>
+        <div class="nav">
+        	<a href="#"><img src="{THEME_PATH}img/ico_2.png" /></a>
+        </div>
+        <div class="menu clearfix">
+            <a href="{__APP__}"><img src="{THEME_PATH}img/ico_11.png" />首页</a>
+            <a href="{U('Goods/Index/category')}"><img src="{THEME_PATH}img/ico_12.png" />全部分类</a>
+            <a href="{U('Goods/Cart/index')}"><img src="{THEME_PATH}img/ico_13.png" />购物车</a>
+            <a href="{U('User/Index/index',array('url_forward' => urlencode(__SELF__)))}"><img src="{THEME_PATH}img/ico_14.png" />会员中心</a>
+        </div>
+    </header>

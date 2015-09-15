@@ -1,0 +1,46 @@
+{template user/header}
+<div class="main">
+        <input type="hidden" name="goods_id" value="{$_GET['goods_id']}" />
+	<div class="pic clearfix">
+		<em>
+            {if empty($goods[thumb]) && empty($goods[list_img])}
+                <img src="{THEME_PATH}images/homeimages/nopic.jpg" />
+            {elseif empty($goods[thumb])}
+                {php $list_img = str2arr($goods[list_img]);}
+                <img src="{$list_img[0]}" />
+            {else}
+                {php $thumb = str2arr($goods[thumb])}
+                <img src="{$thumb[0]}"/>
+                
+            {/if}
+        </em>
+		<p>
+			<a href="{U('Goods/Index/detail', array('id'=> $goods[id]))}">{$goods['name']}</a>
+		</p>
+	</div>
+	<div class="text">
+		<textarea name="question" id="question" placeholder='请输入咨询内容……'></textarea>
+	</div>
+	<div class="mar15">
+		<input type="button" id="dosubmit" value="发表咨询" class="btnBlue" />
+	</div>
+</div>
+{template user/footer}
+<script type="text/javascript">
+setTitle('咨询商品');
+$('#dosubmit').bind('click', function() {
+    $.post("{U('Goods/Consult/add')}",{
+        goods_id : "{$goods['id']}",
+        question : $('#question').val()
+    },function(data){
+        if (data.info) hd_alert(data.info);
+        if (data.status == 1) {
+            location.href = "{U('Goods/Index/detail',array('id' => $goods['id']))}";
+        }else{
+            location.reload();
+        }
+    },'JSON');
+});
+</script>
+</body>
+</html>
